@@ -2,22 +2,27 @@ package main
 
 import (
 	db "DnDCharacterSheet/DB"
-	"fmt"
+	ctrl "DnDCharacterSheet/controllers"
+	"DnDCharacterSheet/models"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db.Init_db()
+	// Connect to the database
+	database := db.ConnectToDB()
+	// Migrate models
+	models.MigrateModels(database)
 
+	// Initialize Gin router
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	// Initialize controllers
+	ctrl.InitControllers(r, database)
+
+	// Start the server
 	err := r.Run(":3000")
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal("Failed to start server:", err)
 	}
 }
