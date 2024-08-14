@@ -1,9 +1,7 @@
-# Specify the version for docker-compose.yml
-version: "1"
-
 # add the serivces needed (postgres,go)
 services:
   postgres:
+    container_name: database
     image: postgres:16.4
     env_file:
       - .env
@@ -15,9 +13,10 @@ services:
       - "5432:5432"
     volumes: 
       - dbdata:/var/lib/postgresql/data
-      - ./database:/docker-entrypoint-initdb.d
+      #- ./database:/docker-entrypoint-initdb.d
 
   go:
+    container_name: go
     build:
       context: ./backend
     depends_on:
@@ -30,6 +29,7 @@ services:
       - /app/files
       
   react:
+    container_name: react
     build:
       context: ./frontend
     ports:

@@ -1,0 +1,12 @@
+# .air.toml
+[build]
+cmd = "go build -o main.exe ."
+bin = "./main"
+
+[watch]
+root = "."
+include = ["*.go"]
+exclude = ["tmp", "vendor"]
+
+[log]
+time = true

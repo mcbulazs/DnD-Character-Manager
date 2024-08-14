@@ -1,8 +1,7 @@
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 import { NavLink } from "react-router-dom";
-import Divider from '@mui/material/Divider';
 
 const Menu = () => {
 	const [open, setOpen] = useState(false);
@@ -27,35 +26,42 @@ const Menu = () => {
 					items-center sm:items-start
                     ${open ? "translate-x-0" : "-translate-x-full"}`}
 			>
-					<button
-						className="text-forest-green h-16 w-16 self-start"
-						onClick={() => setOpen(!open)}
-					>
-						<MenuIcon fontSize="large" />
-					</button>
-					<NavLink
-						to=""
-						onClick={() => setOpen(!open)}
-						className="p-4 hover:bg-gray-700 w-full"
-					>
-						Home
-					</NavLink>
-					<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood"></div>
-					<NavLink
-						to=""
-						onClick={() => setOpen(!open)}
-						className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
-					>
-						<InfoIcon fontSize="small" />
-						About
-					</NavLink>
+				<button
+					className="text-forest-green h-16 w-16 self-start"
+					onClick={() => setOpen(!open)}
+				>
+					<MenuIcon fontSize="large" />
+				</button>
+				<NavLink
+					to=""
+					onClick={() => setOpen(!open)}
+					className="p-4 hover:bg-gray-700 w-full"
+				>
+					Home
+				</NavLink>
+				<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood"></div>
+				<NavLink
+					to=""
+					onClick={() => setOpen(!open)}
+					className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
+				>
+					<InfoIcon fontSize="small" />
+					About
+				</NavLink>
 			</nav>
 			{/* overlay */}
 			{open && (
 				<div
 					className="fixed inset-0 bg-black opacity-20"
 					onClick={() => setOpen(!open)}
-				></div>
+				>
+					<iframe
+						src="/assets/sheet.pdf"
+						width="100%"
+						height="600px"
+						style={{ border: "none" }}
+					/>
+				</div>
 			)}
 		</>
 	);
