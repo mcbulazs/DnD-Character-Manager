@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Menu from "./components/sidebar";
+import Menu from "./components/Sidebar";
 
 const DesktopLayout = () => {
 	return (
@@ -8,6 +8,7 @@ const DesktopLayout = () => {
 				<Menu />
 			</header>
 			<main className="flex-1 bg-parchment-beige">
+				szia hanga &lt;3
 				<Outlet />
 			</main>
 			<footer className="bg-ancient-gold text-parchment-beige p-4">Footer</footer>
