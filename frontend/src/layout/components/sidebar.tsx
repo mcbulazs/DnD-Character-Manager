@@ -2,10 +2,12 @@ import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import InfoIcon from "@mui/icons-material/Info";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../../store/authSlice";
 
 const Menu = () => {
 	const [open, setOpen] = useState(false);
-
+	const isLoggedIn = useSelector(selectIsLoggedIn);
 	return (
 		<>
 			{/* menu button */}
@@ -33,12 +35,40 @@ const Menu = () => {
 					<MenuIcon fontSize="large" />
 				</button>
 				<NavLink
-					to=""
+					to="/"
 					onClick={() => setOpen(!open)}
 					className="p-4 hover:bg-gray-700 w-full"
 				>
 					Home
 				</NavLink>
+				{ !isLoggedIn ? ( 
+					<>
+						<NavLink
+							to="/login"
+							onClick={() => setOpen(!open)}
+							className="p-4 hover:bg-gray-700 w-full"
+						>
+							Login
+						</NavLink> 
+						<NavLink
+							to="/register"
+							onClick={() => setOpen(!open)}
+							className="p-4 hover:bg-gray-700 w-full"
+						>
+							Register
+						</NavLink> 
+					</>
+				) : (
+					<>
+						<NavLink
+							to="/logout"
+							onClick={() => setOpen(!open)}
+							className="p-4 hover:bg-gray-700 w-full"
+						>
+							Logout
+						</NavLink>
+					</>
+				)}
 				<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood"></div>
 				<NavLink
 					to=""
@@ -55,12 +85,7 @@ const Menu = () => {
 					className="fixed inset-0 bg-black opacity-20"
 					onClick={() => setOpen(!open)}
 				>
-					<iframe
-						src="/assets/sheet.pdf"
-						width="100%"
-						height="600px"
-						style={{ border: "none" }}
-					/>
+				
 				</div>
 			)}
 		</>

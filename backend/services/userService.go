@@ -4,6 +4,7 @@ import (
 	"DnDCharacterSheet/models"
 	"DnDCharacterSheet/utility"
 	"errors"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -16,6 +17,8 @@ func NewUserService(db *gorm.DB) *UserService {
 	return &UserService{DB: db}
 }
 
+var ErrUserExists = errors.New("user already exists")
+
 func (s *UserService) CreateUser(user *models.User) error {
 	// Hash the password before saving the user
 	hashedPassword, err := utility.HashPassword(user.Password)
@@ -25,7 +28,14 @@ func (s *UserService) CreateUser(user *models.User) error {
 	user.Password = hashedPassword
 
 	// Create the user in the database
-	return user.Create(s.DB)
+	err = user.Create(s.DB)
+	if err != nil {
+		if strings.Contains(err.Error(), "duplicate key value") {
+			return ErrUserExists
+		}
+		return err
+	}
+	return nil
 }
 
 // Define specific error types

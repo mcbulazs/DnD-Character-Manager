@@ -6,14 +6,25 @@ import Logout from "./pages/auth/Logout";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import './components/toast/toast.css';
+import Register from './pages/auth/Register';
+import AuthGuard from './components/AuthGuard';
 
 function App() {
 
   return (
     <BrowserRouter>
 			<Routes>
-				<Route path="/" element={<DesktopLayout />}>  
-          <Route path="login" element={<Login />} />
+				<Route path="/" element={<DesktopLayout />}>
+          <Route path="register" element={
+            <AuthGuard>
+              <Register />
+            </AuthGuard>
+          } />  
+          <Route path="login" element={ 
+              <AuthGuard>
+                <Login />
+              </AuthGuard>
+            } />
           <Route path="logout" element={<Logout />} />
         </Route>
 			</Routes>

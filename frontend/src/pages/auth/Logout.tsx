@@ -1,15 +1,24 @@
 import React, { useEffect } from 'react';
 import { useLogoutMutation } from '../../store/api/userApiSlice';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../store/authSlice';
+import { useSelector } from 'react-redux';
+import { selectIsLoggedIn } from '../../store/authSlice';
 
 const Logout: React.FC = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  if (!isLoggedIn) {
+    navigate('/login');
+  }
   useEffect(() => {
     const performLogout = async () => {
       try {
         await logout().unwrap(); 
+        dispatch(logOut());
         navigate('/login'); 
       } catch (error) {
         console.error('Logout failed', error);

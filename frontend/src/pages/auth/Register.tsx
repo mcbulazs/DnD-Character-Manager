@@ -1,19 +1,19 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useLoginMutation } from '../../store/api/userApiSlice';
-import { logIn } from '../../store/authSlice';
+import { useRegisterMutation } from '../../store/api/userApiSlice';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../types/apiError';
+import { logIn } from '../../store/authSlice';
 
 interface UserCredentials {
   email: string;
   password: string;
 }
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [credentials, setCredentials] = useState<UserCredentials>({ email: '', password: '' });
-  const [loginMutate, { isLoading, error }] = useLoginMutation();
+  const [registerMutate, { isLoading, error }] = useRegisterMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,25 +26,24 @@ const Login: React.FC = () => {
     e.preventDefault(); // Prevent the default form submission behavior
 
     try {
-      await loginMutate(credentials).unwrap(); // No response data to check
+      await registerMutate(credentials).unwrap(); // No response data to check
       dispatch(logIn());
-      // Redirect after a successful login
-      toast('Login successful', {type:'success'});
+      toast('Registration successful', { type: 'success' });
       navigate('/');
     } catch (error) {
-      const err = (error as ApiError)
-      console.error('Login failed', error);
-      if (err.status === 401) {
-        toast('Invalid email or password', {type:'warning'});
+      const err = (error as ApiError);
+      console.error('Registration failed', error);
+      if (err.status === 409) {
+        toast('User already exists', { type: 'warning' });
       } else {
-        toast('An unexpected error occurred', {type:'error'});
+        toast('An unexpected error occurred', { type: 'error' });
       }
     }
   };
 
   return (
     <div className="w-1/3 m-auto mt-10">
-      <h1 className="text-center text-3xl font-bold">Login</h1>
+      <h1 className="text-center text-3xl font-bold">Register</h1>
       <form onSubmit={handleSubmit}>
         <div className="my-2">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -77,12 +76,12 @@ const Login: React.FC = () => {
           className="w-full p-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-700"
           disabled={isLoading} // Optional: disable the button while loading
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? 'Registering...' : 'Register'}
         </button>
-        {error && <p className="text-red-500 mt-2">Login failed. Please try again.</p>}
+        {error && <p className="text-red-500 mt-2">Registration failed. Please try again.</p>}
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;

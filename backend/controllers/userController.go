@@ -22,9 +22,14 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 	userService := services.NewUserService(db)
 	err = userService.CreateUser(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if err == services.ErrUserExists {
+			c.JSON(http.StatusConflict, gin.H{"error": "Email already in use"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		}
 		return
 	}
+
 	utility.CreateSession(c, int(user.ID))
 	c.JSON(http.StatusCreated, gin.H{"message": "User created"})
 }
