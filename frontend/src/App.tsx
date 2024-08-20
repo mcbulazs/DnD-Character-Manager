@@ -5,6 +5,7 @@ import Login from "./pages/auth/Login";
 import Logout from "./pages/auth/Logout";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import './components/toast/toast.css';
 
 function App() {
 
@@ -16,6 +17,17 @@ function App() {
           <Route path="logout" element={<Logout />} />
         </Route>
 			</Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 		</BrowserRouter>
   )
 }

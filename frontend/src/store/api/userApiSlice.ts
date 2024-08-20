@@ -1,15 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQuery from "./baseQuery";
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import LoginRequest from "../../types/loginRequest";
 
 
 export const userApiSlice = createApi({
   reducerPath: "userApi",
-  baseQuery: baseQuery,
+  baseQuery,
   endpoints: (builder) => ({
     register: builder.mutation<void, { email: string; password: string }>({
       query: (registerData) => ({
@@ -18,7 +14,7 @@ export const userApiSlice = createApi({
         body: registerData,
       }),
     }),
-    login: builder.mutation<void, LoginData>({
+    login: builder.mutation<void, LoginRequest>({
       query: (loginData) => ({
         url: `login`,
         method: "POST",

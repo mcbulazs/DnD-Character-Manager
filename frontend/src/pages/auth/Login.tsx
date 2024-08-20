@@ -1,6 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../../store/api/userApiSlice';
+//import { showToast } from '../../components/toast/toast';
+import { toast } from 'react-toastify';
+import { ApiError } from '../../types/apiError';
 
 interface UserCredentials {
   email: string;
@@ -26,8 +29,13 @@ const Login: React.FC = () => {
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
+      const err = (error as ApiError)
       console.error('Login failed', error);
-      // Optionally, show a notification or alert the user
+      if (err.status === 401) {
+        toast('Invalid email or password', {type:'warning'});
+      } else {
+        toast('An unexpected error occurred', {type:'error'});
+      }
     }
   };
 
