@@ -54,6 +54,20 @@ const Menu = () => {
 		}
 	}, [open]);
 
+	useEffect(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+				setOpen(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
 	return (
 		<>
 			{/* Menu Button */}

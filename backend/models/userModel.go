@@ -10,8 +10,9 @@ var ErrUserNotFound = errors.New("user not found")
 
 type User struct {
 	gorm.Model
-	Email    string `gorm:"unique"`
-	Password string
+	Email      string `gorm:"unique"`
+	Password   string
+	Characters []Character `gorm:"foreignKey:UserID"`
 }
 
 // Create inserts a new user into the database

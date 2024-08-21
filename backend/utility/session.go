@@ -20,6 +20,7 @@ func CreateSession(c *gin.Context, user_id int) error {
 	session.Options = &sessions.Options{
 		Path:     "/",
 		HttpOnly: true,
+		MaxAge:   60 * 60 * 24, // 1 day
 	}
 	err := session.Save(c.Request, c.Writer)
 	if err != nil {
@@ -65,7 +66,8 @@ func AuthenticateSession(c *gin.Context) {
 		c.Abort()
 		return
 	}
-
+	c.Set("user_id", user_id)
+	fmt.Println("User ID:", c.MustGet("user_id"))
 	c.Set("session", session)
 	c.Next()
 }

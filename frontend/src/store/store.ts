@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { userApiSlice } from "./api/userApiSlice";
 import authReducer from './utility/authSlice';
 import headerReducer from './utility/headerSlice';
+import { characterApiSlice } from "./api/characterApiSlice";
 // Import other slices as needed
 
 export const store = configureStore({
@@ -9,10 +10,12 @@ export const store = configureStore({
     auth: authReducer,
     header: headerReducer,
     [userApiSlice.reducerPath]: userApiSlice.reducer,
-    // Add other slices here
+    [characterApiSlice.reducerPath]: characterApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApiSlice.middleware),
+    getDefaultMiddleware()
+    .concat(userApiSlice.middleware)
+    .concat(characterApiSlice.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

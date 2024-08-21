@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import characterCard from "../../types/characterCard";
+import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
 
-interface CharacterListCardProps {
-    img?: string;
-    name?: string;
-    class?: string;
-    subClass?: string;
-    id?: number;
-    isFavorite?: boolean;
-}
-
-const CharacterListCard: React.FC<CharacterListCardProps> = ({
-    img = "/assets/human.png",
-    name = "Unknown Name",
-    class: characterClass = "Unknown Class",
-    subClass = "Unknown Subclass",
-    id = 0,
-    isFavorite = false,
-}) => {
+const CharacterListCard: React.FC<{ character: characterCard }> = ({ character }) => {
     const navigate = useNavigate();
-    const [favorite, setFavorite] = useState(isFavorite);
+    const [favorite, setFavorite] = useState(character.isFavorite);
     const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 767px)").matches);
+    const [setCharacterFavorite] = useSetCharacterFavoriteMutation();
 
     useEffect(() => {
         const handleResize = () => {
@@ -32,6 +19,7 @@ const CharacterListCard: React.FC<CharacterListCardProps> = ({
     }, []);
 
     const handleFavorite = (e: React.MouseEvent) => {
+        setCharacterFavorite({ id: character.ID });
         e.stopPropagation();
         setFavorite(!favorite);
     };
@@ -42,16 +30,16 @@ const CharacterListCard: React.FC<CharacterListCardProps> = ({
             w-5/12 sm:w-5/12 md:w-1/4 xl:w-1/6
             h-fit p-0 bg-white rounded-lg shadow-md relative select-none
             cursor-pointer hover:shadow-lg transition-shadow duration-300"
-            onClick={() => navigate(`/characters/${id}`)}
+            onClick={() => navigate(`/characters/${character.ID}`)}
         >
-            <img className="w-full aspect-[3/4] rounded-t-lg" src={img} alt={name} />
+            <img className="w-full aspect-[3/4] rounded-t-lg" src={character.imageUrl} alt={character.name} />
             <div className="w-full flex flex-col items-center justify-center p-2 gap-2">
-                <h2 className="text-lg font-semibold text-center">{name}</h2>
+                <h2 className="text-lg font-semibold text-center">{character.name}</h2>
                 <span className="text-sm font-semibold text-center">
-                    {subClass} {characterClass}
+                    {character.class}
                 </span>
             </div>
-            <div className={`absolute right-0 top-0 m-2 z-2 ${isMobile ? '' : 'group-hover:block hidden'}`}>
+            <div className="absolute right-0 top-0 m-2 z-2">
                 {favorite ? (
                     <svg
                         className="w-10 h-10 text-yellow-500 transition-transform duration-300 ease-in-out"

@@ -9,8 +9,24 @@ import './components/toast/toast.css';
 import Register from './pages/auth/Register';
 import AuthGuard from './components/AuthGuard';
 import CharacterList from './pages/characters/CharacterList';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setLoggedIn } from './store/utility/authSlice';
+import Cookies from 'js-cookie';
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const authCookie = Cookies.get('session');
+    console.log(authCookie);
+    if (authCookie) {
+      dispatch(setLoggedIn(true));
+    } else {
+      dispatch(setLoggedIn(false));
+    }
+  }, [dispatch]);
 
   return (
     <BrowserRouter>

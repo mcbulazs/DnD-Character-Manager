@@ -1,12 +1,13 @@
 package services
 
 import (
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/utility"
 	"errors"
 	"strings"
 
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/utility"
 )
 
 type UserService struct {
@@ -44,7 +45,6 @@ var ErrAuthenticationFailed = errors.New("authentication failed")
 // AuthenticateUser authenticates a user by email and password
 // returns nil if the user is authenticated, otherwise returns an error
 func (s *UserService) AuthenticateUser(email, password string) (int, error) {
-
 	user, err := models.FindByEmail(s.DB, email)
 	if err != nil {
 		if errors.Is(err, models.ErrUserNotFound) {

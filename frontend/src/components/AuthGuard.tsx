@@ -10,12 +10,12 @@ interface AuthGuardProps {
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
+  // Redirect to home page if logged in
   if (isLoggedIn) {
-    // If the user is logged in, redirect them away from the login/register pages
     return <Navigate to="/" replace />;
   }
 
-  // If not logged in, allow access to the route
+  // Allow access if not logged in
   return children;
 };
 
