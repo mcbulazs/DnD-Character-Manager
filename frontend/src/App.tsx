@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import './components/toast/toast.css';
 import Register from './pages/auth/Register';
 import AuthGuard from './components/AuthGuard';
+import CharacterList from './pages/characters/CharacterList';
 
 function App() {
 
@@ -26,6 +27,8 @@ function App() {
               </AuthGuard>
             } />
           <Route path="logout" element={<Logout />} />
+          <Route path="characters" element={<CharacterList />} />
+          
         </Route>
 			</Routes>
       <ToastContainer
