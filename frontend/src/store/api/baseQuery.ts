@@ -7,7 +7,7 @@ const baseUrl = (() => {
   const origin = window.location.origin;
 
   if (origin.includes('192.168.0.101')) {
-    return 'http://192.168.0.101/';
+    return 'http://192.168.0.101:3000/';
   } else {
     return 'http://localhost:3000/';
   }

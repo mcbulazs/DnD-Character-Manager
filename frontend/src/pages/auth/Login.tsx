@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../../store/api/userApiSlice';
-import { logIn } from '../../store/authSlice';
+import { logIn } from '../../store/utility/authSlice';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../types/apiError';
 
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         <NavLink to="/register" className="block text-center mt-4 text-blue-500 hover:underline">
           Don't have an account? Register
         </NavLink>
-        {error && <p className="text-red-500 mt-2">Login failed. Please try again.</p>}
+        {error && <p className="text-red-500 mt-2 text-center">Login failed. Please try again.</p>}
       </form>
     </div>
   );

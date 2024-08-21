@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../../store/api/userApiSlice';
 import { toast } from 'react-toastify';
 import { ApiError } from '../../types/apiError';
-import { logIn } from '../../store/authSlice';
+import { logIn } from '../../store/utility/authSlice';
 
 interface UserCredentials {
   email: string;
@@ -81,7 +81,7 @@ const Register: React.FC = () => {
         <NavLink to="/login" className="block text-center mt-4 text-blue-500 hover:underline">
           Already have an account? Login!  
         </NavLink>
-        {error && <p className="text-red-500 mt-2">Register failed. Please try again.</p>}
+        {error && <p className="text-red-500 mt-2 text-center">Register failed. Please try again.</p>}
       </form>
     </div>
   );
