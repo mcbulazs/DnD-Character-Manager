@@ -42,10 +42,10 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="w-1/3 m-auto mt-10">
+    <div className="w-full max-w-xs mx-auto mt-10 p-4">
       <h1 className="text-center text-3xl font-bold">Register</h1>
       <form onSubmit={handleSubmit}>
-        <div className="my-2">
+        <div className="my-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
           <input
             id="email"
@@ -58,7 +58,7 @@ const Register: React.FC = () => {
             required
           />
         </div>
-        <div className="my-2">
+        <div className="my-4">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
             id="password"
@@ -76,10 +76,12 @@ const Register: React.FC = () => {
           className="w-full p-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-700"
           disabled={isLoading} // Optional: disable the button while loading
         >
-          {isLoading ? 'Registering...' : 'Register'}
+          {isLoading ? 'Logging in...' : 'Register'}
         </button>
-        <NavLink to="/login" className="block text-center mt-2 text-blue-500 hover:underline">Already have an account? Login</NavLink>
-        {error && <p className="text-red-500 mt-2">Registration failed. Please try again.</p>}
+        <NavLink to="/login" className="block text-center mt-4 text-blue-500 hover:underline">
+          Already have an account? Login!  
+        </NavLink>
+        {error && <p className="text-red-500 mt-2">Register failed. Please try again.</p>}
       </form>
     </div>
   );

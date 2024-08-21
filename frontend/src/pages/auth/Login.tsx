@@ -43,10 +43,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="w-1/3 m-auto mt-10">
+    <div className="w-full max-w-xs mx-auto mt-10 p-4">
       <h1 className="text-center text-3xl font-bold">Login</h1>
       <form onSubmit={handleSubmit}>
-        <div className="my-2">
+        <div className="my-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
           <input
             id="email"
@@ -59,7 +59,7 @@ const Login: React.FC = () => {
             required
           />
         </div>
-        <div className="my-2">
+        <div className="my-4">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
             id="password"
@@ -79,11 +79,14 @@ const Login: React.FC = () => {
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
-        <NavLink to="/register" className="block text-center mt-2 text-blue-500 hover:underline">Don't have an account? Register</NavLink>
+        <NavLink to="/register" className="block text-center mt-4 text-blue-500 hover:underline">
+          Don't have an account? Register
+        </NavLink>
         {error && <p className="text-red-500 mt-2">Login failed. Please try again.</p>}
       </form>
     </div>
   );
+  
 };
 
 export default Login;
