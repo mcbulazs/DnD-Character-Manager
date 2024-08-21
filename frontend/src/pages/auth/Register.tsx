@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../../store/api/userApiSlice';
 import { toast } from 'react-toastify';
@@ -78,6 +78,7 @@ const Register: React.FC = () => {
         >
           {isLoading ? 'Registering...' : 'Register'}
         </button>
+        <NavLink to="/login" className="block text-center mt-2 text-blue-500 hover:underline">Already have an account? Login</NavLink>
         {error && <p className="text-red-500 mt-2">Registration failed. Please try again.</p>}
       </form>
     </div>

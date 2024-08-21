@@ -3,8 +3,15 @@ import { FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { ApiError } from "../../types/apiError";
 
 // The type of the baseQuery function returned by fetchBaseQuery
-const baseUrl = 'http://localhost:3000/';
+const baseUrl = (() => {
+  const origin = window.location.origin;
 
+  if (origin.includes('192.168.0.101')) {
+    return 'http://192.168.0.101/';
+  } else {
+    return 'http://localhost:3000/';
+  }
+})()
 // Define the base query with error handling
 
 const baseQuery: BaseQueryFn<string | FetchArgs, unknown, ApiError> = async (args, api, extraOptions) => {

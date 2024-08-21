@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../../store/api/userApiSlice';
 import { logIn } from '../../store/authSlice';
@@ -79,6 +79,7 @@ const Login: React.FC = () => {
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
+        <NavLink to="/register" className="block text-center mt-2 text-blue-500 hover:underline">Don't have an account? Register</NavLink>
         {error && <p className="text-red-500 mt-2">Login failed. Please try again.</p>}
       </form>
     </div>
