@@ -8,7 +8,7 @@ type Character struct {
 	Name       string `gorm:"default:''" json:"name"`
 	Class      string `gorm:"default:''" json:"class"`
 	IsFavorite bool   `gorm:"default:false" json:"isFavorite"`
-	ImageUrl   string `gorm:"default:'/assets/human.png'" json:"imageUrl"`
+	ImageUrl   string `gorm:"default:'https://www.dndbeyond.com/avatars/thumbnails/6/258/420/618/636271801914013762.png'" json:"imageUrl"`
 }
 
 func (character *Character) Create(db *gorm.DB) error {

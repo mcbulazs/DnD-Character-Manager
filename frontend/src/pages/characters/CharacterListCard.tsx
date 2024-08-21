@@ -32,7 +32,9 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({ character }
             cursor-pointer hover:shadow-lg transition-shadow duration-300"
             onClick={() => navigate(`/characters/${character.ID}`)}
         >
-            <img className="w-full aspect-[3/4] rounded-t-lg" src={character.imageUrl} alt={character.name} />
+            <div className={`w-full aspect-[3/4] rounded-t-lg bg-[url('${character.imageUrl}')]`}>
+                 
+            </div>
             <div className="w-full flex flex-col items-center justify-center p-2 gap-2">
                 <h2 className="text-lg font-semibold text-center">{character.name}</h2>
                 <span className="text-sm font-semibold text-center">

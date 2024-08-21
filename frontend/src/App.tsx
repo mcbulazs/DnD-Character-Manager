@@ -15,18 +15,14 @@ import { setLoggedIn } from './store/utility/authSlice';
 import Cookies from 'js-cookie';
 
 function App() {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const authCookie = Cookies.get('session');
-    console.log(authCookie);
-    if (authCookie) {
+    const token = Cookies.get('session');
+    if (token) {
       dispatch(setLoggedIn(true));
-    } else {
-      dispatch(setLoggedIn(false));
     }
-  }, [dispatch]);
+  }, [ dispatch ]);
 
   return (
     <BrowserRouter>

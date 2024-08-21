@@ -11,10 +11,10 @@ const Logout: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  if (!isLoggedIn) {
-    navigate('/login');
-  }
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
     const performLogout = async () => {
       try {
         await logout().unwrap(); 
