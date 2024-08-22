@@ -1,7 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
+import { type SetStateAction, useState } from "react";
 
-const CreateCharacterButton: React.FC = () => {
+const CreateCharacterButton: React.FC<{ setOpen: React.Dispatch<SetStateAction<boolean>> }> = ({
+	setOpen,
+}) => {
 	const [hover, setHover] = useState(false);
 	return (
 		<>
@@ -13,14 +15,16 @@ const CreateCharacterButton: React.FC = () => {
                                 transition-all duration-300 ease-in-out overflow-hidden`}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
+				onMouseDown={() => setOpen(true)}
+				type="button"
 			>
-				 {hover ? (
-          <span className="text-white text-center whitespace-nowrap">
-            Create Character
-          </span>
-        ) : (
-          <AddIcon/>
-        )}
+				{hover ? (
+					<span className="text-white text-center whitespace-nowrap">
+						Create Character
+					</span>
+				) : (
+					<AddIcon />
+				)}
 			</button>
 		</>
 	);

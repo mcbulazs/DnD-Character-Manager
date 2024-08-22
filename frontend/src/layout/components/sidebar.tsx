@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import InfoIcon from "@mui/icons-material/Info";
-import { NavLink } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { selectIsLoggedIn } from "../../store/utility/authSlice";
 
 const Menu = () => {
@@ -35,7 +35,7 @@ const Menu = () => {
 			window.removeEventListener("touchstart", handleTouchStart);
 			window.removeEventListener("touchmove", handleTouchMove);
 		};
-	}, [startX]);
+	}, [startX, open]);
 
 	useEffect(() => {
 		const isMobile = window.matchMedia("(max-width: 767px)").matches;
@@ -56,7 +56,10 @@ const Menu = () => {
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
-			if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+			if (
+				sidebarRef.current &&
+				!sidebarRef.current.contains(e.target as Node)
+			) {
 				setOpen(false);
 			}
 		};
@@ -74,6 +77,7 @@ const Menu = () => {
 			<button
 				className="block fixed text-forest-green top-0 left-0 w-16 h-16"
 				onClick={() => setOpen(!open)}
+				type="button"
 			>
 				<MenuIcon fontSize="large" />
 			</button>
@@ -92,6 +96,7 @@ const Menu = () => {
 				<button
 					className="text-forest-green h-16 w-16 self-start"
 					onClick={() => setOpen(!open)}
+					type="button"
 				>
 					<MenuIcon fontSize="large" />
 				</button>
@@ -128,7 +133,7 @@ const Menu = () => {
 						>
 							Logout
 						</NavLink>
-						<div className="w-11/12 self-center border-b-2 border-dragon-blood"></div>
+						<div className="w-11/12 self-center border-b-2 border-dragon-blood" />
 						<NavLink
 							to="/characters"
 							onClick={() => setOpen(!open)}
@@ -138,7 +143,7 @@ const Menu = () => {
 						</NavLink>
 					</>
 				)}
-				<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood"></div>
+				<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood" />
 				<NavLink
 					to=""
 					onClick={() => setOpen(!open)}

@@ -1,75 +1,83 @@
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import characterCard from "../../types/characterCard";
 import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
+import type characterCard from "../../types/characterCard";
 
-const CharacterListCard: React.FC<{ character: characterCard }> = ({ character }) => {
-    const navigate = useNavigate();
-    const [favorite, setFavorite] = useState(character.isFavorite);
-    const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 767px)").matches);
-    const [setCharacterFavorite] = useSetCharacterFavoriteMutation();
+const CharacterListCard: React.FC<{ character: characterCard }> = ({
+	character,
+}) => {
+	const navigate = useNavigate();
+	const [favorite, setFavorite] = useState(character.isFavorite);
+	const [isMobile, setIsMobile] = useState(
+		window.matchMedia("(max-width: 767px)").matches,
+	);
+	const [setCharacterFavorite] = useSetCharacterFavoriteMutation();
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.matchMedia("(max-width: 767px)").matches);
-        };
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+		};
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
-    const handleFavorite = (e: React.MouseEvent) => {
-        setCharacterFavorite({ id: character.ID });
-        e.stopPropagation();
-        setFavorite(!favorite);
-    };
+	const handleFavorite = async (e: React.MouseEvent) => {
+		e.stopPropagation();
+		await setCharacterFavorite({ id: character.ID });
+		setFavorite(!favorite);
+	};
 
-    return (
-        <div
-            className="group flex flex-col justify-center items-center
+	return (
+		<div
+			className="group flex flex-col justify-center items-center
             w-5/12 sm:w-5/12 md:w-1/4 xl:w-1/6
             h-fit p-0 bg-white rounded-lg shadow-md relative select-none
             cursor-pointer hover:shadow-lg transition-shadow duration-300"
-            onClick={() => navigate(`/characters/${character.ID}`)}
-        >
-            <div className={`w-full aspect-[3/4] rounded-t-lg bg-[url('${character.imageUrl}')]`}>
-                 
-            </div>
-            <div className="w-full flex flex-col items-center justify-center p-2 gap-2">
-                <h2 className="text-lg font-semibold text-center">{character.name}</h2>
-                <span className="text-sm font-semibold text-center">
-                    {character.class}
-                </span>
-            </div>
-            <div className="absolute right-0 top-0 m-2 z-2">
-                {favorite ? (
-                    <svg
-                        className="w-10 h-10 text-yellow-500 transition-transform duration-300 ease-in-out"
-                        fill="currentColor"
-                        stroke="black"
-                        strokeWidth="1.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        onClick={handleFavorite}
-                    >
-                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
-                    </svg>
-                ) : (
-                    <svg
-                        className={`w-10 h-10 ${isMobile ? 'text-black' : 'text-black opacity-0 group-hover:opacity-100'} transition-opacity duration-300 ease-in-out transform scale-95 ${!isMobile ? 'group-hover:scale-105' : ''}`}
-                        fill="none"
-                        stroke="black"
-                        strokeWidth="1.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        onClick={handleFavorite}
-                    >
-                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
-                    </svg>
-                )}
-            </div>
-        </div>
-    );
+			onMouseDown={() => navigate(`/characters/${character.ID}`)}
+		>
+			<div
+				className="w-full aspect-[3/4] rounded-t-lg bg-contain bg-no-repeat bg-center"
+				style={{ backgroundImage: `url('${character.imageUrl}')` }}
+			/>
+			<div className="w-full flex flex-col items-center justify-center p-2 gap-2">
+				<h2 className="text-lg font-semibold text-center">{character.name}</h2>
+				<span className="text-sm font-semibold text-center">
+					{character.class}
+				</span>
+			</div>
+			<div className="absolute right-0 top-0 m-2 z-2">
+				{favorite ? (
+					<svg
+						className="w-10 h-10 text-yellow-500 transition-transform duration-300 ease-in-out"
+						fill="currentColor"
+						stroke="black"
+						strokeWidth="1.5"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						onMouseDown={handleFavorite}
+					>
+						<title>Favorite</title>
+						<path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
+					</svg>
+				) : (
+					<svg
+						className={`w-10 h-10 ${isMobile ? "text-black" : "text-black opacity-0 group-hover:opacity-100"} transition-opacity duration-300 ease-in-out transform scale-95 ${!isMobile ? "group-hover:scale-105" : ""}`}
+						fill="none"
+						stroke="black"
+						strokeWidth="1.5"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						onMouseDown={handleFavorite}
+					>
+						<title>Favorite</title>
+						<path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z" />
+					</svg>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default CharacterListCard;

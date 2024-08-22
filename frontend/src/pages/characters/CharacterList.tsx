@@ -1,19 +1,22 @@
-import React, {useEffect} from "react";
-import { useSelector } from "react-redux";
-import { selectIsLoggedIn } from "../../store/utility/authSlice";
+import type React from "react";
+import {useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CreateCharacterButton from "./CreateCharacterButton";
-import CharacterListCard from "./CharacterListCard";
-import { setHeaderText } from "../../store/utility/headerSlice";
-import { useDispatch } from "react-redux";
-import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import { toast } from "react-toastify";
+import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
+import { selectIsLoggedIn } from "../../store/utility/authSlice";
+import { setHeaderText } from "../../store/utility/headerSlice";
+import CharacterListCard from "./CharacterListCard";
+import CreateCharacterButton from "./CreateCharacterButton";
+import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector(selectIsLoggedIn);
     const { data: characters, error, isLoading } = useGetCharactersQuery();
+
+	const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(setHeaderText("Character List"));
@@ -25,6 +28,7 @@ const CharacterList: React.FC = () => {
         if (error) {
             toast("Error loading characters", { type: "error" });
         }
+        
     }, [dispatch, isLoggedIn, navigate, error]);
     
     if (isLoading) {
@@ -38,7 +42,8 @@ const CharacterList: React.FC = () => {
                     <CharacterListCard key={character.ID} character={character} />
                 ))}
 			</div>
-			<CreateCharacterButton />
+			<CreateCharacterButton setOpen={setModalOpen} />
+            <CreateCharacterModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 		</>
 	);
 };
