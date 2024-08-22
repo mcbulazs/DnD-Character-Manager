@@ -4,10 +4,10 @@ import DesktopLayout from "./layout/Desktop-layout";
 import Login from "./pages/auth/Login";
 import Logout from "./pages/auth/Logout";
 import "react-toastify/dist/ReactToastify.css";
-import Cookiesjscookie
-import { useEffect }fect }freactctctctctctctct";
-import { useDispatchchchchchchchch-redux }-redux f-reduxro-reduxm -redux"r-reduxea-reduxct-redux";
-import { ToastContainernernernernernertoastifyastifyastifyastifyastifyastifyastifyastify";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import AuthGuard from "./components/AuthGuard";
 import Register from "./pages/auth/Register";
 import CharacterList from "./pages/characters/CharacterList";
