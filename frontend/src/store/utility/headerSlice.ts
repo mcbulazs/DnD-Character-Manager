@@ -1,23 +1,22 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
 
 interface HeaderText {
-  text: string;
+	text: string;
 }
 
 const initialState: HeaderText = {
-    text: "ZX",
+	text: "ZX",
 };
 
 const headerSlice = createSlice({
-  name: 'header',
-  initialState,
-  reducers: {
-    setHeaderText: (state, action: PayloadAction<string>) => {
-      state.text = action.payload;
-    },
-    
-  },
+	name: "header",
+	initialState,
+	reducers: {
+		setHeaderText: (state, action: PayloadAction<string>) => {
+			state.text = action.payload;
+		},
+	},
 });
 
 export const { setHeaderText } = headerSlice.actions;

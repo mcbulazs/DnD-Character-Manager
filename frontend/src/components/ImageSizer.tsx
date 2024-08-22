@@ -32,9 +32,9 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
 		if (clientRef.current && dimensions) {
 			//for some reason i only know the width
 			const width = clientRef.current.clientWidth;
-			const height = width/ dimensions.width * dimensions.height;
+			const height = (width / dimensions.width) * dimensions.height;
 			console.log(height, width);
-			
+
 			if (height / 4 > width * 3) {
 				const apparentHeight = width * 3;
 				setDraggable({
@@ -67,13 +67,18 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
 	}, [imageUrl]);
 
 	//when the draggable element is dragged, update the position and calculate the clip path
-	const onDrag = (_: RndDragEvent | TouchEvent, data: DraggableData) => {
+	const onDrag = (_: RndDragEvent, data: DraggableData) => {
 		setDraggable({ ...draggable, x: data.x, y: data.y });
 	};
-	
 
 	//when the draggable element is resized, update the size and calculate the clip path
-	const onResize: RndResizeCallback = (e, direction, ref, delta, position) => {
+	const onResize: RndResizeCallback = (
+		_e,
+		_direction,
+		ref,
+		_delta,
+		position,
+	) => {
 		setDraggable({
 			x: position.x,
 			y: position.y,
@@ -92,7 +97,7 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
             ${draggable.x}px ${draggable.y + draggable.height}px,
             ${draggable.x}px 100%,
             100% 100%, 100% 0%)`);
-	}, [draggable])
+	}, [draggable]);
 
 	return (
 		<div

@@ -1,6 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { type FormEvent, useState } from "react";
-import Draggable from "react-draggable";
 import ImageSizer from "../../components/ImageSizer";
 
 const CreateCharacterModal: React.FC<{
