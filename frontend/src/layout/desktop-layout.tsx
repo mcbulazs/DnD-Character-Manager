@@ -13,7 +13,7 @@ const DesktopLayout = () => {
 				<Menu />
 				{headerText}
 			</header>
-			<PerfectScrollBar>
+			<PerfectScrollBar className="flex">
 				<main className="flex-1 flex justify-center bg-parchment-beige py-10 px-0 sm:px-10">
 					<Outlet />
 				</main>

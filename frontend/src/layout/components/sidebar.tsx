@@ -80,7 +80,7 @@ const Menu: React.FC = () => {
 				{characters &&
 					characters.length > 0 &&
 					characters
-						.filter((character) => character.isFavorite)
+						.filter((character) => character.is_favorite)
 						.map((character) => (
 							<NavLink
 								key={character.ID}

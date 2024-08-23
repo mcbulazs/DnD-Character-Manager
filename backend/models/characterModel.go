@@ -6,13 +6,14 @@ import (
 
 type Character struct {
 	gorm.Model
-	UserID     uint            `json:"userId"`
-	Name       string          `gorm:"default:''" json:"name"`
-	Class      string          `gorm:"default:''" json:"class"`
-	IsFavorite bool            `gorm:"default:false" json:"isFavorite"`
-	Image      BackgroundImage `json:"image" gorm:"foreignKey:CharacterID"`
+	UserID        uint                  `json:"userId"`
+	Name          string                `json:"name" gorm:"default:''"`
+	Class         string                `json:"class" gorm:"default:''"`
+	IsFavorite    bool                  `json:"is_favorite" gorm:"default:false"`
+	Image         CharacterImage        `json:"image" gorm:"foreignKey:CharacterID"`
+	AbilityScores CharacterAbilityScore `json:"ability_scores" gorm:"foreignKey:CharacterID"`
 }
-type BackgroundImage struct {
+type CharacterImage struct {
 	gorm.Model
 	CharacterID        uint   `json:"characterId"`
 	BackgroundImage    string `json:"background_image" gorm:"default:'url(https://www.dndbeyond.com/avatars/thumbnails/6/258/420/618/636271801914013762.png)'"`

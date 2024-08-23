@@ -65,11 +65,14 @@ const CreateCharacterModal: React.FC<{
 							<label className="block text-sm font-medium text-gray-700">
 								Image URL:
 							</label>
+							<span className="text-xs text-gray-500">
+								Might have to wait a few seconds for the image to load
+							</span>
 							<input
 								type="url"
 								value={imageUrl}
 								onChange={(e) => setImageUrl(e.target.value)}
-								className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+								className="p-2 border border-gray-300 rounded-lg w-full"
 							/>
 						</div>
 						{imageUrl !== "" && (

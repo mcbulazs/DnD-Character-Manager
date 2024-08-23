@@ -14,7 +14,7 @@ func MigrateModels(db *gorm.DB) {
 	if err := db.AutoMigrate(&Character{}); err != nil {
 		log.Fatal("Failed to migrate models:", err)
 	}
-	if err := db.AutoMigrate(&BackgroundImage{}); err != nil {
+	if err := db.AutoMigrate(&CharacterImage{}); err != nil {
 		log.Fatal("Failed to migrate models:", err)
 	}
 	fmt.Println("Successfully migrated models")

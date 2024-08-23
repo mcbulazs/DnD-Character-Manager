@@ -5,5 +5,5 @@ export default interface characterCard {
 	image?: backgroundImageProps;
 	name?: string;
 	class?: string;
-	isFavorite?: boolean;
+	is_favorite?: boolean;
 }

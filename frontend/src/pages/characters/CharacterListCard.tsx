@@ -8,7 +8,7 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 	character,
 }) => {
 	const navigate = useNavigate();
-	const [favorite, setFavorite] = useState(character.isFavorite);
+	const [favorite, setFavorite] = useState(character.is_favorite);
 	const [isMobile, setIsMobile] = useState(
 		window.matchMedia("(max-width: 767px)").matches,
 	);
