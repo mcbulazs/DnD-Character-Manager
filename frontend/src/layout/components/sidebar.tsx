@@ -135,8 +135,8 @@ const Menu: React.FC = () => {
 				</button>
 
 				{/* Scrollable Content Area */}
-				<nav className="flex-grow w-full overflow-hidden">
-					<PerfectScrollbar className="w-full flex flex-col">
+				<nav className="w-full overflow-hidden">
+					<PerfectScrollbar className="w-full flex flex-grow flex-col">
 						<NavLink
 							to="/"
 							onClick={() => setOpen(!open)}

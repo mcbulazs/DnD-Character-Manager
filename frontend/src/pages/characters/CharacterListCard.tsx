@@ -40,7 +40,7 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 	return (
 		<div
 			className="group flex flex-col justify-center items-center
-            w-5/12 sm:w-5/12 md:w-1/4 xl:w-1/6
+            w-5/12 sm:w-5/12 md:w-1/4 lg:w-1/6
             h-fit p-0 bg-white rounded-lg shadow-md relative select-none
             cursor-pointer hover:shadow-lg transition-shadow duration-300"
 			onMouseDown={handleCardClick}

@@ -11,7 +11,9 @@ import type { backgroundImageProps } from "../types/backgroundImageProps";
 const ImageSizer: React.FC<{
 	imageUrl: string;
 	setOutputImage: React.Dispatch<SetStateAction<backgroundImageProps>>;
-}> = ({ imageUrl, setOutputImage }) => {
+	style?: React.CSSProperties;
+	className?: string;
+}> = ({ imageUrl, setOutputImage, style = null, className = "" }) => {
 	//the polygon that will be used to clip the image
 	const [polyPoints, setPolyPoints] = useState<string>("");
 
@@ -67,11 +69,15 @@ const ImageSizer: React.FC<{
 	//when the image url changes, get the dimensions of the image
 	useEffect(() => {
 		if (!imageUrl) return;
+		console.log(imageUrl);
 
 		const img = new Image();
 		img.src = imageUrl;
+		console.log("asd");
 		img.onload = () => {
 			setDimensions({ width: img.width, height: img.height });
+
+			console.log(img);
 		};
 	}, [imageUrl]);
 
@@ -129,31 +135,30 @@ const ImageSizer: React.FC<{
 	}, [backgroundImageProps, setOutputImage]);
 
 	return (
-		<>
+		<div
+			className={`${className} w-full relative bg-contain bg-no-repeat bg-center`}
+			style={{
+				...style,
+				backgroundImage: `url(${imageUrl})`,
+				aspectRatio: `${dimensions?.width}/${dimensions?.height}`,
+			}}
+			ref={clientRef}
+		>
 			<div
-				className="w-full relative bg-contain bg-no-repeat bg-center"
+				className="absolute inset-0 bg-black opacity-60"
 				style={{
-					backgroundImage: `url(${imageUrl})`,
-					aspectRatio: `${dimensions?.width}/${dimensions?.height}`,
+					clipPath: polyPoints,
 				}}
-				ref={clientRef}
-			>
-				<div
-					className="absolute inset-0 bg-black opacity-60"
-					style={{
-						clipPath: polyPoints,
-					}}
-				/>
-				<Rnd
-					bounds={"parent"}
-					size={{ width: draggable.width, height: draggable.height }}
-					position={{ x: draggable.x, y: draggable.y }}
-					onResize={onResize}
-					onDrag={onDrag}
-					lockAspectRatio={true}
-				/>
-			</div>
-		</>
+			/>
+			<Rnd
+				bounds={"parent"}
+				size={{ width: draggable.width, height: draggable.height }}
+				position={{ x: draggable.x, y: draggable.y }}
+				onResize={onResize}
+				onDrag={onDrag}
+				lockAspectRatio={true}
+			/>
+		</div>
 	);
 };
 
