@@ -5,9 +5,8 @@ import { useCreateCharacterMutation } from "../../store/api/characterApiSlice";
 import type { backgroundImageProps } from "../../types/backgroundImageProps";
 
 const CreateCharacterModal: React.FC<{
-	isOpen: boolean;
 	onClose: () => void;
-}> = ({ isOpen, onClose }) => {
+}> = ({ onClose }) => {
 	const [name, setName] = useState("");
 	const [className, setClassName] = useState("");
 	const [image, setImage] = useState<backgroundImageProps>({
@@ -23,8 +22,6 @@ const CreateCharacterModal: React.FC<{
 		e.preventDefault();
 		onClose();
 	};
-
-	if (!isOpen) return null;
 
 	return (
 		<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
