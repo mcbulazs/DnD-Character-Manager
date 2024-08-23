@@ -1,10 +1,8 @@
 import type React from "react";
-import { type ChangeEvent, type FormEvent, useState } from "react"
-import { useDispatch } from "react-redux";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRegisterMutation } from "../../store/api/userApiSlice";
-import { logIn } from "../../store/utility/authSlice";
 import type { ApiError } from "../../types/apiError";
 
 interface UserCredentials {
@@ -19,7 +17,6 @@ const Register: React.FC = () => {
 	});
 	const [registerMutate, { isLoading, error }] = useRegisterMutation();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -30,8 +27,7 @@ const Register: React.FC = () => {
 		e.preventDefault(); // Prevent the default form submission behavior
 
 		try {
-			await registerMutate(credentials).unwrap(); // No response data to check
-			dispatch(logIn());
+			await registerMutate(credentials);
 			toast("Registration successful", { type: "success" });
 			navigate("/");
 		} catch (error) {

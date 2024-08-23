@@ -17,6 +17,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	r.POST("/login", func(c *gin.Context) {
 		LoginHandler(c, db)
 	})
+	r.GET("/auth", AuthHandler)
 
 	api := r.Group("/", middleware.AuthMiddleware())
 	api.POST("/logout", LogoutHandler)

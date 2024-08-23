@@ -69,15 +69,11 @@ const ImageSizer: React.FC<{
 	//when the image url changes, get the dimensions of the image
 	useEffect(() => {
 		if (!imageUrl) return;
-		console.log(imageUrl);
 
 		const img = new Image();
 		img.src = imageUrl;
-		console.log("asd");
 		img.onload = () => {
 			setDimensions({ width: img.width, height: img.height });
-
-			console.log(img);
 		};
 	}, [imageUrl]);
 

@@ -2,10 +2,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useEffect, useRef, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
-import { selectIsLoggedIn } from "../../store/utility/authSlice";
+import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
 import "react-perfect-scrollbar/dist/css/styles.css"; // Import the CSS for PerfectScrollbar
 
 const Menu: React.FC = () => {
@@ -13,7 +12,8 @@ const Menu: React.FC = () => {
 	const [startX, setStartX] = useState(0);
 	const sidebarRef = useRef<HTMLDivElement | null>(null);
 
-	const isLoggedIn = useSelector(selectIsLoggedIn);
+	const { data } = useIsAuthenticatedQuery();
+	const isLoggedIn = data?.authenticated;
 
 	useEffect(() => {
 		const handleTouchStart = (e: TouchEvent) => {
@@ -103,6 +103,7 @@ const Menu: React.FC = () => {
 		);
 	};
 
+
 	return (
 		<>
 			{/* Menu Button */}
@@ -178,31 +179,7 @@ const Menu: React.FC = () => {
 								>
 									Characters
 								</NavLink>
-								{
 								<FavoriteCharacters />
-								/*characters &&
-									characters.length > 0 &&
-									characters
-										.filter((character) => character.isFavorite)
-										.map((character) => (
-											<NavLink
-												key={character.ID}
-												to={`/characters/${character.ID}`}
-												onClick={() => setOpen(!open)}
-												className="p-4 hover:bg-gray-700 w-full flex gap-3"
-											>
-												<div
-													className="flex items-center gap-1 h-10 aspect-[3/4] rounded-lg"
-													style={{
-														backgroundImage: character.image?.background_image,
-														backgroundPosition:
-															character.image?.background_position,
-														backgroundSize: character.image?.background_size,
-													}}
-												/>
-												{character.name}
-											</NavLink>
-										))*/}
 							</>
 						)}
 						<div className="w-11/12 self-center border-y-2 border-dragon-blood" />

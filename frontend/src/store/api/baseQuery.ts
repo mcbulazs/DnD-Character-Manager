@@ -19,12 +19,10 @@ const baseQuery: BaseQueryFn<string | FetchArgs, unknown, ApiError> = async (
 	extraOptions,
 ) => {
 	try {
-		const result = await fetchBaseQuery({ baseUrl, credentials: "include" })(
-			args,
-			api,
-			extraOptions,
-		);
-
+		const result = await fetchBaseQuery({
+			baseUrl,
+			credentials: "include",
+		})(args, api, extraOptions);
 		if (result.error) {
 			const error = result.error as FetchBaseQueryError;
 

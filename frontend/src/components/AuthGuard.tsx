@@ -1,8 +1,5 @@
 import type React from "react";
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
-import { selectIsLoggedIn } from "../store/utility/authSlice";
-
+import { useIsAuthenticatedQuery } from "../store/api/userApiSlice";
 interface AuthGuardProps {
 	children: React.ReactNode;
 	loggedInRequired: boolean;
@@ -12,7 +9,8 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
 	children,
 	loggedInRequired,
 }) => {
-	const isLoggedIn = useSelector(selectIsLoggedIn);
+	const { data } = useIsAuthenticatedQuery();
+	const isLoggedIn = data?.authenticated;
 
 	if (isLoggedIn === loggedInRequired) {
 		return <>{children}</>; // Return children wrapped in a fragment

@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/services"
-	"DnDCharacterSheet/utility"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
 func RegisterHandler(c *gin.Context, db *gorm.DB) {
@@ -30,7 +31,11 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	utility.CreateSession(c, int(user.ID))
+	err = utility.CreateSession(c, int(user.ID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
+		return
+	}
 	c.JSON(http.StatusCreated, gin.H{"message": "User created"})
 }
 
@@ -52,8 +57,16 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	utility.CreateSession(c, userID)
+	err = utility.CreateSession(c, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "User authenticated"})
+}
+
+func AuthHandler(c *gin.Context) {
+	utility.SetUserAuthentication(c)
 }
 
 func LogoutHandler(c *gin.Context) {

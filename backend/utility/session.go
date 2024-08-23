@@ -27,9 +27,13 @@ func CreateSession(c *gin.Context, user_id int) error {
 
 // ClearSession clears the session
 func ClearSession(c *gin.Context) {
-	session := c.MustGet("session").(*sessions.Session)
+	session, err := store.Get(c.Request, "session")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})
+		return
+	}
 	session.Options.MaxAge = -1 // Expire the session
-	err := session.Save(c.Request, c.Writer)
+	err = session.Save(c.Request, c.Writer)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to clear session"})
 		return
@@ -44,6 +48,20 @@ func GetUserIdBySession(c *gin.Context) (int, error) {
 		return 0, nil
 	}
 	return userId.(int), nil
+}
+
+func SetUserAuthentication(c *gin.Context) {
+	session, err := store.Get(c.Request, "session")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})
+		c.Abort()
+	}
+	user_id, ok := session.Values["user_id"].(int)
+	if ok && user_id != 0 {
+		c.JSON(http.StatusOK, gin.H{"authenticated": true})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"authenticated": false})
 }
 
 // AuthenticateSession checks if the user is authenticated
@@ -62,6 +80,7 @@ func AuthenticateSession(c *gin.Context) {
 		c.Abort()
 		return
 	}
+
 	c.Set("user_id", user_id)
 	c.Set("session", session)
 	c.Next()

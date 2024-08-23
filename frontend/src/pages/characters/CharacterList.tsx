@@ -1,37 +1,30 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
-import { selectIsLoggedIn } from "../../store/utility/authSlice";
 import { setHeaderText } from "../../store/utility/headerSlice";
 import CharacterListCard from "./CharacterListCard";
 import CreateCharacterButton from "./CreateCharacterButton";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const isLoggedIn = useSelector(selectIsLoggedIn);
 	const { data: characters, error, isLoading } = useGetCharactersQuery();
 
 	const [modalOpen, setModalOpen] = useState(false);
-
+	
 	useEffect(() => {
 		dispatch(setHeaderText("Character List"));
-
-		if (!isLoggedIn) {
-			navigate("/login");
-		}
-
-		if (error) {
-			toast("Error loading characters", { type: "error" });
-		}
-	}, [dispatch, isLoggedIn, navigate, error]);
+	}, [dispatch]);
 
 	if (isLoading) {
 		return <div>Loading...</div>;
+	}
+	if (error) {
+		toast("Error loading characters", { type: "error" });
+		console.error("Error loading characters", error);
+		return <div>Error loading characters</div>;
 	}
 
 	return (

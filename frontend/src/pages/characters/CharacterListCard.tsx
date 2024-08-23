@@ -29,8 +29,6 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 	};
 
 	const handleCardClick = (e: React.MouseEvent) => {
-		console.log((e.target as HTMLElement).closest(".favorite-icon"));
-
 		// If the target is not the favorite icon, navigate to the character's page
 		if ((e.target as HTMLElement).closest(".favorite-icon") === null) {
 			navigate(`/characters/${character.ID}`);
