@@ -5,11 +5,16 @@ import type { ApiError } from "../../types/apiError";
 // The type of the baseQuery function returned by fetchBaseQuery
 const baseUrl = (() => {
 	const origin = window.location.origin;
-
+	/*
 	if (origin.includes("192.168.0.101")) {
-		return "http://192.168.0.101:3000/";
+		return "http://192.168.0.101:3000/api/";
 	}
-	return "http://localhost:3000/";
+	return "http://localhost:3000/api/";*/
+	
+	if (origin.includes("192.168.0.101")) {
+		return "http://192.168.0.101/api/";
+	}
+	return "http://localhost/api/";
 })();
 // Define the base query with error handling
 

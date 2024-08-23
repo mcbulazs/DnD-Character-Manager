@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -10,34 +12,50 @@ import (
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
 	initCors(r)
+	// Serve static files from the "static" directory
+	r.Static("/files/assets", "./files/assets")
+	r.LoadHTMLFiles("files/index.html")
 
-	r.POST("/register", func(c *gin.Context) {
+	// Define a route for the root path
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
+	api := r.Group("/api")
+
+	api.POST("/register", func(c *gin.Context) {
 		RegisterHandler(c, db)
 	})
-	r.POST("/login", func(c *gin.Context) {
+	api.POST("/login", func(c *gin.Context) {
 		LoginHandler(c, db)
 	})
-	r.GET("/auth", AuthHandler)
+	api.GET("/auth", AuthHandler)
 
-	api := r.Group("/", middleware.AuthMiddleware())
-	api.POST("/logout", LogoutHandler)
-	api.POST("/characters", func(c *gin.Context) {
+	auth := api.Group("/", middleware.AuthMiddleware())
+	auth.POST("/logout", LogoutHandler)
+	auth.POST("/characters", func(c *gin.Context) {
 		CreateCharacterHandler(c, db)
 	})
-	api.GET("/characters", func(c *gin.Context) {
+	auth.GET("/characters", func(c *gin.Context) {
 		GetCharactersHandler(c, db)
 	})
-	api.GET("/characters/:id", func(c *gin.Context) {
+	auth.GET("/characters/:id", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})
-	api.POST("/characters/favorite/:id", func(c *gin.Context) {
+	auth.POST("/characters/favorite/:id", func(c *gin.Context) {
 		SetCharacterFavoriteHandler(c, db)
+	})
+
+	// frontend routes
+	r.NoRoute(func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
 	})
 }
 
 func initCors(r *gin.Engine) {
+	fmt.Println("asd")
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173", "http://localhost:4200", "http://192.168.0.101:4200"}, // Allow your frontend origin
+		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173"}, // Allow your dev origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,

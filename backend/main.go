@@ -1,12 +1,13 @@
 package main
 
 import (
-	db "DnDCharacterSheet/DB"
-	ctrl "DnDCharacterSheet/controllers"
-	"DnDCharacterSheet/models"
 	"log"
 
 	"github.com/gin-gonic/gin"
+
+	db "DnDCharacterSheet/DB"
+	ctrl "DnDCharacterSheet/controllers"
+	"DnDCharacterSheet/models"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	ctrl.InitControllers(r, database)
 
 	// Start the server
-	err := r.Run(":3000")
+	err := r.Run(":80")
 	if err != nil {
 		log.Fatal("Failed to start server:", err)
 	}

@@ -13,29 +13,28 @@ services:
       - "5432:5432"
     volumes: 
       - dbdata:/var/lib/postgresql/data
-      #- ./database:/docker-entrypoint-initdb.d
 
-  go:
-    container_name: go
+  app:
+    container_name: app
     build:
-      context: ./backend
+      context: ./
     depends_on:
       - "postgres"
     ports:
-      - 3000:80
+      - 80:80
     env_file:
       - .env
     volumes:
       - /app/files
       
-  react:
-    container_name: react
-    build:
-      context: ./frontend
-    ports:
-      - 4200:80
-    env_file:
-      - .env
+  #react:
+  #  container_name: react
+  #  build:
+  #    context: ./frontend
+  #  ports:
+  #    - 4200:80
+  #  env_file:
+  #    - .env
 volumes:
   dbdata: # create the volume for persisting data.
             
