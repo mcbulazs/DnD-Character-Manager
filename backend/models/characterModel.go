@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Character struct {
 	gorm.Model
@@ -13,9 +15,9 @@ type Character struct {
 type BackgroundImage struct {
 	gorm.Model
 	CharacterID        uint   `json:"characterId"`
-	BackgroundImage    string `json:"background_image" gorm:"default:'https://www.dndbeyond.com/avatars/thumbnails/6/258/420/618/636271801914013762.png'"`
+	BackgroundImage    string `json:"background_image" gorm:"default:'url(https://www.dndbeyond.com/avatars/thumbnails/6/258/420/618/636271801914013762.png)'"`
 	BackgroundSize     string `json:"background_size" gorm:"default:'cover'"`
-	BackgroundPosition string `json:"background_position" gorm:"default:'center'"`
+	BackgroundPosition string `json:"background_position" gorm:"default:'top'"`
 }
 
 func (character *Character) Create(db *gorm.DB) error {
@@ -28,7 +30,7 @@ func (character *Character) Create(db *gorm.DB) error {
 
 func FindCharacterByID(db *gorm.DB, id int) (*Character, error) {
 	var character Character
-	tx:= db.Preload("Image").First(&character, id)
+	tx := db.Preload("Image").First(&character, id)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

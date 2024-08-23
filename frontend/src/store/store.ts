@@ -18,5 +18,10 @@ export const store = configureStore({
 			.concat(characterApiSlice.middleware),
 });
 
+export const resetApiState = (dispatch: AppDispatch) => {
+	dispatch(userApiSlice.util.resetApiState());
+	dispatch(characterApiSlice.util.resetApiState());
+};
+
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

@@ -23,10 +23,18 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	const handleFavorite = async (e: React.MouseEvent) => {
-		e.stopPropagation();
+	const handleFavorite = async (_e: React.MouseEvent) => {
 		await setCharacterFavorite({ id: character.ID });
 		setFavorite(!favorite);
+	};
+
+	const handleCardClick = (e: React.MouseEvent) => {
+		console.log((e.target as HTMLElement).closest(".favorite-icon"));
+
+		// If the target is not the favorite icon, navigate to the character's page
+		if ((e.target as HTMLElement).closest(".favorite-icon") === null) {
+			navigate(`/characters/${character.ID}`);
+		}
 	};
 
 	return (
@@ -35,10 +43,10 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
             w-5/12 sm:w-5/12 md:w-1/4 xl:w-1/6
             h-fit p-0 bg-white rounded-lg shadow-md relative select-none
             cursor-pointer hover:shadow-lg transition-shadow duration-300"
-			onMouseDown={() => navigate(`/characters/${character.ID}`)}
+			onMouseDown={handleCardClick}
 		>
 			<div
-				className="w-full aspect-[3/4] rounded-t-lg bg-contain bg-no-repeat bg-center"
+				className="w-full aspect-[3/4] rounded-t-lg"
 				style={{
 					backgroundImage: character.image?.background_image,
 					backgroundSize: character.image?.background_size,
@@ -51,7 +59,7 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 					{character.class}
 				</span>
 			</div>
-			<div className="absolute right-0 top-0 m-2 z-2">
+			<div className="absolute right-0 top-0 m-2 z-2 favorite-icon">
 				{favorite ? (
 					<svg
 						className="w-10 h-10 text-yellow-500 transition-transform duration-300 ease-in-out"

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../store/api/userApiSlice";
+import { resetApiState } from "../../store/store";
 import { logOut } from "../../store/utility/authSlice";
 import { selectIsLoggedIn } from "../../store/utility/authSlice";
 
@@ -18,8 +19,9 @@ const Logout: React.FC = () => {
 		}
 		const performLogout = async () => {
 			try {
-				await logout().unwrap();
+				await logout();
 				dispatch(logOut());
+				resetApiState(dispatch);
 				navigate("/login");
 			} catch (error) {
 				console.error("Logout failed", error);

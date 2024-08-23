@@ -11,7 +11,7 @@ const CreateCharacterModal: React.FC<{
 	const [className, setClassName] = useState("");
 	const [image, setImage] = useState<backgroundImageProps>({
 		background_size: "cover",
-		background_position: "center",
+		background_position: "top",
 		background_image: "",
 	});
 	const [imageUrl, setImageUrl] = useState("");
@@ -67,7 +67,6 @@ const CreateCharacterModal: React.FC<{
 							value={imageUrl}
 							onChange={(e) => setImageUrl(e.target.value)}
 							className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-							required
 						/>
 					</div>
 					{imageUrl !== "" && (

@@ -1,11 +1,14 @@
 import InfoIcon from "@mui/icons-material/Info";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useEffect, useRef, useState } from "react";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import { selectIsLoggedIn } from "../../store/utility/authSlice";
+import "react-perfect-scrollbar/dist/css/styles.css"; // Import the CSS for PerfectScrollbar
 
-const Menu = () => {
+const Menu: React.FC = () => {
 	const [open, setOpen] = useState(false);
 	const [startX, setStartX] = useState(0);
 	const sidebarRef = useRef<HTMLDivElement | null>(null);
@@ -47,7 +50,6 @@ const Menu = () => {
 				document.body.style.overflow = "auto";
 			}
 
-			// Clean up overflow style on component unmount or when `open` changes
 			return () => {
 				document.body.style.overflow = "auto";
 			};
@@ -71,6 +73,36 @@ const Menu = () => {
 		};
 	}, []);
 
+	const FavoriteCharacters: React.FC = () => {
+		const { data: characters } = useGetCharactersQuery();
+		return (
+			<>
+				{characters &&
+					characters.length > 0 &&
+					characters
+						.filter((character) => character.isFavorite)
+						.map((character) => (
+							<NavLink
+								key={character.ID}
+								to={`/characters/${character.ID}`}
+								onClick={() => setOpen(!open)}
+								className="p-4 hover:bg-gray-700 w-full flex gap-3"
+							>
+								<div
+									className="flex items-center gap-1 h-10 aspect-[3/4] rounded-lg"
+									style={{
+										backgroundImage: character.image?.background_image,
+										backgroundPosition: character.image?.background_position,
+										backgroundSize: character.image?.background_size,
+									}}
+								/>
+								{character.name}
+							</NavLink>
+						))}
+			</>
+		);
+	};
+
 	return (
 		<>
 			{/* Menu Button */}
@@ -81,17 +113,18 @@ const Menu = () => {
 			>
 				<MenuIcon fontSize="large" />
 			</button>
+
 			{/* Sidebar */}
-			<nav
-				ref={sidebarRef}
+			<div
 				className={`fixed left-0 top-0
-          bg-shadow-black text-ancient-gold h-full z-50 
-          flex flex-col gap-1
-          transition-transform duration-500
-          w-full sm:w-64
-          text-3xl sm:text-2xl 
-          items-center sm:items-start
-          ${open ? "translate-x-0" : "-translate-x-full"}`}
+				bg-shadow-black text-ancient-gold h-full z-50 
+				flex flex-col gap-1
+				transition-transform duration-500
+				w-full sm:w-64
+				text-3xl sm:text-2xl 
+				items-center sm:items-start
+				${open ? "translate-x-0" : "-translate-x-full"}`}
+				ref={sidebarRef}
 			>
 				<button
 					className="text-forest-green h-16 w-16 self-start"
@@ -100,59 +133,92 @@ const Menu = () => {
 				>
 					<MenuIcon fontSize="large" />
 				</button>
-				<NavLink
-					to="/"
-					onClick={() => setOpen(!open)}
-					className="p-4 hover:bg-gray-700 w-full"
-				>
-					Home
-				</NavLink>
-				{!isLoggedIn ? (
-					<>
+
+				{/* Scrollable Content Area */}
+				<nav className="flex-grow w-full overflow-hidden">
+					<PerfectScrollbar className="w-full flex flex-col">
 						<NavLink
-							to="/login"
+							to="/"
 							onClick={() => setOpen(!open)}
 							className="p-4 hover:bg-gray-700 w-full"
 						>
-							Login
+							Home
 						</NavLink>
+						{!isLoggedIn ? (
+							<>
+								<NavLink
+									to="/login"
+									onClick={() => setOpen(!open)}
+									className="p-4 hover:bg-gray-700 w-full"
+								>
+									Login
+								</NavLink>
+								<NavLink
+									to="/register"
+									onClick={() => setOpen(!open)}
+									className="p-4 hover:bg-gray-700 w-full"
+								>
+									Register
+								</NavLink>
+							</>
+						) : (
+							<>
+								<NavLink
+									to="/logout"
+									onClick={() => setOpen(!open)}
+									className="p-4 hover:bg-gray-700 w-full"
+								>
+									Logout
+								</NavLink>
+								<div className="w-11/12 self-center border-b-2 border-dragon-blood" />
+								<NavLink
+									to="/characters"
+									onClick={() => setOpen(!open)}
+									className="p-4 hover:bg-gray-700 w-full"
+								>
+									Characters
+								</NavLink>
+								{
+								<FavoriteCharacters />
+								/*characters &&
+									characters.length > 0 &&
+									characters
+										.filter((character) => character.isFavorite)
+										.map((character) => (
+											<NavLink
+												key={character.ID}
+												to={`/characters/${character.ID}`}
+												onClick={() => setOpen(!open)}
+												className="p-4 hover:bg-gray-700 w-full flex gap-3"
+											>
+												<div
+													className="flex items-center gap-1 h-10 aspect-[3/4] rounded-lg"
+													style={{
+														backgroundImage: character.image?.background_image,
+														backgroundPosition:
+															character.image?.background_position,
+														backgroundSize: character.image?.background_size,
+													}}
+												/>
+												{character.name}
+											</NavLink>
+										))*/}
+							</>
+						)}
+						<div className="w-11/12 self-center border-y-2 border-dragon-blood" />
 						<NavLink
-							to="/register"
+							to=""
 							onClick={() => setOpen(!open)}
-							className="p-4 hover:bg-gray-700 w-full"
+							className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
 						>
-							Register
+							<InfoIcon fontSize="small" />
+							About
 						</NavLink>
-					</>
-				) : (
-					<>
-						<NavLink
-							to="/logout"
-							onClick={() => setOpen(!open)}
-							className="p-4 hover:bg-gray-700 w-full"
-						>
-							Logout
-						</NavLink>
-						<div className="w-11/12 self-center border-b-2 border-dragon-blood" />
-						<NavLink
-							to="/characters"
-							onClick={() => setOpen(!open)}
-							className="p-4 hover:bg-gray-700 w-full"
-						>
-							Characters
-						</NavLink>
-					</>
-				)}
-				<div className="flex-grow w-11/12 self-center border-y-2 border-dragon-blood" />
-				<NavLink
-					to=""
-					onClick={() => setOpen(!open)}
-					className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
-				>
-					<InfoIcon fontSize="small" />
-					About
-				</NavLink>
-			</nav>
+					</PerfectScrollbar>
+				</nav>
+
+				{/* Footer or Non-Scrollable Content */}
+			</div>
 		</>
 	);
 };

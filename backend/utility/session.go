@@ -1,21 +1,17 @@
 package utility
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
 
-var (
-	store = sessions.NewCookieStore([]byte("asd")) //! Replace it with os.Getenv("SESSION_KEY")
-)
+var store = sessions.NewCookieStore([]byte("asd")) //! Replace it with os.Getenv("SESSION_KEY")
 
 // CreateSession creates a new session
 func CreateSession(c *gin.Context, user_id int) error {
 	session := sessions.NewSession(store, "session")
-	fmt.Println("User ID:", user_id)
 	session.Values["user_id"] = user_id
 	session.Options = &sessions.Options{
 		Path:     "/",
@@ -67,7 +63,6 @@ func AuthenticateSession(c *gin.Context) {
 		return
 	}
 	c.Set("user_id", user_id)
-	fmt.Println("User ID:", c.MustGet("user_id"))
 	c.Set("session", session)
 	c.Next()
 }
