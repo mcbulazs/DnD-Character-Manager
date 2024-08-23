@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import AuthGuard from "./components/AuthGuard";
 import Register from "./pages/auth/Register";
 import CharacterList from "./pages/characters/CharacterList";
+import CharacterSheet from "./pages/characters/CharacterSheet/CharacterSheet";
 import { setLoggedIn } from "./store/utility/authSlice";
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
 					<Route
 						path="register"
 						element={
-							<AuthGuard>
+							<AuthGuard loggedInRequired={false}>
 								<Register />
 							</AuthGuard>
 						}
@@ -38,13 +39,38 @@ function App() {
 					<Route
 						path="login"
 						element={
-							<AuthGuard>
+							<AuthGuard loggedInRequired={false}>
 								<Login />
 							</AuthGuard>
 						}
 					/>
-					<Route path="logout" element={<Logout />} />
-					<Route path="characters" element={<CharacterList />} />
+
+					<Route
+						path="logout"
+						element={
+							<AuthGuard loggedInRequired={true}>
+								<Logout />
+							</AuthGuard>
+						}
+					/>
+					<Route
+						path="characters"
+						element={
+							<AuthGuard loggedInRequired={true}>
+								<CharacterList />
+							</AuthGuard>
+						}
+					/>
+					<Route
+						path="characters/:characterId"
+						element={
+							<AuthGuard loggedInRequired={true}>
+								<CharacterSheet />
+							</AuthGuard>
+						}
+					/>
+
+					<Route path="*" element={<div>404 Not Found</div>} />
 				</Route>
 			</Routes>
 			<ToastContainer

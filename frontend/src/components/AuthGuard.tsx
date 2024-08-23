@@ -4,19 +4,21 @@ import { Navigate } from "react-router-dom";
 import { selectIsLoggedIn } from "../store/utility/authSlice";
 
 interface AuthGuardProps {
-	children: JSX.Element;
+	children: React.ReactNode;
+	loggedInRequired: boolean;
 }
 
-const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+const AuthGuard: React.FC<AuthGuardProps> = ({
+	children,
+	loggedInRequired,
+}) => {
 	const isLoggedIn = useSelector(selectIsLoggedIn);
 
-	// Redirect to home page if logged in
-	if (isLoggedIn) {
-		return <Navigate to="/" replace />;
+	if (isLoggedIn === loggedInRequired) {
+		return <>{children}</>; // Return children wrapped in a fragment
 	}
 
-	// Allow access if not logged in
-	return children;
+	return <div>Log {loggedInRequired ? "in" : "out"} to view this page</div>;
 };
 
 export default AuthGuard;
