@@ -26,10 +26,12 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	api.GET("/characters", func(c *gin.Context) {
 		GetCharactersHandler(c, db)
 	})
+	api.GET("/characters/:id", func(c *gin.Context) {
+		GetCharacterHandler(c, db)
+	})
 	api.POST("/characters/favorite/:id", func(c *gin.Context) {
 		SetCharacterFavoriteHandler(c, db)
 	})
-
 }
 
 func initCors(r *gin.Engine) {

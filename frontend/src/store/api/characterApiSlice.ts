@@ -35,6 +35,9 @@ export const characterApiSlice = createApi({
 			onQueryStarted, // reuse the onQueryStarted function
 			invalidatesTags: ["Characters"], // Automatically invalidate the 'Characters' tag
 		}),
+		getCharacterById: builder.query<characterCard, number>({
+			query: (id) => `characters/${id}`,
+		}),
 		getCharacters: builder.query<characterCard[], void>({
 			query: () => "characters",
 			providesTags: ["Characters"], // Indicate this query provides the 'Characters' tag
@@ -53,6 +56,7 @@ export const characterApiSlice = createApi({
 
 export const {
 	useCreateCharacterMutation,
+	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 	useSetCharacterFavoriteMutation,
 } = characterApiSlice;

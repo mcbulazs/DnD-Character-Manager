@@ -43,6 +43,27 @@ func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, characters)
 }
 
+func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
+	characterService := services.NewCharacterService(db)
+
+	characterID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
+		return
+	}
+	character, err := characterService.FindCharacterByID(characterID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if character.UserID != uint(c.MustGet("user_id").(int)) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to view this character"})
+		return
+	}
+
+	c.JSON(http.StatusOK, character)
+}
+
 func SetCharacterFavoriteHandler(c *gin.Context, db *gorm.DB) {
 	characterService := services.NewCharacterService(db)
 

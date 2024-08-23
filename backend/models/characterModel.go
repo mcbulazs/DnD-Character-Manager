@@ -21,6 +21,17 @@ type CharacterImage struct {
 	BackgroundPosition string `json:"background_position" gorm:"default:'top'"`
 }
 
+type CharacterAbilityScore struct {
+	gorm.Model
+	CharacterID  uint `json:"characterId"`
+	Strength     int  `json:"strength" gorm:"default:10"`
+	Dexterity    int  `json:"dexterity" gorm:"default:10"`
+	Constitution int  `json:"constitution" gorm:"default:10"`
+	Intelligence int  `json:"intelligence" gorm:"default:10"`
+	Wisdom       int  `json:"wisdom" gorm:"default:10"`
+	Charisma     int  `json:"charisma" gorm:"default:10"`
+}
+
 func (character *Character) Create(db *gorm.DB) error {
 	tx := db.Create(character)
 	if tx.Error != nil {
