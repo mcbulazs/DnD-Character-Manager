@@ -39,7 +39,11 @@ const CharacterListCard: React.FC<{ character: characterCard }> = ({
 		>
 			<div
 				className="w-full aspect-[3/4] rounded-t-lg bg-contain bg-no-repeat bg-center"
-				style={{ backgroundImage: `url('${character.imageUrl}')` }}
+				style={{
+					backgroundImage: character.image?.background_image,
+					backgroundSize: character.image?.background_size,
+					backgroundPosition: character.image?.background_position,
+				}}
 			/>
 			<div className="w-full flex flex-col items-center justify-center p-2 gap-2">
 				<h2 className="text-lg font-semibold text-center">{character.name}</h2>

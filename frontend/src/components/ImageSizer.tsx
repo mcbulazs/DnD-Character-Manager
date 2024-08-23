@@ -1,16 +1,26 @@
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { type SetStateAction, useEffect, useRef, useState } from "react";
 import {
 	type DraggableData,
 	Rnd,
 	type RndDragEvent,
 	type RndResizeCallback,
 } from "react-rnd";
+import type { backgroundImageProps } from "../types/backgroundImageProps";
 
-const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
+const ImageSizer: React.FC<{
+	imageUrl: string;
+	setOutputImage: React.Dispatch<SetStateAction<backgroundImageProps>>;
+}> = ({ imageUrl, setOutputImage }) => {
 	//the polygon that will be used to clip the image
 	const [polyPoints, setPolyPoints] = useState<string>("");
 
+	const [backgroundImageProps, setBackgroundImageProps] =
+		useState<backgroundImageProps>({
+			background_size: "cover",
+			background_position: "center",
+			background_image: `url(${imageUrl})`,
+		});
 	//the dimensions of the image
 	const [dimensions, setDimensions] = useState<{
 		width: number;
@@ -33,10 +43,9 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
 			//for some reason i only know the width
 			const width = clientRef.current.clientWidth;
 			const height = (width / dimensions.width) * dimensions.height;
-			console.log(height, width);
 
-			if (height / 4 > width * 3) {
-				const apparentHeight = width * 3;
+			if (height / 4 > width / 3) {
+				const apparentHeight = (width / 3) * 4;
 				setDraggable({
 					x: 0,
 					y: (height - apparentHeight) / 2,
@@ -89,6 +98,22 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
 
 	//calculate the clip path based on the draggable element's position and size
 	useEffect(() => {
+		const background_size_width =
+			((clientRef?.current?.offsetWidth ?? 1) * 100) / draggable.width;
+		const background_size_height =
+			((clientRef?.current?.offsetHeight ?? 1) * 100) / draggable.height;
+
+		const background_position_x =
+			(100 * draggable.x) /
+			Math.max((clientRef?.current?.offsetWidth ?? 1) - draggable.width, 1);
+		const background_position_y =
+			(100 * draggable.y) /
+			Math.max((clientRef?.current?.offsetHeight ?? 1) - draggable.height, 1);
+		setBackgroundImageProps({
+			background_size: `${background_size_width}% ${background_size_height}%`,
+			background_position: `${background_position_x}% ${background_position_y}%`,
+			background_image: `url(${imageUrl})`,
+		});
 		setPolyPoints(`polygon(0% 0%, 0% 100%, 
             ${draggable.x}px 100%, 
             ${draggable.x}px ${draggable.y}px,
@@ -97,32 +122,38 @@ const ImageSizer: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
             ${draggable.x}px ${draggable.y + draggable.height}px,
             ${draggable.x}px 100%,
             100% 100%, 100% 0%)`);
-	}, [draggable]);
+	}, [draggable, imageUrl]);
+
+	useEffect(() => {
+		setOutputImage(backgroundImageProps);
+	}, [backgroundImageProps, setOutputImage]);
 
 	return (
-		<div
-			className="w-full relative bg-contain bg-no-repeat bg-center"
-			style={{
-				backgroundImage: `url(${imageUrl})`,
-				aspectRatio: `${dimensions?.width}/${dimensions?.height}`,
-			}}
-			ref={clientRef}
-		>
+		<>
 			<div
-				className="absolute inset-0 bg-black opacity-60"
+				className="w-full relative bg-contain bg-no-repeat bg-center"
 				style={{
-					clipPath: polyPoints,
+					backgroundImage: `url(${imageUrl})`,
+					aspectRatio: `${dimensions?.width}/${dimensions?.height}`,
 				}}
-			/>
-			<Rnd
-				bounds={"parent"}
-				size={{ width: draggable.width, height: draggable.height }}
-				position={{ x: draggable.x, y: draggable.y }}
-				onResize={onResize}
-				onDrag={onDrag}
-				lockAspectRatio={true}
-			/>
-		</div>
+				ref={clientRef}
+			>
+				<div
+					className="absolute inset-0 bg-black opacity-60"
+					style={{
+						clipPath: polyPoints,
+					}}
+				/>
+				<Rnd
+					bounds={"parent"}
+					size={{ width: draggable.width, height: draggable.height }}
+					position={{ x: draggable.x, y: draggable.y }}
+					onResize={onResize}
+					onDrag={onDrag}
+					lockAspectRatio={true}
+				/>
+			</div>
+		</>
 	);
 };
 

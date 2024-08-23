@@ -1,6 +1,8 @@
+import type { backgroundImageProps } from "./backgroundImageProps";
+
 export default interface characterCard {
 	ID: number;
-	imageUrl?: string;
+	image?: backgroundImageProps;
 	name?: string;
 	class?: string;
 	isFavorite?: boolean;

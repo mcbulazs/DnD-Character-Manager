@@ -1,6 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { type FormEvent, useState } from "react";
 import ImageSizer from "../../components/ImageSizer";
+import { useCreateCharacterMutation } from "../../store/api/characterApiSlice";
+import type { backgroundImageProps } from "../../types/backgroundImageProps";
 
 const CreateCharacterModal: React.FC<{
 	isOpen: boolean;
@@ -8,10 +10,18 @@ const CreateCharacterModal: React.FC<{
 }> = ({ isOpen, onClose }) => {
 	const [name, setName] = useState("");
 	const [className, setClassName] = useState("");
+	const [image, setImage] = useState<backgroundImageProps>({
+		background_size: "cover",
+		background_position: "center",
+		background_image: "",
+	});
 	const [imageUrl, setImageUrl] = useState("");
+	const [createCharacterMutation] = useCreateCharacterMutation();
 
 	const handleSubmit = (e: FormEvent) => {
+		createCharacterMutation({ ID: 0, name, class: className, image });
 		e.preventDefault();
+		onClose();
 	};
 
 	if (!isOpen) return null;
@@ -64,7 +74,7 @@ const CreateCharacterModal: React.FC<{
 						/>
 					</div>
 					{imageUrl !== "" && (
-						<ImageSizer imageUrl={imageUrl} />
+						<ImageSizer imageUrl={imageUrl} setOutputImage={setImage} />
 					)}
 					<button
 						type="submit"
