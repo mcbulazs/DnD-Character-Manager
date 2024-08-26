@@ -17,25 +17,24 @@ const CharacterSheet: React.FC = () => {
 		error,
 		isLoading,
 	} = useGetCharacterByIdQuery(Number.parseInt(characterId));
-    useEffect(() => {
-        dispatch(setHeaderText(character?.name ?? "Character Sheet"));
-    }, [dispatch, character]);
-    
+	useEffect(() => {
+		dispatch(setHeaderText(character?.name ?? "Character Sheet"));
+	}, [dispatch, character]);
+
 	if (isLoading) {
-        return <div>Loading...</div>;
+		return <div>Loading...</div>;
 	}
 	if (error) {
-        toast("Error loading character", { type: "error" });
+		toast("Error loading character", { type: "error" });
 		console.error("Error loading character", error);
 		return <div>Error loading character</div>;
 	}
 	if (!character) {
 		return <div>Character not found</div>;
 	}
-    console.log(character)
+	console.log(character);
 	return (
-		<div>
-			<h1>Character Sheet</h1>
+		<div className="w-full h-auto">
 		</div>
 	);
 };

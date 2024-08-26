@@ -2,9 +2,9 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
-import type characterCard from "../../types/characterCard";
+import type CharacterCard from "../../types/characterCard";
 
-const CharacterListCard: React.FC<{ character: characterCard }> = ({
+const CharacterListCard: React.FC<{ character: CharacterCard }> = ({
 	character,
 }) => {
 	const navigate = useNavigate();

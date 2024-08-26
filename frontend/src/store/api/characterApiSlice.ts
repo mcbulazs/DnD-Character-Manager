@@ -1,6 +1,6 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import type characterCard from "../../types/characterCard";
+import type CharacterCard from "../../types/characterCard";
 import baseQuery from "./baseQuery";
 
 const onQueryStarted = async (
@@ -26,7 +26,7 @@ export const characterApiSlice = createApi({
 	baseQuery,
 	tagTypes: ["Characters"], // Register 'Characters' as a valid tag type
 	endpoints: (builder) => ({
-		createCharacter: builder.mutation<void, characterCard>({
+		createCharacter: builder.mutation<void, CharacterCard>({
 			query: (characterData) => ({
 				url: "characters",
 				method: "POST",
@@ -35,10 +35,10 @@ export const characterApiSlice = createApi({
 			onQueryStarted, // reuse the onQueryStarted function
 			invalidatesTags: ["Characters"], // Automatically invalidate the 'Characters' tag
 		}),
-		getCharacterById: builder.query<characterCard, number>({
+		getCharacterById: builder.query<CharacterCard, number>({
 			query: (id) => `characters/${id}`,
 		}),
-		getCharacters: builder.query<characterCard[], void>({
+		getCharacters: builder.query<CharacterCard[], void>({
 			query: () => "characters",
 			providesTags: ["Characters"], // Indicate this query provides the 'Characters' tag
 		}),

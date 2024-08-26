@@ -11,7 +11,6 @@ import CharacterList from "./pages/characters/CharacterList";
 import CharacterSheet from "./pages/characters/CharacterSheet/CharacterSheet";
 
 function App() {
-
 	return (
 		<BrowserRouter>
 			<Routes>
