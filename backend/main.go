@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	db "DnDCharacterSheet/DB"
 	ctrl "DnDCharacterSheet/controllers"
+	db "DnDCharacterSheet/db"
 	"DnDCharacterSheet/models"
 )
 
