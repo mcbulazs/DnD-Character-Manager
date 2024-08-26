@@ -1,14 +1,13 @@
 package controllers
 
 import (
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/services"
-	"DnDCharacterSheet/utility"
 )
 
 func RegisterHandler(c *gin.Context, db *gorm.DB) {
@@ -20,7 +19,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	// Create the user using the service
-	userService := services.NewUserService(db)
+	userService := services.NewUserService(db) // Initialize UserService with DB
 	err = userService.CreateUser(&user)
 	if err != nil {
 		if err == services.ErrUserExists {
@@ -46,7 +45,7 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	userService := services.NewUserService(db)
+	userService := services.NewUserService(db) // Initialize UserService with DB
 	userID, err := userService.AuthenticateUser(loginUser.Email, loginUser.Password)
 	if err != nil {
 		if err == services.ErrAuthenticationFailed {

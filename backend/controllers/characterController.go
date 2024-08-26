@@ -18,11 +18,11 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	characterService := services.NewCharacterService(db)
-	user_id := c.MustGet("user_id")
-	character.UserID = uint(user_id.(int))
+	service := services.NewCharacterService(db)
+	userID := c.MustGet("user_id").(int)
+	character.UserID = uint(userID)
 
-	err := characterService.CreateCharacter(&character)
+	err := service.CreateCharacter(&character);
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,9 +32,10 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
-	characterService := services.NewCharacterService(db)
-	user_id := c.MustGet("user_id")
-	characters, err := characterService.FindCharactersByUserID(uint(user_id.(int)))
+	service := services.NewCharacterService(db)
+	userID := c.MustGet("user_id").(int)
+
+	characters, err := service.FindCharactersByUserID(uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -44,18 +45,20 @@ func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
-	characterService := services.NewCharacterService(db)
+	service := services.NewCharacterService(db)
 
 	characterID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-	character, err := characterService.FindCharacterByID(characterID)
+
+	character, err := service.FindCharacterByID(characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
 	if character.UserID != uint(c.MustGet("user_id").(int)) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to view this character"})
 		return
@@ -65,21 +68,21 @@ func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func SetCharacterFavoriteHandler(c *gin.Context, db *gorm.DB) {
-	characterService := services.NewCharacterService(db)
+	service := services.NewCharacterService(db)
 
 	characterID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-	character, err := characterService.FindCharacterByID(characterID)
+
+	character, err := service.FindCharacterByID(characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = characterService.SetFavorite(character)
-	if err != nil {
+	if err := service.SetFavorite(character); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

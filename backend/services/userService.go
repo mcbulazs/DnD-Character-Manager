@@ -1,21 +1,23 @@
 package services
 
 import (
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/repositories"
+	"DnDCharacterSheet/utility"
 	"errors"
 	"strings"
 
 	"gorm.io/gorm"
-
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/utility"
 )
 
 type UserService struct {
-	DB *gorm.DB
+	repo *repositories.UserRepository
 }
 
 func NewUserService(db *gorm.DB) *UserService {
-	return &UserService{DB: db}
+	return &UserService{
+		repo: repositories.NewUserRepository(db),
+	}
 }
 
 var ErrUserExists = errors.New("user already exists")
@@ -29,7 +31,7 @@ func (s *UserService) CreateUser(user *models.User) error {
 	user.Password = hashedPassword
 
 	// Create the user in the database
-	err = user.Create(s.DB)
+	err = s.repo.Create(user)
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key value") {
 			return ErrUserExists
@@ -42,12 +44,10 @@ func (s *UserService) CreateUser(user *models.User) error {
 // Define specific error types
 var ErrAuthenticationFailed = errors.New("authentication failed")
 
-// AuthenticateUser authenticates a user by email and password
-// returns nil if the user is authenticated, otherwise returns an error
 func (s *UserService) AuthenticateUser(email, password string) (int, error) {
-	user, err := models.FindByEmail(s.DB, email)
+	user, err := s.repo.FindByEmail(email)
 	if err != nil {
-		if errors.Is(err, models.ErrUserNotFound) {
+		if errors.Is(err, repositories.ErrUserNotFound) {
 			// Do not disclose whether the user was not found or the password is incorrect
 			return 0, ErrAuthenticationFailed
 		}

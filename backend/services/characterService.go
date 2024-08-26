@@ -1,47 +1,34 @@
 package services
 
 import (
-	"gorm.io/gorm"
-
 	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/repositories"
+
+	"gorm.io/gorm"
 )
 
 type CharacterService struct {
-	DB *gorm.DB
+	Repo *repositories.CharacterRepository
 }
 
-func NewCharacterService(db *gorm.DB) *CharacterService {
-	return &CharacterService{DB: db}
+func NewCharacterService(DB *gorm.DB) *CharacterService {
+	return &CharacterService{
+		Repo: repositories.NewCharacterRepository(DB),
+	}
 }
 
 func (s *CharacterService) CreateCharacter(character *models.Character) error {
-	err := character.Create(s.DB)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.Repo.Create(character)
 }
 
 func (s *CharacterService) FindCharacterByID(id int) (*models.Character, error) {
-	character, err := models.FindCharacterByID(s.DB, id)
-	if err != nil {
-		return nil, err
-	}
-	return character, nil
+	return s.Repo.FindByID(id)
 }
 
 func (s *CharacterService) FindCharactersByUserID(userID uint) ([]models.Character, error) {
-	characters, err := models.FindCharactersByUserID(s.DB, userID)
-	if err != nil {
-		return nil, err
-	}
-	return characters, nil
+	return s.Repo.FindByUserID(userID)
 }
 
 func (s *CharacterService) SetFavorite(character *models.Character) error {
-	err := character.SetFavorite(s.DB)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.Repo.SetFavorite(character)
 }

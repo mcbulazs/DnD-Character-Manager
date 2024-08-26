@@ -1,5 +1,5 @@
 # Stage 1: Build the Go binary
-FROM golang:1.22.6 AS GoBuild
+FROM golang:1.22.6 AS gobuild
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY dockerbuildfiles/db.go /app/DB
 RUN CGO_ENABLED=0 GOOS=linux go build -o app
 
 # Stage 2: Build the React app using a Node.js image
-FROM node:20.16 AS ReactBuild
+FROM node:20.16 AS reactbuild
 
 WORKDIR /app
 
