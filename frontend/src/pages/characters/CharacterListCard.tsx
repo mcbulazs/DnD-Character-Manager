@@ -2,9 +2,9 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
-import type CharacterCard from "../../types/characterCard";
+import type CharacterBase from "../../types/characterBase";
 
-const CharacterListCard: React.FC<{ character: CharacterCard }> = ({
+const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	character,
 }) => {
 	const navigate = useNavigate();
@@ -24,6 +24,7 @@ const CharacterListCard: React.FC<{ character: CharacterCard }> = ({
 	}, []);
 
 	const handleFavorite = async (_e: React.MouseEvent) => {
+		if (character.ID === undefined) return;
 		await setCharacterFavorite({ id: character.ID });
 		setFavorite(!favorite);
 	};

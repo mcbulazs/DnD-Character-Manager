@@ -4,9 +4,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserModel struct {
 	gorm.Model
 	Email      string `gorm:"unique"`
 	Password   string
-	Characters []Character `gorm:"foreignKey:UserID"`
+	Characters []CharacterModel `gorm:"foreignKey:UserID"`
+}
+
+func (u *UserModel) TableName() string {
+	return "users"
 }

@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/services"
 )
 
 func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
-	var character models.Character
+	var character dto.CreateCharacterDTO
 	if err := c.ShouldBindJSON(&character); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -20,9 +20,8 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 
 	service := services.NewCharacterService(db)
 	userID := c.MustGet("user_id").(int)
-	character.UserID = uint(userID)
 
-	err := service.CreateCharacter(&character);
+	err := service.CreateCharacter(&character, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -52,15 +51,14 @@ func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-
-	character, err := service.FindCharacterByID(characterID)
+	userId := c.MustGet("user_id").(int)
+	character, err := service.FindCharacterByID(characterID, userId)
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Character not found"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if character.UserID != uint(c.MustGet("user_id").(int)) {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to view this character"})
 		return
 	}
 
@@ -75,14 +73,9 @@ func SetCharacterFavoriteHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-
-	character, err := service.FindCharacterByID(characterID)
+	userId := c.MustGet("user_id").(int)
+	character, err := service.SetFavorite(characterID, userId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := service.SetFavorite(character); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

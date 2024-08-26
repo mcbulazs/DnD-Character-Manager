@@ -1,17 +1,18 @@
 package controllers
 
 import (
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/services"
-	"DnDCharacterSheet/utility"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
 func RegisterHandler(c *gin.Context, db *gorm.DB) {
-	var user models.User
+	var user dto.UserDTO
 	err := c.BindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -20,7 +21,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 
 	// Create the user using the service
 	userService := services.NewUserService(db) // Initialize UserService with DB
-	err = userService.CreateUser(&user)
+	userModel, err := userService.CreateUser(&user)
 	if err != nil {
 		if err == services.ErrUserExists {
 			c.JSON(http.StatusConflict, gin.H{"error": "Email already in use"})
@@ -29,8 +30,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		}
 		return
 	}
-
-	err = utility.CreateSession(c, int(user.ID))
+	err = utility.CreateSession(c, int(userModel.ID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
 		return
@@ -39,14 +39,14 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func LoginHandler(c *gin.Context, db *gorm.DB) {
-	var loginUser models.User
-	if err := c.BindJSON(&loginUser); err != nil {
+	var user dto.UserDTO
+	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
 
 	userService := services.NewUserService(db) // Initialize UserService with DB
-	userID, err := userService.AuthenticateUser(loginUser.Email, loginUser.Password)
+	userID, err := userService.AuthenticateUser(&user)
 	if err != nil {
 		if err == services.ErrAuthenticationFailed {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})

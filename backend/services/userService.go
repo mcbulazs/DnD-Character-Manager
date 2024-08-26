@@ -1,13 +1,15 @@
 package services
 
 import (
-	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
-	"DnDCharacterSheet/utility"
 	"errors"
 	"strings"
 
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/repositories"
+	"DnDCharacterSheet/utility"
 )
 
 type UserService struct {
@@ -22,30 +24,31 @@ func NewUserService(db *gorm.DB) *UserService {
 
 var ErrUserExists = errors.New("user already exists")
 
-func (s *UserService) CreateUser(user *models.User) error {
+func (s *UserService) CreateUser(user *dto.UserDTO) (*models.UserModel, error) {
 	// Hash the password before saving the user
 	hashedPassword, err := utility.HashPassword(user.Password)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	user.Password = hashedPassword
 
 	// Create the user in the database
-	err = s.repo.Create(user)
+	userModel := convertToUser(user)
+	err = s.repo.Create(userModel)
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key value") {
-			return ErrUserExists
+			return nil, ErrUserExists
 		}
-		return err
+		return nil, err
 	}
-	return nil
+	return userModel, nil
 }
 
 // Define specific error types
 var ErrAuthenticationFailed = errors.New("authentication failed")
 
-func (s *UserService) AuthenticateUser(email, password string) (int, error) {
-	user, err := s.repo.FindByEmail(email)
+func (s *UserService) AuthenticateUser(user *dto.UserDTO) (int, error) {
+	userModel, err := s.repo.FindByEmail(user.Email)
 	if err != nil {
 		if errors.Is(err, repositories.ErrUserNotFound) {
 			// Do not disclose whether the user was not found or the password is incorrect
@@ -53,8 +56,15 @@ func (s *UserService) AuthenticateUser(email, password string) (int, error) {
 		}
 		return 0, err // Internal error
 	}
-	if err := utility.CheckPasswordHash(password, user.Password); err != nil {
+	if err := utility.CheckPasswordHash(userModel.Password, user.Password); err != nil {
 		return 0, ErrAuthenticationFailed
 	}
-	return int(user.ID), nil
+	return int(userModel.ID), nil
+}
+
+func convertToUser(userDTO *dto.UserDTO) *models.UserModel {
+	return &models.UserModel{
+		Email:    userDTO.Email,
+		Password: userDTO.Password,
+	}
 }

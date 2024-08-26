@@ -1,10 +1,11 @@
 package repositories
 
 import (
-	"DnDCharacterSheet/models"
 	"errors"
 
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/models"
 )
 
 type UserRepository struct {
@@ -17,7 +18,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 
 var ErrUserNotFound = errors.New("user not found")
 
-func (r *UserRepository) Create(user *models.User) error {
+func (r *UserRepository) Create(user *models.UserModel) error {
 	tx := r.DB.Create(user)
 	if tx.Error != nil {
 		return tx.Error
@@ -25,8 +26,8 @@ func (r *UserRepository) Create(user *models.User) error {
 	return nil
 }
 
-func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
-	var foundUser models.User
+func (r *UserRepository) FindByEmail(email string) (*models.UserModel, error) {
+	var foundUser models.UserModel
 	tx := r.DB.Where("email = ?", email).First(&foundUser)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, ErrUserNotFound
