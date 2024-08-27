@@ -6,11 +6,11 @@ import {
 	type RndDragEvent,
 	type RndResizeCallback,
 } from "react-rnd";
-import type { backgroundImageProps } from "../types/backgroundImageProps";
+import type { BackgroundImageProps } from "../types/backgroundImageProps";
 
 const ImageSizer: React.FC<{
 	imageUrl: string;
-	setOutputImage: React.Dispatch<SetStateAction<backgroundImageProps>>;
+	setOutputImage: React.Dispatch<SetStateAction<BackgroundImageProps>>;
 	style?: React.CSSProperties;
 	className?: string;
 }> = ({ imageUrl, setOutputImage, style = null, className = "" }) => {
@@ -18,10 +18,10 @@ const ImageSizer: React.FC<{
 	const [polyPoints, setPolyPoints] = useState<string>("");
 
 	const [backgroundImageProps, setBackgroundImageProps] =
-		useState<backgroundImageProps>({
-			background_size: "cover",
-			background_position: "center",
-			background_image: `url(${imageUrl})`,
+		useState<BackgroundImageProps>({
+			backgroundSize: "cover",
+			backgroundPosition: "center",
+			backgroundImage: `url(${imageUrl})`,
 		});
 	//the dimensions of the image
 	const [dimensions, setDimensions] = useState<{
@@ -112,9 +112,9 @@ const ImageSizer: React.FC<{
 			(100 * draggable.y) /
 			Math.max((clientRef?.current?.offsetHeight ?? 1) - draggable.height, 1);
 		setBackgroundImageProps({
-			background_size: `${background_size_width}% ${background_size_height}%`,
-			background_position: `${background_position_x}% ${background_position_y}%`,
-			background_image: `url(${imageUrl})`,
+			backgroundSize: `${background_size_width}% ${background_size_height}%`,
+			backgroundPosition: `${background_position_x}% ${background_position_y}%`,
+			backgroundImage: `url(${imageUrl})`,
 		});
 		setPolyPoints(`polygon(0% 0%, 0% 100%, 
             ${draggable.x}px 100%, 

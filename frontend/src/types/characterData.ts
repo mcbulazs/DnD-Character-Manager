@@ -3,7 +3,7 @@ export interface Attribute {
     modifier: number;
 }
 
-export interface Attributes {
+export interface AbilityScores {
     strength: Attribute;
     dexterity: Attribute;
     constitution: Attribute;
@@ -54,11 +54,12 @@ export interface Skills {
 export interface CharacterData {
     id: number;
     name: string;
-    characterClass: string;
-    subclass: string;
-    level: number;
+    class: string;
     armorClass: number;
-    attributes: Attributes;
+    initiative: number;
+    speed: number;
+    passivePerception: number;
+    abilityScores: AbilityScores;
     savingThrows: SavingThrows;
     skills: Skills;
 }

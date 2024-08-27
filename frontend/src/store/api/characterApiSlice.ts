@@ -1,6 +1,6 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import type CharacterBase from "../../types/characterBase";
+import type {CharacterBase, CreateCharacterBase} from "../../types/characterBase";
 import baseQuery from "./baseQuery";
 
 const onQueryStarted = async (
@@ -26,7 +26,7 @@ export const characterApiSlice = createApi({
 	baseQuery,
 	tagTypes: ["Characters"], // Register 'Characters' as a valid tag type
 	endpoints: (builder) => ({
-		createCharacter: builder.mutation<void, CharacterBase>({
+		createCharacter: builder.mutation<void, CreateCharacterBase>({
 			query: (characterData) => ({
 				url: "characters",
 				method: "POST",

@@ -2,13 +2,13 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
-import type CharacterBase from "../../types/characterBase";
+import type { CharacterBase } from "../../types/characterBase";
 
 const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	character,
 }) => {
 	const navigate = useNavigate();
-	const [favorite, setFavorite] = useState(character.is_favorite);
+	const [favorite, setFavorite] = useState(character.isFavorite);
 	const [isMobile, setIsMobile] = useState(
 		window.matchMedia("(max-width: 767px)").matches,
 	);
@@ -24,15 +24,14 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	}, []);
 
 	const handleFavorite = async (_e: React.MouseEvent) => {
-		if (character.ID === undefined) return;
-		await setCharacterFavorite({ id: character.ID });
+		await setCharacterFavorite({ id: character.id });
 		setFavorite(!favorite);
 	};
 
 	const handleCardClick = (e: React.MouseEvent) => {
 		// If the target is not the favorite icon, navigate to the character's page
 		if ((e.target as HTMLElement).closest(".favorite-icon") === null) {
-			navigate(`/characters/${character.ID}`);
+			navigate(`/characters/${character.id}`);
 		}
 	};
 
@@ -47,9 +46,9 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 			<div
 				className="w-full aspect-[3/4] rounded-t-lg"
 				style={{
-					backgroundImage: character.image?.background_image,
-					backgroundSize: character.image?.background_size,
-					backgroundPosition: character.image?.background_position,
+					backgroundImage: character.image?.backgroundImage,
+					backgroundSize: character.image?.backgroundSize,
+					backgroundPosition: character.image?.backgroundPosition,
 				}}
 			/>
 			<div className="w-full flex flex-col items-center justify-center p-2 gap-2">

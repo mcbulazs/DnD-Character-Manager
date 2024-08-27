@@ -11,7 +11,6 @@ import CreateCharacterModal from "./CreateCharacterModal";
 const CharacterList: React.FC = () => {
 	const dispatch = useDispatch();
 	const { data: characters, error, isLoading } = useGetCharactersQuery();
-
 	const [modalOpen, setModalOpen] = useState(false);
 	
 	useEffect(() => {
@@ -31,7 +30,7 @@ const CharacterList: React.FC = () => {
 		<>
 			<div className="flex w-full lg:w-4/5 flex-wrap justify-evenly gap-4">
 				{characters?.map((character) => (
-					<CharacterListCard key={character.ID} character={character} />
+					<CharacterListCard key={character.id} character={character} />
 				))}
 			</div>
 			{!modalOpen ? (

@@ -3,7 +3,7 @@ import { type FormEvent, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ImageSizer from "../../components/ImageSizer";
 import { useCreateCharacterMutation } from "../../store/api/characterApiSlice";
-import type { backgroundImageProps } from "../../types/backgroundImageProps";
+import type { BackgroundImageProps } from "../../types/backgroundImageProps";
 import "react-perfect-scrollbar/dist/css/styles.css"; // Import the CSS for PerfectScrollbar
 
 const CreateCharacterModal: React.FC<{
@@ -11,17 +11,17 @@ const CreateCharacterModal: React.FC<{
 }> = ({ onClose }) => {
 	const [name, setName] = useState("");
 	const [className, setClassName] = useState("");
-	const [image, setImage] = useState<backgroundImageProps>({
-		background_size: "cover",
-		background_position: "top",
-		background_image: "",
+	const [image, setImage] = useState<BackgroundImageProps>({
+		backgroundSize: "cover",
+		backgroundPosition: "top",
+		backgroundImage: "",
 	});
 	const [imageUrl, setImageUrl] = useState("");
 	const [createCharacterMutation] = useCreateCharacterMutation();
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		createCharacterMutation({ ID: 0, name, class: className, image });
+		createCharacterMutation({ name, class: className, image });
 		onClose();
 	};
 
