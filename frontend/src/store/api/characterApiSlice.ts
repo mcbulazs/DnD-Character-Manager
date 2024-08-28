@@ -1,6 +1,10 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import type {CharacterBase, CreateCharacterBase} from "../../types/characterBase";
+import type {
+	CharacterBase,
+	CreateCharacterBase,
+} from "../../types/characterBase";
+import type { CharacterData } from "../../types/characterData";
 import baseQuery from "./baseQuery";
 
 const onQueryStarted = async (
@@ -35,8 +39,15 @@ export const characterApiSlice = createApi({
 			onQueryStarted, // reuse the onQueryStarted function
 			invalidatesTags: ["Characters"], // Automatically invalidate the 'Characters' tag
 		}),
-		getCharacterById: builder.query<CharacterBase, number>({
+		getCharacterById: builder.query<CharacterData, number>({
 			query: (id) => `characters/${id}`,
+		}),
+		modifyCharacter: builder.mutation<void, CharacterData>({
+			query: (characterData) => ({
+				url: `characters/${characterData.id}`,
+				method: "PUT",
+				body: characterData,
+			}),
 		}),
 		getCharacters: builder.query<CharacterBase[], void>({
 			query: () => "characters",
@@ -45,7 +56,7 @@ export const characterApiSlice = createApi({
 		setCharacterFavorite: builder.mutation<void, { id: number }>({
 			query: ({ id }) => ({
 				url: `characters/favorite/${id}`,
-				method: "POST",
+				method: "PATCH",
 				body: {},
 			}),
 			onQueryStarted, // reuse the onQueryStarted function
@@ -59,4 +70,5 @@ export const {
 	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 	useSetCharacterFavoriteMutation,
+	useModifyCharacterMutation
 } = characterApiSlice;

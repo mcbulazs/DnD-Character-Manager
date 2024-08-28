@@ -15,7 +15,8 @@ export default {
         'forest-green': '#228B22',  // Equivalent to 'tahiti'
         'shadow-black': '#2C2C2C',  // Equivalent to 'silver'
         'arcane-purple': '#4B0082',  // Equivalent to 'bubble-gum'
-        'parchment-beige': '#F5DEB3',  // Equivalent to 'bermuda'
+        'parchment-beige': '#f0cc8f',  // Equivalent to 'bermuda'
+        'light-parchment-beiage': '#f6e1bc',  // Equivalent to 'bermuda'
       }
     },
     

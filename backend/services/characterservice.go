@@ -18,14 +18,29 @@ func NewCharacterService(DB *gorm.DB) *CharacterService {
 	}
 }
 
-func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, userID int) error {
+func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, userID int) (*dto.CharacterDTO, error) {
 	characterModel := models.CharacterModel{
 		Name:  character.Name,
 		Class: character.Class,
 		Image: convertToCharacterImageModel(&character.Image),
 	}
 	characterModel.UserID = uint(userID)
-	return s.Repo.Create(&characterModel)
+	err := s.Repo.Create(&characterModel)
+	if err != nil {
+		return nil, err
+	}
+	characterDTO := convertToCharacterDTO(&characterModel)
+	return characterDTO, nil
+}
+
+func (s *CharacterService) UpdateCharacter(character *dto.CharacterDTO, userID int) error {
+	characterModel := convertToCharacterModel(character)
+	err := s.Repo.Update(characterModel, userID)
+	if err != nil {
+		return err
+	}
+	*character = *convertToCharacterDTO(characterModel)
+	return nil
 }
 
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {

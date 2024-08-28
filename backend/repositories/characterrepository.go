@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"DnDCharacterSheet/models"
 )
@@ -15,7 +16,33 @@ func NewCharacterRepository(db *gorm.DB) *CharacterRepository {
 }
 
 func (r *CharacterRepository) Create(character *models.CharacterModel) error {
-	return r.DB.Create(character).Error
+	tx := r.DB.Begin()
+
+	// Create the character
+	if err := tx.Create(&character).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Create related models if needed
+	character.AbilityScores.CharacterID = character.ID
+	if err := tx.Create(&character.AbilityScores).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	character.SavingThrows.CharacterID = character.ID
+	if err := tx.Create(&character.SavingThrows).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	character.Skills.CharacterID = character.ID
+	if err := tx.Create(&character.Skills).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
 }
 
 func (r *CharacterRepository) FindByID(id int) (*models.CharacterModel, error) {
@@ -36,10 +63,12 @@ func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel
 	return characters, nil
 }
 
-func (r *CharacterRepository) Update(character *models.CharacterModel) error {
-	tx := r.DB.Model(&models.CharacterModel{}).
-		Where("id = ? AND user_id = ?", character.ID, character.UserID).
-		Updates(character)
+func (r *CharacterRepository) Update(character *models.CharacterModel, userID int) error {
+	tx := r.DB.
+		Omit("user_id").
+		Clauses(clause.Returning{}).
+		Where("id = ? AND user_id = ?", character.ID, userID).
+		Save(&character)
 	if tx.Error != nil {
 		return tx.Error
 	}

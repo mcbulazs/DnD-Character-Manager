@@ -9,14 +9,6 @@ import (
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
-	corsConfig := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173"}, // Allow your dev origin
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}
-	r.Use(cors.New(corsConfig))
-	// initCors(r)
 	// Serve static files from the "static" directory
 	r.Static("/files/assets", "./files/assets")
 	r.LoadHTMLFiles("files/index.html")
@@ -26,6 +18,8 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		c.HTML(200, "index.html", nil)
 	})
 	api := r.Group("/api")
+	initCors(api)
+	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
 	api.POST("/register", func(c *gin.Context) {
 		RegisterHandler(c, db)
@@ -46,7 +40,10 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	auth.GET("/characters/:id", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})
-	auth.POST("/characters/favorite/:id", func(c *gin.Context) {
+	auth.PUT("/characters/:id", func(c *gin.Context) {
+		UpdateCharacterHandler(c, db)
+	})
+	auth.PATCH("/characters/favorite/:id", func(c *gin.Context) {
 		SetCharacterFavoriteHandler(c, db)
 	})
 
@@ -56,10 +53,10 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 }
 
-func initCors(r *gin.Engine) {
+func initCors(r *gin.RouterGroup) {
 	corsConfig := cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173"}, // Allow your dev origin
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}
