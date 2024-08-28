@@ -10,14 +10,7 @@ import (
 )
 
 func ConnectToDB() *gorm.DB {
-	//! IMPORTANT: Replace the connection string with the one for your database
-	dbUser := "admin"        // Replace with os.Getenv("DB_USER")
-	dbPassword := "Admin123" // Replace with os.Getenv("DB_PASSWORD")
-	dbName := "PSQL"         // Replace with os.Getenv("DB_NAME")
-	dbHost := "localhost"    // Replace with postgres
-	connStr := fmt.Sprintf(
-		"user=%s dbname=%s password=%s host=%s sslmode=disable",
-		dbUser, dbName, dbPassword, dbHost)
+	connStr := GetConnectionString()
 
 	// Retry settings
 	maxRetries := 10

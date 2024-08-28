@@ -30,7 +30,7 @@ func (c *CharacterModel) TableName() string {
 type CharacterImageModel struct {
 	gorm.Model
 	CharacterID        uint
-	BackgroundImage    string `gorm:"default:'url(https://www.dndbeyond.com/avatars/thumbnails/6/258/420/618/636271801914013762.png)'"`
+	BackgroundImage    string `gorm:"default:''"`
 	BackgroundSize     string `gorm:"default:'cover'"`
 	BackgroundPosition string `gorm:"default:'top'"`
 }

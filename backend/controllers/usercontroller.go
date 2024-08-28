@@ -18,7 +18,6 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	// Create the user using the service
 	userService := services.NewUserService(db) // Initialize UserService with DB
 	userModel, err := userService.CreateUser(&user)

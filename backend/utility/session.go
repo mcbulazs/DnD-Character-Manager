@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var store = sessions.NewCookieStore([]byte("asd")) //! Replace it with os.Getenv("SESSION_KEY")
+var store = sessions.NewCookieStore([]byte("ygMSEbVbH8n4IPnnmIp2NIOg1teTUwc8")) //! Replace it with os.Getenv("SESSION_KEY")
 
 // CreateSession creates a new session
 func CreateSession(c *gin.Context, user_id int) error {

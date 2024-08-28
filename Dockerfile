@@ -9,7 +9,7 @@ COPY backend/go.sum* ./
 RUN go mod download
 
 COPY backend .
-COPY dockerbuildfiles/db.go /app/DB
+COPY dockerbuildfiles/connectionstring.go /app/db
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o app
 

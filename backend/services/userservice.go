@@ -56,7 +56,7 @@ func (s *UserService) AuthenticateUser(user *dto.UserDTO) (int, error) {
 		}
 		return 0, err // Internal error
 	}
-	if err := utility.CheckPasswordHash(userModel.Password, user.Password); err != nil {
+	if err := utility.CheckPasswordHash(user.Password, userModel.Password); err != nil {
 		return 0, ErrAuthenticationFailed
 	}
 	return int(userModel.ID), nil

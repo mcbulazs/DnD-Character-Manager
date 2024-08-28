@@ -80,20 +80,20 @@ const Menu: React.FC = () => {
 				{characters &&
 					characters.length > 0 &&
 					characters
-						.filter((character) => character.is_favorite)
+						.filter((character) => character.isFavorite)
 						.map((character) => (
 							<NavLink
-								key={character.ID}
-								to={`/characters/${character.ID}`}
+								key={character.id}
+								to={`/characters/${character.id}`}
 								onClick={() => setOpen(!open)}
 								className="p-4 hover:bg-gray-700 w-full flex gap-3"
 							>
 								<div
 									className="flex items-center gap-1 h-10 aspect-[3/4] rounded-lg"
 									style={{
-										backgroundImage: character.image?.background_image,
-										backgroundPosition: character.image?.background_position,
-										backgroundSize: character.image?.background_size,
+										backgroundImage: character.image?.backgroundImage,
+										backgroundPosition: character.image?.backgroundPosition,
+										backgroundSize: character.image?.backgroundSize,
 									}}
 								/>
 								{character.name}
@@ -102,7 +102,6 @@ const Menu: React.FC = () => {
 			</>
 		);
 	};
-
 
 	return (
 		<>
@@ -128,7 +127,7 @@ const Menu: React.FC = () => {
 				ref={sidebarRef}
 			>
 				<button
-					className="text-forest-green h-16 w-16 self-start"
+					className="text-forest-green min-h-16 w-16 self-start"
 					onClick={() => setOpen(!open)}
 					type="button"
 				>
@@ -136,8 +135,8 @@ const Menu: React.FC = () => {
 				</button>
 
 				{/* Scrollable Content Area */}
-				<nav className="w-full overflow-hidden">
-					<PerfectScrollbar className="w-full flex flex-grow flex-col">
+				<nav className="w-full overflow-hidden min-h-full">
+					<PerfectScrollbar className="w-full flex flex-grow flex-col  ">
 						<NavLink
 							to="/"
 							onClick={() => setOpen(!open)}
@@ -182,7 +181,7 @@ const Menu: React.FC = () => {
 								<FavoriteCharacters />
 							</>
 						)}
-						<div className="w-11/12 self-center border-y-2 border-dragon-blood" />
+						{/*<div className="w-11/12 self-center border-y-2 border-dragon-blood grow" />*/}
 						<NavLink
 							to=""
 							onClick={() => setOpen(!open)}

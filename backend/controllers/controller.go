@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -11,7 +9,14 @@ import (
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
-	initCors(r)
+	corsConfig := cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173"}, // Allow your dev origin
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}
+	r.Use(cors.New(corsConfig))
+	// initCors(r)
 	// Serve static files from the "static" directory
 	r.Static("/files/assets", "./files/assets")
 	r.LoadHTMLFiles("files/index.html")
@@ -20,7 +25,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.html", nil)
 	})
-
 	api := r.Group("/api")
 
 	api.POST("/register", func(c *gin.Context) {
@@ -53,7 +57,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 }
 
 func initCors(r *gin.Engine) {
-	fmt.Println("asd")
 	corsConfig := cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.101:5173"}, // Allow your dev origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
