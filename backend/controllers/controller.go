@@ -47,6 +47,13 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		SetCharacterFavoriteHandler(c, db)
 	})
 
+	characters := auth.Group("/characters/:id", func(c *gin.Context) {
+		middleware.CharacterMiddleware(c, db)
+	})
+	characters.PUT("/ability-scores", func(c *gin.Context) {
+		UpdateCharacterAbilityScoresHandler(c, db)
+	})
+
 	// frontend routes
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(200, "index.html", nil)

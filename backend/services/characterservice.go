@@ -18,6 +18,10 @@ func NewCharacterService(DB *gorm.DB) *CharacterService {
 	}
 }
 
+func (s *CharacterService) IsUserCharacter(userID int, characterID int) bool {
+	return s.Repo.IsUserCharacter(userID, characterID)
+}
+
 func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, userID int) (*dto.CharacterDTO, error) {
 	characterModel := models.CharacterModel{
 		Name:  character.Name,
@@ -40,6 +44,16 @@ func (s *CharacterService) UpdateCharacter(character *dto.CharacterDTO, userID i
 		return err
 	}
 	*character = *convertToCharacterDTO(characterModel)
+	return nil
+}
+
+func (s *CharacterService) UpdateCharacterAbilityScores(abilityScores *dto.CharacterAbilityScoreDTO, characterID int) error {
+	abilityScoresModel := convertToCharacterAbilityScoreModel(abilityScores)
+	abilityScoresModel.CharacterID = uint(characterID)
+	err := s.Repo.UpdateAbilityScores(&abilityScoresModel)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

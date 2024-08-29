@@ -24,7 +24,7 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	}, []);
 
 	const handleFavorite = async (_e: React.MouseEvent) => {
-		await setCharacterFavorite({ id: character.id });
+		await setCharacterFavorite(character.id);
 		setFavorite(!favorite);
 	};
 

@@ -52,7 +52,7 @@ export interface Skills {
 }
 
 export interface CharacterData {
-    id: number;
+    ID: number;
     name: string;
     class: string;
     armorClass: number;

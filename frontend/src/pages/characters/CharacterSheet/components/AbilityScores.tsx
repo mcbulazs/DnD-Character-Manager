@@ -1,6 +1,4 @@
-import { useCallback } from "react";
 import type { AbilityScores } from "../../../../types/characterData";
-import type { Attribute } from "../../../../types/characterData";
 import AbilityScore from "./AbilityScore";
 
 const AbilitScoresComp: React.FC<{

@@ -36,7 +36,6 @@ func UpdateCharacterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	service := services.NewCharacterService(db)
 	userID := c.MustGet("user_id").(int)
 
@@ -57,6 +56,24 @@ func UpdateCharacterHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	c.JSON(http.StatusOK, character)
+}
+
+func UpdateCharacterAbilityScoresHandler(c *gin.Context, db *gorm.DB) {
+	var abilityScores dto.CharacterAbilityScoreDTO
+	if err := c.ShouldBindJSON(&abilityScores); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	service := services.NewCharacterService(db)
+	characterID := c.MustGet("character_id").(int)
+
+	err := service.UpdateCharacterAbilityScores(&abilityScores, characterID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, abilityScores)
 }
 
 func GetCharactersHandler(c *gin.Context, db *gorm.DB) {

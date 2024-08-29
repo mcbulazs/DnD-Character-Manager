@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import type { Attribute } from "../../../../types/characterData";
 
 const UnstyledNumberInput: React.FC<{
@@ -17,7 +17,6 @@ const UnstyledNumberInput: React.FC<{
 		// Ensure that only the first character can be a sign (+ or -)
 		newValue = newValue.replace(/(?!^)[-+]/g, "");
 
-		// Validate if the newValue matches the regex
 		onChange(newValue);
 	};
 
@@ -46,15 +45,23 @@ const AbilityScore: React.FC<{
 		setTrueModifier(
 			Math.floor((attribute.value - 10) / 2) + attribute.modifier,
 		);
+		setScore({
+			value: attribute.value.toString(),
+			modifier: attribute.modifier.toString(),
+		});
 	}, [attribute]);
 
-	// ignore this error
-	const onScoreUpdate = () => {
-		const val = score.value === "" ? 0 : Number.parseInt(score.value);
-		const mod = score.modifier === "" ? 0 : Number.parseInt(score.modifier);
+	const onScoreUpdate = (updatedScore: { value: string; modifier: string }) => {
+		if (updatedScore.value === "" || updatedScore.modifier === "") {
+			return;
+		}
+		const val = Number.parseInt(updatedScore.value);
+		const mod = Number.parseInt(updatedScore.modifier);
 		if (!Number.isNaN(val) && !Number.isNaN(mod)) {
-			console.log(val, mod);
-			updateAttribute({ value: val, modifier: mod });
+			setTrueModifier(Math.floor((val - 10) / 2) + mod);
+			if (val !== attribute.value || mod !== attribute.modifier) {
+				updateAttribute({ value: val, modifier: mod });
+			}
 		}
 	};
 
@@ -75,10 +82,13 @@ const AbilityScore: React.FC<{
 			</span>
 			<UnstyledNumberInput
 				className="outline-none w-full bg-light-parchment-beiage text-center 
-					text-3xl sm:text-5xl xl:text-5xl grow"
+text-3xl sm:text-5xl xl:text-5xl grow"
 				onChange={(val) => {
-					setScore({ value: val, modifier: score.modifier });
-					onScoreUpdate();
+					setScore((prevScore) => {
+						const updatedScore = { value: val, modifier: prevScore.modifier };
+						setTimeout(() => onScoreUpdate(updatedScore), 0);
+						return updatedScore;
+					});
 				}}
 				value={score.value}
 			/>
@@ -90,8 +100,11 @@ const AbilityScore: React.FC<{
                         rounded-md 
                         text-center"
 					onChange={(mod) => {
-						setScore({ value: score.value, modifier: mod });
-						onScoreUpdate();
+						setScore((prevScore) => {
+							const updatedScore = { value: prevScore.value, modifier: mod };
+							setTimeout(() => onScoreUpdate(updatedScore), 0);
+							return updatedScore;
+						});
 					}}
 					value={score.modifier}
 				/>
@@ -108,4 +121,4 @@ const AbilityScore: React.FC<{
 	);
 };
 
-export default AbilityScore;
+export default memo(AbilityScore);

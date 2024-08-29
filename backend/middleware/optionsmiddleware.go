@@ -1,13 +1,10 @@
 package middleware
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
 func OptionsMidddleware(c *gin.Context) {
-	fmt.Println("Options Middleware")
 	c.Writer.Header().Set("Access-Control-Allow-Methods", getAllowedMethods(c.FullPath()))
 	if c.Request.Method == "OPTIONS" {
 		c.AbortWithStatus(200)
@@ -17,7 +14,6 @@ func OptionsMidddleware(c *gin.Context) {
 }
 
 func getAllowedMethods(route string) string {
-	fmt.Println(route)
 	switch route {
 	case "/api/register":
 		return "POST, OPTIONS"
@@ -33,6 +29,8 @@ func getAllowedMethods(route string) string {
 		return "GET, PUT, OPTIONS"
 	case "/api/characters/favorite/:id":
 		return "PATCH, OPTIONS"
+	case "/api/characters/:id/ability-scores":
+		return "PUT, OPTIONS"
 	default:
 		return "GET, OPTIONS"
 	}

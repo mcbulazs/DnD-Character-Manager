@@ -4,7 +4,7 @@ import type {
 	CharacterBase,
 	CreateCharacterBase,
 } from "../../types/characterBase";
-import type { CharacterData } from "../../types/characterData";
+import type { AbilityScores, CharacterData } from "../../types/characterData";
 import baseQuery from "./baseQuery";
 
 const onQueryStarted = async (
@@ -44,17 +44,28 @@ export const characterApiSlice = createApi({
 		}),
 		modifyCharacter: builder.mutation<void, CharacterData>({
 			query: (characterData) => ({
-				url: `characters/${characterData.id}`,
+				url: `characters/${characterData.ID}`,
 				method: "PUT",
 				body: characterData,
 			}),
 		}),
+		modifyCharacterAbilityScores: builder.mutation<
+			AbilityScores,
+			{ abilityScores: AbilityScores; characterID: number }
+		>({
+			query: ({ abilityScores, characterID }) => ({
+				url: `characters/${characterID}/ability-scores`,
+				method: "PUT",
+				body: abilityScores,
+			}),
+		}),
+
 		getCharacters: builder.query<CharacterBase[], void>({
 			query: () => "characters",
 			providesTags: ["Characters"], // Indicate this query provides the 'Characters' tag
 		}),
-		setCharacterFavorite: builder.mutation<void, { id: number }>({
-			query: ({ id }) => ({
+		setCharacterFavorite: builder.mutation<void,  number>({
+			query: (id) => ({
 				url: `characters/favorite/${id}`,
 				method: "PATCH",
 				body: {},
@@ -70,5 +81,6 @@ export const {
 	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 	useSetCharacterFavoriteMutation,
-	useModifyCharacterMutation
+	useModifyCharacterMutation,
+	useModifyCharacterAbilityScoresMutation,
 } = characterApiSlice;
