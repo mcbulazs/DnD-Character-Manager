@@ -1,14 +1,14 @@
 package utility
 
 import (
+	"DnDCharacterSheet/env"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
 
-var store = sessions.NewCookieStore([]byte("ygMSEbVbH8n4IPnnmIp2NIOg1teTUwc8")) //! Replace it with os.Getenv("SESSION_KEY")
-
+var store = sessions.NewCookieStore([]byte(env.GetStoreHash()))
 // CreateSession creates a new session
 func CreateSession(c *gin.Context, user_id int) error {
 	session := sessions.NewSession(store, "session")

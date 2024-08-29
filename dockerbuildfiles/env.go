@@ -15,3 +15,7 @@ func GetConnectionString() string {
 		dbUser, dbName, dbPassword, dbHost)
 	return connStr
 }
+
+func GetStoreHash() string {
+	return os.Getenv("SESSION_KEY")
+}

@@ -7,10 +7,13 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"DnDCharacterSheet/env"
+	"DnDCharacterSheet/utility"
 )
 
 func ConnectToDB() *gorm.DB {
-	connStr := GetConnectionString()
+	connStr := env.GetConnectionString()
 
 	// Retry settings
 	maxRetries := 10
@@ -20,7 +23,9 @@ func ConnectToDB() *gorm.DB {
 	var db *gorm.DB
 
 	for i := 0; i < maxRetries; i++ {
-		db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
+		db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{
+			Logger: utility.GormLogger,
+		})
 		if err == nil {
 			sqlDB, err := db.DB()
 			if err == nil {

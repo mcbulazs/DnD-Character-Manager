@@ -1,4 +1,4 @@
-package db
+package env
 
 import "fmt"
 
@@ -12,4 +12,8 @@ func GetConnectionString() string {
 		"user=%s dbname=%s password=%s host=%s sslmode=disable",
 		dbUser, dbName, dbPassword, dbHost)
 	return connStr
+}
+
+func GetStoreHash() string {
+	return "ygMSEbVbH8n4IPnnmIp2NIOg1teTUwc8"
 }
