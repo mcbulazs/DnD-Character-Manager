@@ -1,20 +1,11 @@
 import type { FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { type BaseQueryFn, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { ApiError } from "../../types/apiError";
+import backendUrl from "../../env";
 
 // The type of the baseQuery function returned by fetchBaseQuery
 const baseUrl = (() => {
-	const origin = window.location.origin;
-	/*
-	if (origin.includes("192.168.0.101")) {
-		return "http://192.168.0.101:3000/api/";
-	}
-	return "http://localhost:3000/api/";*/
-	
-	if (origin.includes("192.168.0.101")) {
-		return "http://192.168.0.101/api/";
-	}
-	return "http://localhost/api/";
+	return backendUrl();
 })();
 // Define the base query with error handling
 
