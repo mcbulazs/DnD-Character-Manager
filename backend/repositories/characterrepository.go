@@ -67,6 +67,19 @@ func (r *CharacterRepository) UpdateAbilityScores(abilityScores *models.Characte
 	return nil
 }
 
+func (r *CharacterRepository) UpdateSkills(skills *models.CharacterSkillModel) error {
+	tx := r.DB.Model(&skills).
+		Clauses(clause.Returning{}).
+		Select("*").
+		Omit("id", "created_at", "updated_at", "delted_at", "character_id").
+		Where("character_id = ?", skills.CharacterID).
+		Updates(&skills)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (r *CharacterRepository) FindByID(id int) (*models.CharacterModel, error) {
 	var character models.CharacterModel
 	tx := r.DB.Preload("Image").

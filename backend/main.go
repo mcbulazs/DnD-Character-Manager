@@ -22,7 +22,6 @@ func main() {
 
 	// Initialize Gin router
 	r := gin.Default()
-	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	// Initialize controllers
 	ctrl.InitControllers(r, database)

@@ -1,20 +1,41 @@
 import InfoIcon from "@mui/icons-material/Info";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import AbilityScoreInfo from "/publicfile_AbilityScoreInfo.png";
+import { useModifyCharacterAbilityScoresMutation } from "../../../../store/api/characterApiSlice";
 import type { AbilityScores } from "../../../../types/characterData";
+import debounce from "../../../../utility/debounce";
 import AbilityScore from "./AbilityScore";
 
 const AbilitScoresComp: React.FC<{
-	scores: AbilityScores;
-	updateAbilityScores: (as: AbilityScores) => void;
-}> = ({ scores, updateAbilityScores }) => {
+	abilityScores: AbilityScores;
+	characterID: number;
+}> = ({ abilityScores: _abilityScores, characterID }) => {
+	const [abilityScores, setAbilityScores] =
+		useState<AbilityScores>(_abilityScores);
 	const [isHovered, setIsHovered] = useState(false);
+	const [modifyCharacterAbilityScoresMutation] =
+		useModifyCharacterAbilityScoresMutation();
 
 	useEffect(() => {
-        // Preload the image
-        const img = new Image();
-        img.src = AbilityScoreInfo;
-    }, []);
+		const img = new Image();
+		img.src = AbilityScoreInfo;
+	}, []);
+
+	const debounceModifyAbilityScores = useCallback(
+		debounce(async (as: AbilityScores) => {
+			try {
+				modifyCharacterAbilityScoresMutation({
+					abilityScores: as,
+					characterID,
+				}).unwrap();
+			} catch (error) {
+				toast("Error updating ability scores", { type: "error" });
+				console.error("Error updating ability scores", error);
+			}
+		}, 300),
+		[],
+	);
 
 	return (
 		<div
@@ -23,44 +44,68 @@ const AbilitScoresComp: React.FC<{
 				flex flex-row flex-wrap justify-center gap-4 relative"
 		>
 			<AbilityScore
-				attribute={scores?.strength ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.strength}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, strength: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, strength: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Strength"}
 			/>
 			<AbilityScore
-				attribute={scores?.dexterity ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.dexterity}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, dexterity: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, dexterity: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Dexterity"}
 			/>
 			<AbilityScore
-				attribute={scores?.constitution ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.constitution}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, constitution: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, constitution: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Constitution"}
 			/>
 			<AbilityScore
-				attribute={scores?.intelligence ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.intelligence}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, intelligence: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, intelligence: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Intelligence"}
 			/>
 			<AbilityScore
-				attribute={scores?.wisdom ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.wisdom}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, wisdom: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, wisdom: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Wisdom"}
 			/>
 			<AbilityScore
-				attribute={scores?.charisma ?? { value: 0, modifier: 0 }}
+				attribute={abilityScores.charisma}
 				updateAttribute={(attr) => {
-					updateAbilityScores({ ...scores, charisma: attr });
+					setAbilityScores((prev) => {
+						const newValue: AbilityScores = { ...prev, charisma: attr };
+						debounceModifyAbilityScores(newValue);
+						return newValue;
+					});
 				}}
 				name={"Charisma"}
 			/>
@@ -69,7 +114,7 @@ const AbilitScoresComp: React.FC<{
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 			>
-				<InfoIcon fontSize="large"/>
+				<InfoIcon fontSize="large" />
 			</div>
 			{isHovered && (
 				<img

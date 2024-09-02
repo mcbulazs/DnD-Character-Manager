@@ -26,29 +26,29 @@ export interface SavingThrows {
     charisma: ProficientAttribute;
 }
 
-export interface Skill extends ProficientAttribute {
+export interface ExpertiseAttribute extends ProficientAttribute {
     expertise: boolean;
 }
 
 export interface Skills {
-    acrobatics: Skill;
-    animalHandling: Skill;
-    arcana: Skill;
-    athletics: Skill;
-    deception: Skill;
-    history: Skill;
-    insight: Skill;
-    intimidation: Skill;
-    investigation: Skill;
-    medicine: Skill;
-    nature: Skill;
-    perception: Skill;
-    performance: Skill;
-    persuasion: Skill;
-    religion: Skill;
-    sleightOfHand: Skill;
-    stealth: Skill;
-    survival: Skill;
+    acrobatics: ExpertiseAttribute;
+    animalHandling: ExpertiseAttribute;
+    arcana: ExpertiseAttribute;
+    athletics: ExpertiseAttribute;
+    deception: ExpertiseAttribute;
+    history: ExpertiseAttribute;
+    insight: ExpertiseAttribute;
+    intimidation: ExpertiseAttribute;
+    investigation: ExpertiseAttribute;
+    medicine: ExpertiseAttribute;
+    nature: ExpertiseAttribute;
+    perception: ExpertiseAttribute;
+    performance: ExpertiseAttribute;
+    persuasion: ExpertiseAttribute;
+    religion: ExpertiseAttribute;
+    sleightOfHand: ExpertiseAttribute;
+    stealth: ExpertiseAttribute;
+    survival: ExpertiseAttribute;
 }
 
 export interface CharacterData {
@@ -59,6 +59,7 @@ export interface CharacterData {
     initiative: number;
     speed: number;
     passivePerception: number;
+    proficiencyBonus: number;
     abilityScores: AbilityScores;
     savingThrows: SavingThrows;
     skills: Skills;

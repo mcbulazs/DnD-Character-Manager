@@ -9,8 +9,8 @@ import CreateCharacterButton from "./CreateCharacterButton";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
-	const dispatch = useDispatch();
 	const { data: characters, error, isLoading } = useGetCharactersQuery();
+	const dispatch = useDispatch();
 	const [modalOpen, setModalOpen] = useState(false);
 	
 	useEffect(() => {

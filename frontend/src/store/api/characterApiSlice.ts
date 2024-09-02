@@ -1,34 +1,42 @@
 import type { Dispatch } from "@reduxjs/toolkit";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { type TagDescription, createApi } from "@reduxjs/toolkit/query/react";
 import type {
 	CharacterBase,
 	CreateCharacterBase,
 } from "../../types/characterBase";
-import type { AbilityScores, CharacterData } from "../../types/characterData";
+import type {
+	AbilityScores,
+	CharacterData,
+	Skills,
+} from "../../types/characterData";
 import baseQuery from "./baseQuery";
 
-const onQueryStarted = async (
-	_arg: unknown, // or you can make this generic <T>(arg: T, ...)
-	{
-		dispatch,
-		queryFulfilled,
-	}: {
-		dispatch: Dispatch;
-		queryFulfilled: Promise<unknown>;
-	},
-) => {
-	try {
-		await queryFulfilled;
-		dispatch(characterApiSlice.util.invalidateTags(["Characters"]));
-	} catch (error) {
-		console.error("Failed to handle mutation:", error);
-	}
-};
+type Tags = TagDescription<"Characters" | "Character">;
+
+const onQueryStarted =
+	(tags: Tags[]) =>
+	async (
+		_arg: unknown, // or you can make this generic <T>(arg: T, ...)
+		{
+			dispatch,
+			queryFulfilled,
+		}: {
+			dispatch: Dispatch;
+			queryFulfilled: Promise<unknown>;
+		},
+	) => {
+		try {
+			await queryFulfilled;
+			dispatch(characterApiSlice.util.invalidateTags(tags));
+		} catch (error) {
+			console.error("Failed to handle mutation:", error);
+		}
+	};
 
 export const characterApiSlice = createApi({
 	reducerPath: "characterApi",
 	baseQuery,
-	tagTypes: ["Characters"], // Register 'Characters' as a valid tag type
+	tagTypes: ["Characters", "Character"],
 	endpoints: (builder) => ({
 		createCharacter: builder.mutation<void, CreateCharacterBase>({
 			query: (characterData) => ({
@@ -36,11 +44,12 @@ export const characterApiSlice = createApi({
 				method: "POST",
 				body: characterData,
 			}),
-			onQueryStarted, // reuse the onQueryStarted function
-			invalidatesTags: ["Characters"], // Automatically invalidate the 'Characters' tag
+			onQueryStarted: onQueryStarted(["Characters"]),
+			invalidatesTags: ["Characters"],
 		}),
 		getCharacterById: builder.query<CharacterData, number>({
 			query: (id) => `characters/${id}`,
+			providesTags: ["Character"],
 		}),
 		modifyCharacter: builder.mutation<void, CharacterData>({
 			query: (characterData) => ({
@@ -48,6 +57,8 @@ export const characterApiSlice = createApi({
 				method: "PUT",
 				body: characterData,
 			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
 		}),
 		modifyCharacterAbilityScores: builder.mutation<
 			AbilityScores,
@@ -58,20 +69,34 @@ export const characterApiSlice = createApi({
 				method: "PUT",
 				body: abilityScores,
 			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
+		}),
+		modifyCharacterSkills: builder.mutation<
+			Skills,
+			{ skills: Skills; characterID: number }
+		>({
+			query: ({ skills, characterID }) => ({
+				url: `characters/${characterID}/skills`,
+				method: "PUT",
+				body: skills,
+			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
 		}),
 
 		getCharacters: builder.query<CharacterBase[], void>({
 			query: () => "characters",
-			providesTags: ["Characters"], // Indicate this query provides the 'Characters' tag
+			providesTags: ["Characters"],
 		}),
-		setCharacterFavorite: builder.mutation<void,  number>({
+		setCharacterFavorite: builder.mutation<void, number>({
 			query: (id) => ({
 				url: `characters/favorite/${id}`,
 				method: "PATCH",
 				body: {},
 			}),
-			onQueryStarted, // reuse the onQueryStarted function
-			invalidatesTags: ["Characters"], // Automatically invalidate the 'Characters' tag
+			onQueryStarted: onQueryStarted(["Characters"]),
+			invalidatesTags: ["Characters"],
 		}),
 	}),
 });
@@ -83,4 +108,5 @@ export const {
 	useSetCharacterFavoriteMutation,
 	useModifyCharacterMutation,
 	useModifyCharacterAbilityScoresMutation,
+	useModifyCharacterSkillsMutation,
 } = characterApiSlice;

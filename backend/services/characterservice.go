@@ -57,6 +57,16 @@ func (s *CharacterService) UpdateCharacterAbilityScores(abilityScores *dto.Chara
 	return nil
 }
 
+func (s *CharacterService) UpdateCharacterSkills(skills *dto.CharacterSkillDTO, characterID int) error {
+	skillsModel := convertToCharacterSkillModel(skills)
+	skillsModel.CharacterID = uint(characterID)
+	err := s.Repo.UpdateSkills(&skillsModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {
 	characterModel, err := s.Repo.FindByID(id)
 	if characterModel == nil {

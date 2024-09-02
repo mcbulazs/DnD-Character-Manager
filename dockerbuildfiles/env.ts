@@ -1,5 +1,5 @@
 const backendUrl = () => {
-	const url = process.env.REACT_APP_API_URL;
+	const url = "http://localhost/api";
 	console.log('url', url);
 	return url;
 };
