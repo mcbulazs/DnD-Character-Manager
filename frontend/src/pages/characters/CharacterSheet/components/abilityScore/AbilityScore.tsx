@@ -1,28 +1,28 @@
 import type React from "react";
 import { memo, useEffect, useState } from "react";
-import UnstyledNumberInput from "../../../../components/UnstyledNumberInput";
-import type { Attribute } from "../../../../types/characterData";
+import UnstyledNumberInput from "../../../../../components/UnstyledNumberInput";
+import type { Attribute } from "../../../../../types/characterData";
 
 const AbilityScore: React.FC<{
-	attribute: Attribute;
+	abilityScore: Attribute;
 	name: string;
 	updateAttribute: (attr: Attribute) => void;
-}> = ({ attribute, name, updateAttribute }) => {
+}> = ({ abilityScore, name, updateAttribute }) => {
 	const [score, setScore] = useState<{ value: string; modifier: string }>({
-		value: attribute.value.toString(),
-		modifier: attribute.modifier.toString(),
+		value: abilityScore.value.toString(),
+		modifier: abilityScore.modifier.toString(),
 	});
 	const [trueModifier, setTrueModifier] = useState<number>(0);
 
 	useEffect(() => {
 		setTrueModifier(
-			Math.floor((attribute.value - 10) / 2) + attribute.modifier,
+			Math.floor((abilityScore.value - 10) / 2) + abilityScore.modifier,
 		);
 		setScore({
-			value: attribute.value.toString(),
-			modifier: attribute.modifier.toString(),
+			value: abilityScore.value.toString(),
+			modifier: abilityScore.modifier.toString(),
 		});
-	}, [attribute]);
+	}, [abilityScore]);
 
 	const onScoreUpdate = (updatedScore: { value: string; modifier: string }) => {
 		if (updatedScore.value === "" || updatedScore.modifier === "") {
@@ -32,7 +32,7 @@ const AbilityScore: React.FC<{
 		const mod = Number.parseInt(updatedScore.modifier);
 		if (!Number.isNaN(val) && !Number.isNaN(mod)) {
 			setTrueModifier(Math.floor((val - 10) / 2) + mod);
-			if (val !== attribute.value || mod !== attribute.modifier) {
+			if (val !== abilityScore.value || mod !== abilityScore.modifier) {
 				updateAttribute({ value: val, modifier: mod });
 			}
 		}

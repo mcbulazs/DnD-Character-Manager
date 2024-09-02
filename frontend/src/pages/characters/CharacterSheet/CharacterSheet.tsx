@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
 import { setHeaderText } from "../../../store/utility/headerSlice";
 import AbilitScoresComp from "./components/abilityScore/AbilityScoresComp";
+import SavingThrowsComp from "./components/savingThrow/SavingThrowsComp";
 import SkillsComp from "./components/skill/SkillsComp";
 
 const CharacterSheet: React.FC = () => {
@@ -40,12 +41,20 @@ const CharacterSheet: React.FC = () => {
 				abilityScores={character.abilityScores}
 				characterID={character.ID}
 			/>
-			<SkillsComp
-				skills={character.skills}
-				characterID={character.ID}
-				abilityScores={character.abilityScores}
-				proficiencyBonus={character.proficiencyBonus}
-			/>
+			<div className="flex justify-evenly flex-col md:flex-row">
+				<SkillsComp
+					skills={character.skills}
+					characterID={character.ID}
+					abilityScores={character.abilityScores}
+					proficiencyBonus={character.proficiencyBonus}
+				/>
+				<SavingThrowsComp
+					savingThrows={character.savingThrows}
+					characterID={character.ID}
+					abilityScores={character.abilityScores}
+					proficiencyBonus={character.proficiencyBonus}
+				/>
+			</div>
 		</div>
 	);
 };

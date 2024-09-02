@@ -1,36 +1,11 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import UnstyledNumberInput from "../../../../components/UnstyledNumberInput";
+import UnstyledNumberInput from "../../../../../components/UnstyledNumberInput";
 import type {
 	Attribute,
 	ExpertiseAttribute,
-} from "../../../../types/characterData";
-
-const RotationCircle: React.FC<{
-	profRotation: number;
-	setProfRotation: (val: number) => void;
-}> = ({ profRotation, setProfRotation }) => {
-	const handleClick = () => {
-		setProfRotation((profRotation + 1) % 3);
-	};
-
-	return (
-		<div
-			className="rounded-full w-4 aspect-square cursor-pointer border-2 border-black"
-			onMouseDown={handleClick}
-			style={{
-				backgroundColor:
-					profRotation === 1
-						? "blue"
-						: profRotation === 2
-							? "red"
-							: "transparent",
-				transition: "background-color 0.3s ease",
-			}}
-			title={`Current State: ${profRotation === 1 ? "Proficient" : profRotation === 2 ? "Expertise" : "Not Proficient"}`}
-		/>
-	);
-};
+} from "../../../../../types/characterData";
+import RotationCircle from "../RotatingBox";
 
 const Skill: React.FC<{
 	skill: ExpertiseAttribute;
@@ -55,6 +30,7 @@ const Skill: React.FC<{
 						: 0),
 		);
 		setModifier(skill.modifier.toString());
+		setProfRotation(skill.expertise ? 2 : skill.proficient ? 1 : 0);
 	}, [abilityScore, skill, proficiencyBonus]);
 
 	const onSkillUpdate = (updatedSkill: {
@@ -95,6 +71,7 @@ const Skill: React.FC<{
 						setProfRotation(val);
 						onSkillUpdate({ modifier, rotation: val });
 					}}
+					max={3}
 				/>
 			</td>
 			{/*modifier*/}

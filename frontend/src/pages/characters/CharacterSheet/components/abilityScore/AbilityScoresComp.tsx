@@ -2,9 +2,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AbilityScoreInfo from "/publicfile_AbilityScoreInfo.png";
-import { useModifyCharacterAbilityScoresMutation } from "../../../../store/api/characterApiSlice";
-import type { AbilityScores } from "../../../../types/characterData";
-import debounce from "../../../../utility/debounce";
+import { useModifyCharacterAbilityScoresMutation } from "../../../../../store/api/characterApiSlice";
+import type { AbilityScores } from "../../../../../types/characterData";
+import debounce from "../../../../../utility/debounce";
 import AbilityScore from "./AbilityScore";
 
 const AbilitScoresComp: React.FC<{
@@ -40,11 +40,25 @@ const AbilitScoresComp: React.FC<{
 	return (
 		<div
 			className="
-				w-full
-				flex flex-row flex-wrap justify-center gap-4 relative"
+			w-full
+			flex flex-row flex-wrap justify-center gap-4 relative"
 		>
+			<div
+				className="absolute right-0 z-10"
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => setIsHovered(false)}
+			>
+				<InfoIcon fontSize="large" />
+			</div>
+			{isHovered && (
+				<img
+					src={AbilityScoreInfo}
+					alt="Ability Score Info"
+					className="absolute right-0 mt-10 border-4 border-black rounded-lg z-10"
+				/>
+			)}
 			<AbilityScore
-				attribute={abilityScores.strength}
+				abilityScore={abilityScores.strength}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, strength: attr };
@@ -55,7 +69,7 @@ const AbilitScoresComp: React.FC<{
 				name={"Strength"}
 			/>
 			<AbilityScore
-				attribute={abilityScores.dexterity}
+				abilityScore={abilityScores.dexterity}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, dexterity: attr };
@@ -66,7 +80,7 @@ const AbilitScoresComp: React.FC<{
 				name={"Dexterity"}
 			/>
 			<AbilityScore
-				attribute={abilityScores.constitution}
+				abilityScore={abilityScores.constitution}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, constitution: attr };
@@ -77,7 +91,7 @@ const AbilitScoresComp: React.FC<{
 				name={"Constitution"}
 			/>
 			<AbilityScore
-				attribute={abilityScores.intelligence}
+				abilityScore={abilityScores.intelligence}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, intelligence: attr };
@@ -88,7 +102,7 @@ const AbilitScoresComp: React.FC<{
 				name={"Intelligence"}
 			/>
 			<AbilityScore
-				attribute={abilityScores.wisdom}
+				abilityScore={abilityScores.wisdom}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, wisdom: attr };
@@ -99,7 +113,7 @@ const AbilitScoresComp: React.FC<{
 				name={"Wisdom"}
 			/>
 			<AbilityScore
-				attribute={abilityScores.charisma}
+				abilityScore={abilityScores.charisma}
 				updateAttribute={(attr) => {
 					setAbilityScores((prev) => {
 						const newValue: AbilityScores = { ...prev, charisma: attr };
@@ -109,20 +123,6 @@ const AbilitScoresComp: React.FC<{
 				}}
 				name={"Charisma"}
 			/>
-			<div
-				className="absolute lg:right-[-1.5rem] right-0 xl:right-0\"
-				onMouseEnter={() => setIsHovered(true)}
-				onMouseLeave={() => setIsHovered(false)}
-			>
-				<InfoIcon fontSize="large" />
-			</div>
-			{isHovered && (
-				<img
-					src={AbilityScoreInfo}
-					alt="Ability Score Info"
-					className="absolute right-0 mt-10 border-4 border-black rounded-lg"
-				/>
-			)}
 		</div>
 	);
 };
