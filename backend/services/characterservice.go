@@ -67,6 +67,16 @@ func (s *CharacterService) UpdateCharacterSkills(skills *dto.CharacterSkillDTO, 
 	return nil
 }
 
+func (s *CharacterService) UpdateCharacterSavingThrows(savingThrows *dto.CharacterSavingThrowDTO, characterID int) error {
+	savingThrowsModel := convertToCharacterSavingThrowModel(savingThrows)
+	savingThrowsModel.CharacterID = uint(characterID)
+	err := s.Repo.UpdateSavingThrows(&savingThrowsModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {
 	characterModel, err := s.Repo.FindByID(id)
 	if characterModel == nil {

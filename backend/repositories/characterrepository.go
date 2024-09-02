@@ -80,6 +80,19 @@ func (r *CharacterRepository) UpdateSkills(skills *models.CharacterSkillModel) e
 	return nil
 }
 
+func (r *CharacterRepository) UpdateSavingThrows(savingThrows *models.CharacterSavingThrowModel) error {
+	tx := r.DB.Model(&savingThrows).
+		Clauses(clause.Returning{}).
+		Select("*").
+		Omit("id", "created_at", "updated_at", "delted_at", "character_id").
+		Where("character_id = ?", savingThrows.CharacterID).
+		Updates(&savingThrows)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (r *CharacterRepository) FindByID(id int) (*models.CharacterModel, error) {
 	var character models.CharacterModel
 	tx := r.DB.Preload("Image").

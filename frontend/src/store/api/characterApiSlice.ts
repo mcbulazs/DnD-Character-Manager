@@ -7,6 +7,7 @@ import type {
 import type {
 	AbilityScores,
 	CharacterData,
+	SavingThrows,
 	Skills,
 } from "../../types/characterData";
 import baseQuery from "./baseQuery";
@@ -84,7 +85,18 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character", "Characters"]),
 			invalidatesTags: ["Character", "Characters"],
 		}),
-
+		modifyCharacterSavingThrows: builder.mutation<
+			SavingThrows,
+			{ savingThrows: SavingThrows; characterID: number }
+		>({
+			query: ({ savingThrows, characterID }) => ({
+				url: `characters/${characterID}/saving-throws`,
+				method: "PUT",
+				body: savingThrows,
+			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
+		}),
 		getCharacters: builder.query<CharacterBase[], void>({
 			query: () => "characters",
 			providesTags: ["Characters"],
@@ -109,4 +121,5 @@ export const {
 	useModifyCharacterMutation,
 	useModifyCharacterAbilityScoresMutation,
 	useModifyCharacterSkillsMutation,
+	useModifyCharacterSavingThrowsMutation
 } = characterApiSlice;

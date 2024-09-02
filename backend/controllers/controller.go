@@ -56,6 +56,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characters.PUT("/skills", func(c *gin.Context) {
 		UpdateCharacterSkillsHandler(c, db)
 	})
+	characters.PUT("/saving-throws", func(c *gin.Context) {
+		UpdateCharacterSavingThrowsHandler(c, db)
+	})
 
 	// frontend routes
 	r.NoRoute(func(c *gin.Context) {
