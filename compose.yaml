@@ -24,8 +24,7 @@ services:
       - 80:80
     env_file:
       - .env
-    volumes:
-      - /root/files
+      
 volumes:
   dbdata: # create the volume for persisting data.
             

@@ -23,7 +23,7 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend .
-#COPY dockerbuildfiles/env.ts /app/src/env.ts
+COPY dockerbuildfiles/env.ts /app/src/env.ts
 
 RUN npm run build
 
