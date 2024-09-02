@@ -75,16 +75,10 @@ const CharacterSheet: React.FC = () => {
 	};
 	return (
 		<div className="w-full h-auto">
-			<div
-				className="
-w-full 
-flex flex-row flex-wrap justify-center gap-4"
-			>
-				<AbilitScoresComp
-					scores={abilityScores}
-					updateAbilityScores={updateAbilityScores}
-				/>
-			</div>
+			<AbilitScoresComp
+				scores={abilityScores}
+				updateAbilityScores={updateAbilityScores}
+			/>
 		</div>
 	);
 };

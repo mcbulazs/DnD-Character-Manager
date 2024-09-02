@@ -23,10 +23,12 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend .
-COPY dockerbuildfiles/env.ts /app/src/env.ts
+#COPY dockerbuildfiles/env.ts /app/src/env.ts
 
 RUN npm run build
 
+COPY dockerbuildfiles/rename.sh /app/rename.sh
+RUN /app/rename.sh
 
 FROM alpine:latest
 
@@ -38,7 +40,7 @@ COPY --from=GoBuild /app/app .
 
 COPY --from=ReactBuild /app/dist files
 
-RUN sed -i 's|/assets|/files/assets|g' files/index.html
+
 
 EXPOSE 80
 # Set the binary as the entrypoint

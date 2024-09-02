@@ -10,7 +10,7 @@ import (
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
 	// Serve static files from the "static" directory
-	r.Static("/files/assets", "./files/assets")
+	r.Static("/files", "./files")
 	r.LoadHTMLFiles("files/index.html")
 
 	// Define a route for the root path
