@@ -80,18 +80,13 @@ const AbilityScore: React.FC<{
 			>
 				{name}
 			</span>
-			<UnstyledNumberInput
+
+			<div
 				className="outline-none w-full bg-light-parchment-beiage text-center 
-text-3xl sm:text-5xl xl:text-5xl grow"
-				onChange={(val) => {
-					setScore((prevScore) => {
-						const updatedScore = { value: val, modifier: prevScore.modifier };
-						setTimeout(() => onScoreUpdate(updatedScore), 0);
-						return updatedScore;
-					});
-				}}
-				value={score.value}
-			/>
+				text-3xl sm:text-5xl xl:text-5xl grow flex justify-center items-center"
+			>
+				{trueModifier}
+			</div>
 			<div className="w-full h-auto flex flex-col items-center bottom-0 translate-y-1/4 absolute">
 				<UnstyledNumberInput
 					className="w-1/3 aspect-[2/1] 
@@ -108,14 +103,21 @@ text-3xl sm:text-5xl xl:text-5xl grow"
 					}}
 					value={score.modifier}
 				/>
-				<div
+
+				<UnstyledNumberInput
 					className="border-2 font-bold border-shadow-black rounded-full 
-                                flex items-center justify-center
-                                md:text-2xl lg:text-base
-                                w-1/2 aspect-[2/1]  bg-light-parchment-beiage text-center"
-				>
-					{trueModifier}
-				</div>
+		flex items-center justify-center
+		md:text-2xl lg:text-base
+		w-1/2 aspect-[2/1]  bg-light-parchment-beiage text-center"
+					onChange={(val) => {
+						setScore((prevScore) => {
+							const updatedScore = { value: val, modifier: prevScore.modifier };
+							setTimeout(() => onScoreUpdate(updatedScore), 0);
+							return updatedScore;
+						});
+					}}
+					value={score.value}
+				/>
 			</div>
 		</div>
 	);
