@@ -40,7 +40,7 @@ const AbilitScoresComp: React.FC<{
 	return (
 		<div
 			className="
-				w-full 
+				w-full
 				flex flex-row flex-wrap justify-center gap-4 relative"
 		>
 			<AbilityScore
