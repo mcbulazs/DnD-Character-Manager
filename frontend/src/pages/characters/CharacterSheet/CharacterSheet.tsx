@@ -6,6 +6,11 @@ import { toast } from "react-toastify";
 import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
 import { setHeaderText } from "../../../store/utility/headerSlice";
 import ArmorClass from "./components/ArmorClass";
+import CharacterClass from "./components/CharacterClass";
+import CharacterImage from "./components/CharacterImage";
+import CharacterLevel from "./components/CharacterLevel";
+import CharacterName from "./components/CharacterName";
+import CharacterRace from "./components/CharacterRace";
 import Initiative from "./components/Initiative";
 import PassivePerception from "./components/PassivePerception";
 import ProficiencyBonus from "./components/ProficiencyBonus";
@@ -41,14 +46,14 @@ const CharacterSheet: React.FC = () => {
 	if (!character) return <div>Character not found</div>;
 
 	return (
-		<div className="md:w-4/5 2xl:w-7/12 grid grid-rows-5 grid-cols-6 gap-5 place-items-center relative">
+		<div className="md:w-4/5 2xl:w-7/12 grid grid-cols-6 gap-5 place-items-center relative">
 			<div className="col-span-full w-full h-full">
 				<AbilitScoresComp
 					abilityScores={character.abilityScores}
 					characterID={character.ID}
 				/>
 			</div>
-			<div className="w-full h-full col-span-2 row-span-4 flex flex-col gap-5 items-center">
+			<div className="w-full h-full col-span-2 flex flex-col gap-5 items-center justify-between">
 				<SkillsComp
 					skills={character.skills}
 					characterID={character.ID}
@@ -63,36 +68,46 @@ const CharacterSheet: React.FC = () => {
 					characterId={character.ID}
 				/>
 			</div>
-
-			<div className="w-full h-full">
-				<ProficiencyBonus
-					value={character.proficiencyBonus}
-					characterId={character.ID}
-				/>
+			<div className="col-span-2 grid grid-cols-2 grid-rows-7 w-full h-full">
+				<CharacterName name={character.name} characterID={character.ID} />
+				<div className="w-full h-full row-span-2">
+					<ProficiencyBonus
+						value={character.proficiencyBonus}
+						characterId={character.ID}
+					/>
+				</div>
+				<div className="w-full h-full row-span-2">
+					<Initiative
+						value={character.initiative}
+						characterId={character.ID}
+						dexterity={character.abilityScores.dexterity}
+					/>
+				</div>
+				<div className="w-full h-full row-span-2">
+					<ArmorClass value={character.armorClass} characterID={character.ID} />
+				</div>
+				<div className="w-full h-full row-span-2">
+					<Speed value={character.speed} characterID={character.ID} />
+				</div>
+				<div className="col-span-2 row-span-2 place-self-end w-full">
+					<SavingThrowsComp
+						savingThrows={character.savingThrows}
+						characterID={character.ID}
+						abilityScores={character.abilityScores}
+						proficiencyBonus={character.proficiencyBonus}
+					/>
+				</div>
 			</div>
-			<div className="w-full h-full">
-				<Initiative
-					value={character.initiative}
-					characterId={character.ID}
-					dexterity={character.abilityScores.dexterity}
-				/>
-			</div>
-			<div className="w-full h-full">
-				<ArmorClass value={character.armorClass} characterID={character.ID} />
-			</div>
-			<div className="w-full h-full">
-				<Speed value={character.speed} characterID={character.ID} />
-			</div>
-			<div className="border-4 border-black w-full h-full col-start-5 row-start-2 row-span-full col-span-full">
-				<div />
-			</div>
-			<div className="row-span-2 col-span-2">
-				<SavingThrowsComp
-					savingThrows={character.savingThrows}
-					characterID={character.ID}
-					abilityScores={character.abilityScores}
-					proficiencyBonus={character.proficiencyBonus}
-				/>
+			<div className="w-full h-full col-span-2">
+				<div className="w-full h-full grid grid-cols-2 gap-3">
+					<CharacterClass
+						characterClass={character.class}
+						characterID={character.ID}
+					/>
+					<CharacterLevel level={character.level} characterID={character.ID} />
+					<CharacterRace race={character.race} characterID={character.ID} />
+					<CharacterImage image={character.image} />
+				</div>
 			</div>
 		</div>
 	);

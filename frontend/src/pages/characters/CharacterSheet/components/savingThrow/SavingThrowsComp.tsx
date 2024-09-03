@@ -51,7 +51,7 @@ const SavingThrowsComp: React.FC<{
 	);
 
 	return (
-		<div className="w-full h-full border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
+		<div className="w-auto h-fit border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
             <div
 				className="absolute right-0 top-0"
 				onMouseEnter={() => setIsHovered(true)}
@@ -67,7 +67,7 @@ const SavingThrowsComp: React.FC<{
                     style={{ minWidth: imgWidth }}
 				/>
 			)}
-			<table className="w-full h-full text-xl">
+			<table className="text-base">
 				<tbody>
 					<SavingThrow
 						savingThrow={savingThrows.strength}

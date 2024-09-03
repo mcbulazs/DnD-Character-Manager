@@ -9,14 +9,14 @@ type CharacterModel struct {
 	UserID            uint
 	Name              string                     `gorm:"default:''"`
 	Class             string                     `gorm:"default:''"`
+	Race              string                     `gorm:"default:''"`
+	Level             int                        `gorm:"default:1"`
 	IsFavorite        bool                       `gorm:"default:false"`
 	ArmorClass        int                        `gorm:"default:null"`
 	Initiative        int                        `gorm:"default:null"`
 	Speed             int                        `gorm:"default:null"`
 	PassivePerception int                        `gorm:"default:null"`
 	ProficiencyBonus  int                        `gorm:"default:null"`
-	Background        string                     `gorm:"default:''"`
-	Alignment         string                     `gorm:"default:''"`
 	Image             CharacterImageModel        `gorm:"foreignKey:CharacterID"`
 	AbilityScores     CharacterAbilityScoreModel `gorm:"foreignKey:CharacterID"`
 	SavingThrows      CharacterSavingThrowModel  `gorm:"foreignKey:CharacterID"`

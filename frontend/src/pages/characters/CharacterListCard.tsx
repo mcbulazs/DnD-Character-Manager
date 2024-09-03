@@ -62,9 +62,9 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 			<div
 				className="w-full aspect-[3/4] rounded-t-lg"
 				style={{
-					backgroundImage: character.image?.backgroundImage,
-					backgroundSize: character.image?.backgroundSize,
-					backgroundPosition: character.image?.backgroundPosition,
+					backgroundImage: character.image.backgroundImage,
+					backgroundSize: character.image.backgroundSize,
+					backgroundPosition: character.image.backgroundPosition,
 				}}
 			/>
 			<div className="w-full flex flex-col items-center justify-center p-2 gap-2">

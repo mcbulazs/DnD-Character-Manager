@@ -18,6 +18,8 @@ type CharacterDTO struct {
 	ID                uint                     `json:"ID"`
 	Name              string                   `json:"name"`
 	Class             string                   `json:"class"`
+	Race              string                   `json:"race"`
+	Level             int                      `json:"level"`
 	IsFavorite        bool                     `json:"isFavorite"`
 	Image             CharacterImageDTO        `json:"image"`
 	ArmorClass        int                      `json:"armorClass"`
@@ -25,8 +27,6 @@ type CharacterDTO struct {
 	Speed             int                      `json:"speed"`
 	PassivePerception int                      `json:"passivePerception"`
 	ProficiencyBonus  int                      `json:"proficiencyBonus"`
-	Background        string                   `json:"background"`
-	Alignment         string                   `json:"alignment"`
 	AbilityScores     CharacterAbilityScoreDTO `json:"abilityScores"`
 	SavingThrows      CharacterSavingThrowDTO  `json:"savingThrows"`
 	Skills            CharacterSkillDTO        `json:"skills"`
