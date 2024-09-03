@@ -46,14 +46,18 @@ const CharacterSheet: React.FC = () => {
 	if (!character) return <div>Character not found</div>;
 
 	return (
-		<div className="md:w-4/5 2xl:w-7/12 grid grid-cols-6 gap-5 place-items-center relative">
-			<div className="col-span-full w-full h-full">
-				<AbilitScoresComp
-					abilityScores={character.abilityScores}
-					characterID={character.ID}
-				/>
-			</div>
-			<div className="w-full h-full col-span-2 flex flex-col gap-5 items-center justify-between">
+		<div className="
+				grid
+				w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
+				grid-cols-1 sm:grid-cols-2  md:grid-cols-3
+				gap-5 
+				place-items-center relative">
+			<AbilitScoresComp
+				abilityScores={character.abilityScores}
+				characterID={character.ID}
+			/>
+			<div className="w-full h-full flex flex-col gap-5 items-center justify-between 
+					order-2 sm:order-1">
 				<SkillsComp
 					skills={character.skills}
 					characterID={character.ID}
@@ -68,7 +72,8 @@ const CharacterSheet: React.FC = () => {
 					characterId={character.ID}
 				/>
 			</div>
-			<div className="col-span-2 grid grid-cols-2 grid-rows-7 w-full h-full">
+			<div className="grid grid-cols-2 grid-rows-7 w-full h-full 
+					order-1	sm:order-2">
 				<CharacterName name={character.name} characterID={character.ID} />
 				<div className="w-full h-full row-span-2">
 					<ProficiencyBonus
@@ -98,7 +103,9 @@ const CharacterSheet: React.FC = () => {
 					/>
 				</div>
 			</div>
-			<div className="w-full h-full col-span-2">
+			<div className="w-full h-full
+					order-3
+					col-span-1 sm:col-span-2 md:col-span-1">
 				<div className="w-full h-full grid grid-cols-2 gap-3">
 					<CharacterClass
 						characterClass={character.class}

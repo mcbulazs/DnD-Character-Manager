@@ -39,9 +39,15 @@ const AbilitScoresComp: React.FC<{
 
 	return (
 		<div
-			className="w-full h-full
-				grid grid-cols-subgrid place-items-center
-				md:grid-cols-6 md:grid-rows-1 gap-1 gap-y-5 md:gap-5
+			className="
+				col-span-full
+				w-full h-full
+				
+				grid place-items-center
+				grid-cols-3 sm:grid-cols-6 
+				grid-rows-2 sm:grid-rows-1
+				gap-1 xs:gap-5 sm:gap-1 lg:gap-5
+				gap-y-5 sm:gap-y-0 
 				relative"
 		>
 			<div

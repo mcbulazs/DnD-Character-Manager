@@ -85,7 +85,7 @@ const Skill: React.FC<{
 					className="bg-light-parchment-beiage w-8 text-center"
 				/>
 			</td>
-			<td>
+			<td className=" whitespace-nowrap">
 				{/*name*/}
 				<span>{name}</span>
 				{/*type*/}

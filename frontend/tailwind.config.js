@@ -17,7 +17,11 @@ export default {
         'arcane-purple': '#4B0082',  // Equivalent to 'bubble-gum'
         'parchment-beige': '#f0cc8f',  // Equivalent to 'bermuda'
         'light-parchment-beiage': '#f6e1bc',  // Equivalent to 'bermuda'
-      }
+      },
+      screens: {
+        'xs': '480px',
+        // => @media (min-width: 480px)
+      },
     },
     
   },

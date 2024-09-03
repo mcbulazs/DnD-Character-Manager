@@ -18,7 +18,7 @@ const CharacterLevel: React.FC<{ level: number; characterID: number }> = ({
 		[],
 	);
 	return (
-		<div className="w-full h-fulls row-span-2 flex flex-col justify-center items-center">
+		<div className="h-full row-span-2 flex flex-col justify-center items-end">
 			<span className="font-bold">Character Level:</span>
 			<div
 				className="bg-light-parchment-beiage border-4 border-black rounded-xl aspect-square w-2/3 

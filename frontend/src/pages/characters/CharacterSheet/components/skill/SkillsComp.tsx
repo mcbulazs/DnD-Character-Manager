@@ -41,7 +41,7 @@ const SkillsComp: React.FC<{
 		[],
 	);
 	return (
-		<div className="w-auto h-auto text-xl border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
+		<div className="w-full h-auto  border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
 			<div
 				className="absolute right-0 top-0"
 				onMouseEnter={() => setIsHovered(true)}
@@ -57,7 +57,7 @@ const SkillsComp: React.FC<{
 					style={{ minWidth: imgWidth }}
 				/>
 			)}
-			<table>
+			<table className="text-md xl:text-xl">
 				<tbody>
 					<Skill
 						skill={skills?.acrobatics ?? { value: 0, modifier: 0 }}

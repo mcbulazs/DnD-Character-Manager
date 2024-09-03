@@ -67,7 +67,7 @@ const SavingThrowsComp: React.FC<{
                     style={{ minWidth: imgWidth }}
 				/>
 			)}
-			<table className="text-base">
+			<table className="text-md xl:text-xl">
 				<tbody>
 					<SavingThrow
 						savingThrow={savingThrows.strength}
