@@ -51,10 +51,11 @@ export interface Skills {
     survival: ExpertiseAttribute;
 }
 
-export interface CharacterData {
+export type CharacterData = {
     ID: number;
     name: string;
     class: string;
+    isFavorite: boolean;
     armorClass: number;
     initiative: number;
     speed: number;

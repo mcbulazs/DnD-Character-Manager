@@ -40,9 +40,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	auth.GET("/characters/:id", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})
-	auth.PATCH("/characters/favorite/:id", func(c *gin.Context) {
-		SetCharacterFavoriteHandler(c, db)
-	})
 
 	characters := auth.Group("/characters/:id", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)

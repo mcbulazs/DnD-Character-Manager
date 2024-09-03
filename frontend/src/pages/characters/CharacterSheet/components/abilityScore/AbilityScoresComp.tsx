@@ -23,10 +23,10 @@ const AbilitScoresComp: React.FC<{
 	}, []);
 
 	const debounceModifyAbilityScores = useCallback(
-		debounce(async (as: AbilityScores) => {
+		debounce(async (abilityScores: AbilityScores) => {
 			try {
 				modifyCharacterAbilityScoresMutation({
-					abilityScores: as,
+					abilityScores,
 					characterID,
 				}).unwrap();
 			} catch (error) {

@@ -46,7 +46,6 @@ func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	attributes := make([]string, 0, len(body))
 	for key := range body {
 		attributes = append(attributes, key)
@@ -154,24 +153,6 @@ func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Character not found"})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, character)
-}
-
-func SetCharacterFavoriteHandler(c *gin.Context, db *gorm.DB) {
-	service := services.NewCharacterService(db)
-
-	characterID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
-		return
-	}
-	userId := c.MustGet("user_id").(int)
-	character, err := service.SetFavorite(characterID, userId)
-	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

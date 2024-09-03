@@ -97,18 +97,21 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character", "Characters"]),
 			invalidatesTags: ["Character", "Characters"],
 		}),
+		setCharacterAttribute: builder.mutation<
+			CharacterData,
+			{ data: Partial<CharacterData>; id: number }
+		>({
+			query: ({ data, id }) => ({
+				url: `characters/${id}/attributes`,
+				method: "PATCH",
+				body: data,
+			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
+		}),
 		getCharacters: builder.query<CharacterBase[], void>({
 			query: () => "characters",
 			providesTags: ["Characters"],
-		}),
-		setCharacterFavorite: builder.mutation<void, number>({
-			query: (id) => ({
-				url: `characters/favorite/${id}`,
-				method: "PATCH",
-				body: {},
-			}),
-			onQueryStarted: onQueryStarted(["Characters"]),
-			invalidatesTags: ["Characters"],
 		}),
 	}),
 });
@@ -117,9 +120,9 @@ export const {
 	useCreateCharacterMutation,
 	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
-	useSetCharacterFavoriteMutation,
 	useModifyCharacterMutation,
 	useModifyCharacterAbilityScoresMutation,
 	useModifyCharacterSkillsMutation,
-	useModifyCharacterSavingThrowsMutation
+	useModifyCharacterSavingThrowsMutation,
+	useSetCharacterAttributeMutation,
 } = characterApiSlice;

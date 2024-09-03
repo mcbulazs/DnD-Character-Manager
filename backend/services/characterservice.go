@@ -1,6 +1,8 @@
 package services
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
@@ -57,14 +59,18 @@ func (s *CharacterService) UpdateCharacterSkills(skills *dto.CharacterSkillDTO, 
 	return nil
 }
 
-func (s *CharacterService) UpdateCharacterAttribute(attribute []string, character *dto.CharacterDTO, characterID int, userID int) error {
+func (s *CharacterService) UpdateCharacterAttribute(attributes []string, character *dto.CharacterDTO, characterID int, userID int) error {
 	characterModel := convertToCharacterModel(character)
 	characterModel.ID = uint(characterID)
 	characterModel.UserID = uint(userID)
-	err := s.Repo.UpdateCharacterAttributes(attribute, characterModel)
+	for i, attribute := range attributes {
+		attributes[i] = strings.ToUpper(string(attribute[0])) + attribute[1:]
+	}
+	err := s.Repo.UpdateCharacterAttributes(attributes, characterModel)
 	if err != nil {
 		return err
 	}
+	*character = *convertToCharacterDTO(characterModel)
 	return nil
 }
 
@@ -95,19 +101,6 @@ func (s *CharacterService) FindCharactersByUserID(userID uint) ([]dto.CharacterB
 		return nil, err
 	}
 	return convertToCharacterBaseDTOs(characters), nil
-}
-
-func (s *CharacterService) SetFavorite(id int, userID int) (*dto.CharacterDTO, error) {
-	character, err := s.FindCharacterByID(id, userID)
-	if err != nil {
-		return nil, err
-	}
-	err = s.Repo.SetFavorite(id, userID)
-	if err != nil {
-		return nil, err
-	}
-	character.IsFavorite = !character.IsFavorite
-	return character, nil
 }
 
 func convertToCharacterImageDTO(image *models.CharacterImageModel) dto.CharacterImageDTO {
@@ -283,6 +276,7 @@ func convertToCharacterModel(character *dto.CharacterDTO) *models.CharacterModel
 		Name:              character.Name,
 		Class:             character.Class,
 		ArmorClass:        character.ArmorClass,
+		IsFavorite:        character.IsFavorite,
 		Initiative:        character.Initiative,
 		Speed:             character.Speed,
 		PassivePerception: character.PassivePerception,

@@ -115,9 +115,9 @@ func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel
 	return characters, nil
 }
 
-func (r *CharacterRepository) UpdateCharacterAttributes(attribute []string, character *models.CharacterModel) error {
+func (r *CharacterRepository) UpdateCharacterAttributes(attributes []string, character *models.CharacterModel) error {
 	tx := r.DB.Model(&models.CharacterModel{}).
-		Select(attribute).
+		Select(attributes).
 		Where("id = ? AND user_id = ?", character.ID, character.UserID).
 		Updates(&character)
 	if tx.Error != nil {
@@ -127,16 +127,6 @@ func (r *CharacterRepository) UpdateCharacterAttributes(attribute []string, char
 	*character = *updatedCharacter
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func (r *CharacterRepository) SetFavorite(id int, userID int) error {
-	tx := r.DB.Model(&models.CharacterModel{}).
-		Where("id = ? AND user_id = ?", id, userID).
-		Update("is_favorite", gorm.Expr("NOT is_favorite"))
-	if tx.Error != nil {
-		return tx.Error
 	}
 	return nil
 }

@@ -39,7 +39,7 @@ const SavingThrowsComp: React.FC<{
 		debounce(async (savingThrows: SavingThrows) => {
 			try {
 				modifyCharacterSavingThrowsMutation({
-					savingThrows: savingThrows,
+					savingThrows,
 					characterID,
 				}).unwrap();
 			} catch (error) {

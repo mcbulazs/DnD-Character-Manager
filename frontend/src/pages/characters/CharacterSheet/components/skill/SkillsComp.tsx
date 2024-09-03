@@ -30,7 +30,7 @@ const SkillsComp: React.FC<{
 		debounce(async (skills: Skills) => {
 			try {
 				modifyCharacterSkillsMutation({
-					skills: skills,
+					skills,
 					characterID,
 				}).unwrap();
 			} catch (error) {

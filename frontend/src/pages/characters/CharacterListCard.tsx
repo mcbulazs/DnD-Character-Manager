@@ -1,8 +1,10 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetCharacterFavoriteMutation } from "../../store/api/characterApiSlice";
+import { toast } from "react-toastify";
+import { useSetCharacterAttributeMutation } from "../../store/api/characterApiSlice";
 import type { CharacterBase } from "../../types/characterBase";
+import debounce from "../../utility/debounce";
 
 const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	character,
@@ -12,7 +14,7 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 	const [isMobile, setIsMobile] = useState(
 		window.matchMedia("(max-width: 767px)").matches,
 	);
-	const [setCharacterFavorite] = useSetCharacterFavoriteMutation();
+	const [setCharacterAttribute] = useSetCharacterAttributeMutation();
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -23,8 +25,22 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	const favoriteDebounce = useCallback(
+		debounce(async (isFavorite) => {
+			try {
+				setCharacterAttribute({
+					data: { isFavorite },
+					id: character.id,
+				}).unwrap();
+			} catch (error) {
+				toast("Error updating favorite", { type: "error" });
+				console.error("Error updating favorite", error);
+			}
+		}, 300),
+		[],
+	);
 	const handleFavorite = async (_e: React.MouseEvent) => {
-		await setCharacterFavorite(character.id);
+		favoriteDebounce(!favorite);
 		setFavorite(!favorite);
 	};
 
