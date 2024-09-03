@@ -39,22 +39,23 @@ const AbilitScoresComp: React.FC<{
 
 	return (
 		<div
-			className="
-			w-full
-			flex flex-row flex-wrap justify-center gap-4 relative"
+			className="w-full h-full
+				grid grid-cols-subgrid place-items-center
+				md:grid-cols-6 md:grid-rows-1 gap-1 gap-y-5 md:gap-5
+				relative"
 		>
 			<div
-				className="absolute right-0 z-10"
+				className="absolute right-[-1.5rem] top-0 z-10"
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 			>
-				<InfoIcon fontSize="large" />
+				<InfoIcon  />
 			</div>
 			{isHovered && (
 				<img
 					src={AbilityScoreInfo}
 					alt="Ability Score Info"
-					className="absolute right-0 mt-10 border-4 border-black rounded-lg z-10"
+					className="absolute right-0 mt-32 border-4 border-black rounded-lg z-50"
 				/>
 			)}
 			<AbilityScore

@@ -63,11 +63,11 @@ const SavingThrowsComp: React.FC<{
 				<img
 					src={SavingThrowInfo}
 					alt="Saving Throw Info"
-					className="absolute mt-5 border-4 border-black rounded-lg z-10 right-[-1.2rem]"
+					className="absolute mt-5 border-4 border-black rounded-lg z-50 right-[-1.2rem]"
                     style={{ minWidth: imgWidth }}
 				/>
 			)}
-			<table>
+			<table className="w-full h-full text-xl">
 				<tbody>
 					<SavingThrow
 						savingThrow={savingThrows.strength}

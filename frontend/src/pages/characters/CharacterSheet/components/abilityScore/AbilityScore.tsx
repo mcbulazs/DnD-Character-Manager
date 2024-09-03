@@ -18,10 +18,6 @@ const AbilityScore: React.FC<{
 		setTrueModifier(
 			Math.floor((abilityScore.value - 10) / 2) + abilityScore.modifier,
 		);
-		setScore({
-			value: abilityScore.value.toString(),
-			modifier: abilityScore.modifier.toString(),
-		});
 	}, [abilityScore]);
 
 	const onScoreUpdate = (updatedScore: { value: string; modifier: string }) => {
@@ -42,7 +38,7 @@ const AbilityScore: React.FC<{
 		<div
 			className="border-2 border-shadow-black bg-light-parchment-beiage 
                 rounded-3xl relative aspect-[5/6]
-                w-1/4 lg:w-[14%] xl:w-[10%] 2xl:w-[8%]
+                w-full md:w-4/5 
                 pb-10
                 flex flex-col justify-start items-center"
 		>

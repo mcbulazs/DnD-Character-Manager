@@ -41,7 +41,7 @@ const SkillsComp: React.FC<{
 		[],
 	);
 	return (
-		<div className="w-full h-full border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
+		<div className="w-full h-full text-xl border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
 			<div
 				className="absolute right-0 top-0"
 				onMouseEnter={() => setIsHovered(true)}
@@ -53,7 +53,7 @@ const SkillsComp: React.FC<{
 				<img
 					src={SkillInfo}
 					alt="Skills Info"
-					className="absolute mt-5 border-4 border-black rounded-lg z-10 right-[-2rem]"
+					className="absolute mt-5 border-4 border-black rounded-lg z-50 right-[-2rem]"
 					style={{ minWidth: imgWidth }}
 				/>
 			)}

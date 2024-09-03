@@ -6,6 +6,9 @@ import { toast } from "react-toastify";
 import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
 import { setHeaderText } from "../../../store/utility/headerSlice";
 import ArmorClass from "./components/ArmorClass";
+import Initiative from "./components/Initiative";
+import ProficiencyBonus from "./components/ProficiencyBonus";
+import Speed from "./components/Speed";
 import AbilitScoresComp from "./components/abilityScore/AbilityScoresComp";
 import SavingThrowsComp from "./components/savingThrow/SavingThrowsComp";
 import SkillsComp from "./components/skill/SkillsComp";
@@ -37,8 +40,8 @@ const CharacterSheet: React.FC = () => {
 	if (!character) return <div>Character not found</div>;
 
 	return (
-		<div className="w-4/5 grid grid-rows-4 grid-cols-6 gap-5">
-			<div className="col-span-full">
+		<div className="w-4/5 grid grid-rows-5 grid-cols-6 gap-5 place-items-center relative">
+			<div className="col-span-full w-full h-full">
 				<AbilitScoresComp
 					abilityScores={character.abilityScores}
 					characterID={character.ID}
@@ -52,18 +55,35 @@ const CharacterSheet: React.FC = () => {
 					proficiencyBonus={character.proficiencyBonus}
 				/>
 			</div>
-			<div className="col-start-3 col-span-2 row-start-4 row-span-2">
+
+			<div className="w-full h-full">
+				<ProficiencyBonus
+					value={character.proficiencyBonus}
+					characterId={character.ID}
+				/>
+			</div>
+			<div className="w-full h-full">
+				<Initiative
+					value={character.initiative}
+					characterId={character.ID}
+					dexterity={character.abilityScores.dexterity}
+				/>
+			</div>
+			<div className="w-full h-full">
+				<ArmorClass value={character.armorClass} characterID={character.ID} />
+			</div>
+			<div className="w-full h-full">
+				<Speed value={character.speed} characterID={character.ID} />
+			</div>
+			<div className="border-4 border-black w-full h-full col-start-5 row-start-2 row-span-full col-span-full">
+				<div />
+			</div>
+			<div className="row-span-2 col-span-2">
 				<SavingThrowsComp
 					savingThrows={character.savingThrows}
 					characterID={character.ID}
 					abilityScores={character.abilityScores}
 					proficiencyBonus={character.proficiencyBonus}
-				/>
-			</div>
-			<div className="col-start-3 row-start-3 p-5">
-				<ArmorClass
-					armorClass={character.armorClass}
-					characterID={character.ID}
 				/>
 			</div>
 		</div>
