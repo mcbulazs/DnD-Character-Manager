@@ -18,7 +18,7 @@ const CharacterName: React.FC<{ name: string; characterID: number }> = ({
 	);
 
 	return (
-		<div className="bg-light-parchment-beiage border-4 border-black rounded-xl w-full col-span-2">
+		<div className="bg-light-parchment-beiage border-4 border-black rounded-xl w-full">
 			<span className="">Character Name:</span>
 			<input
 				className="w-full bg-transparent text-center text-2xl"

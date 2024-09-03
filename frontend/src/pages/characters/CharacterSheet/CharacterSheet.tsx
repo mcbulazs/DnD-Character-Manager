@@ -46,24 +46,128 @@ const CharacterSheet: React.FC = () => {
 	if (!character) return <div>Character not found</div>;
 
 	return (
-		<div className="
+		<div
+			className={`
 				grid
 				w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
-				grid-cols-1 sm:grid-cols-2  md:grid-cols-3
+				grid-cols-2 sm:grid-cols-4 2xl:grid-cols-6
+				
 				gap-5 
-				place-items-center relative">
-			<AbilitScoresComp
-				abilityScores={character.abilityScores}
-				characterID={character.ID}
-			/>
-			<div className="w-full h-full flex flex-col gap-5 items-center justify-between 
-					order-2 sm:order-1">
+				justify-items-center items-center place-items-center
+				 relative`}
+		>
+			<div
+				className="w-full
+				col-span-full
+				order-4 sm:order-1"
+			>
+				<AbilitScoresComp
+					abilityScores={character.abilityScores}
+					characterID={character.ID}
+				/>
+			</div>
+			<div
+				className="w-full
+				col-span-2 
+				sm:row-span-4 2xl:row-span-5 
+				order-5 sm:order-2"
+			>
 				<SkillsComp
 					skills={character.skills}
 					characterID={character.ID}
 					abilityScores={character.abilityScores}
 					proficiencyBonus={character.proficiencyBonus}
 				/>
+			</div>
+			<div
+				className="
+				col-span-2
+				order-1 sm:order-3"
+			>
+				<CharacterName name={character.name} characterID={character.ID} />
+			</div>
+			<div className="w-full h-full
+				order-10 sm:order-8 2xl:order-4"
+			>
+				<CharacterClass
+					characterClass={character.class}
+					characterID={character.ID}
+				/>
+			</div>
+			<div
+				className=" w-1/2 2xl:w-full
+				2xl:row-span-2
+				col-span-2 2xl:col-span-1
+				order-[13] sm:order-13 2xl:order-5"
+			>
+				<CharacterLevel level={character.level} characterID={character.ID} />
+			</div>
+
+			<div
+				className="w-full h-full 
+				2xl:row-span-2
+				order-2 sm:order-4 2xl:order-6"
+			>
+				<ProficiencyBonus
+					value={character.proficiencyBonus}
+					characterId={character.ID}
+				/>
+			</div>
+			<div
+				className="w-full h-full 
+				2xl:row-span-2
+				order-8 sm:order-5 md:order-7"
+			>
+				<Initiative
+					value={character.initiative}
+					characterId={character.ID}
+					dexterity={character.abilityScores.dexterity}
+				/>
+			</div>
+			<div
+				className="w-full h-full 
+				order-11 sm:order-9 2xl:order-8"
+			>
+				<CharacterRace race={character.race} characterID={character.ID} />
+			</div>
+			<div
+				className="w-full h-full
+				col-span-2
+				sm:row-span-3 2xl:row-span-4
+				order-12 sm:order-11 2xl:order-9"
+			>
+				<CharacterImage image={character.image} />
+			</div>
+			<div className="w-full h-full 
+				row-span-1
+				order-3 sm:order-6 2xl:order-10"
+			>
+				<ArmorClass value={character.armorClass} characterID={character.ID} />
+			</div>
+
+			<div className="w-full h-full 
+				row-span-1
+				order-9 sm:order-7 2xl:order-11"
+			>
+				<Speed value={character.speed} characterID={character.ID} />
+			</div>
+			<div className="w-full h-full
+				col-span-2 
+				sm:row-span-1 2xl:row-span-2 
+				order-7 sm:order-12 2xl:order-12"
+			>
+				<SavingThrowsComp
+					savingThrows={character.savingThrows}
+					characterID={character.ID}
+					abilityScores={character.abilityScores}
+					proficiencyBonus={character.proficiencyBonus}
+				/>
+			</div>
+			<div className="flex justify-center
+				col-span-2
+				2xl:row-span-1
+				order-6 sm:order-10 2xl:order-[13]"
+			>
 				<PassivePerception
 					value={character.passivePerception}
 					wisdom={character.abilityScores.wisdom}
@@ -71,50 +175,6 @@ const CharacterSheet: React.FC = () => {
 					proficiencyBonus={character.proficiencyBonus}
 					characterId={character.ID}
 				/>
-			</div>
-			<div className="grid grid-cols-2 grid-rows-7 w-full h-full 
-					order-1	sm:order-2">
-				<CharacterName name={character.name} characterID={character.ID} />
-				<div className="w-full h-full row-span-2">
-					<ProficiencyBonus
-						value={character.proficiencyBonus}
-						characterId={character.ID}
-					/>
-				</div>
-				<div className="w-full h-full row-span-2">
-					<Initiative
-						value={character.initiative}
-						characterId={character.ID}
-						dexterity={character.abilityScores.dexterity}
-					/>
-				</div>
-				<div className="w-full h-full row-span-2">
-					<ArmorClass value={character.armorClass} characterID={character.ID} />
-				</div>
-				<div className="w-full h-full row-span-2">
-					<Speed value={character.speed} characterID={character.ID} />
-				</div>
-				<div className="col-span-2 row-span-2 place-self-end w-full">
-					<SavingThrowsComp
-						savingThrows={character.savingThrows}
-						characterID={character.ID}
-						abilityScores={character.abilityScores}
-						proficiencyBonus={character.proficiencyBonus}
-					/>
-				</div>
-			</div>
-			<div className="w-full h-full
-					order-3
-					col-span-1 sm:col-span-2 md:col-span-1">
-				<div className="w-full h-full grid grid-cols-2 gap-3">
-					<CharacterClass
-						characterClass={character.class}
-						characterID={character.ID}
-					/>
-					<CharacterLevel level={character.level} characterID={character.ID} />
-					<CharacterRace race={character.race} characterID={character.ID} />
-					<CharacterImage image={character.image} />
-				</div>
 			</div>
 		</div>
 	);

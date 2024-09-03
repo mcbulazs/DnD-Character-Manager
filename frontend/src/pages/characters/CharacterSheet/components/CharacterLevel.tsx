@@ -18,7 +18,7 @@ const CharacterLevel: React.FC<{ level: number; characterID: number }> = ({
 		[],
 	);
 	return (
-		<div className="h-full row-span-2 flex flex-col justify-center items-end">
+		<div className="flex flex-col justify-center items-center 2xl:items-end">
 			<span className="font-bold">Character Level:</span>
 			<div
 				className="bg-light-parchment-beiage border-4 border-black rounded-xl aspect-square w-2/3 
@@ -39,8 +39,7 @@ const CharacterLevel: React.FC<{ level: number; characterID: number }> = ({
 					className="absolute bottom-0 bg-forest-green w-full rounded-full border-2 border-black text-center 
                     cursor-pointer translate-y-1/2 select-none whitespace-nowrap"
 				>
-					{String.fromCodePoint(0x10323)} Level Up{" "}
-					{String.fromCodePoint(0x10323)}
+					Level Up
 				</div>
 			</div>
 		</div>

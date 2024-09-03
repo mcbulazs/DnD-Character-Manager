@@ -16,10 +16,14 @@ const AbilitScoresComp: React.FC<{
 	const [isHovered, setIsHovered] = useState(false);
 	const [modifyCharacterAbilityScoresMutation] =
 		useModifyCharacterAbilityScoresMutation();
+	const [imgWidth, setImgWidth] = useState(0);
 
 	useEffect(() => {
 		const img = new Image();
 		img.src = AbilityScoreInfo;
+		img.onload = () => {
+			setImgWidth(img.width);
+		}
 	}, []);
 
 	const debounceModifyAbilityScores = useCallback(
@@ -40,7 +44,6 @@ const AbilitScoresComp: React.FC<{
 	return (
 		<div
 			className="
-				col-span-full
 				w-full h-full
 				
 				grid place-items-center
@@ -61,7 +64,8 @@ const AbilitScoresComp: React.FC<{
 				<img
 					src={AbilityScoreInfo}
 					alt="Ability Score Info"
-					className="absolute right-0 mt-32 border-4 border-black rounded-lg z-50"
+					className="absolute mt-20 border-4 border-black rounded-lg z-50 right-[-2.5rem] sm:right-[-2rem]"
+					style={{ minWidth: `${Math.min(imgWidth, window.innerWidth)}px` }}
 				/>
 			)}
 			<AbilityScore

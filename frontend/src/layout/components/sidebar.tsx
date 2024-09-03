@@ -107,7 +107,7 @@ const Menu: React.FC = () => {
 		<>
 			{/* Menu Button */}
 			<button
-				className="block fixed text-forest-green top-0 left-0 w-16 h-16"
+				className="block fixed text-forest-green top-0 left-0 w-16 h-16 z-50"
 				onClick={() => setOpen(!open)}
 				type="button"
 			>
