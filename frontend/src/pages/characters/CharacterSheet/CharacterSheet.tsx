@@ -7,6 +7,7 @@ import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
 import { setHeaderText } from "../../../store/utility/headerSlice";
 import ArmorClass from "./components/ArmorClass";
 import Initiative from "./components/Initiative";
+import PassivePerception from "./components/PassivePerception";
 import ProficiencyBonus from "./components/ProficiencyBonus";
 import Speed from "./components/Speed";
 import AbilitScoresComp from "./components/abilityScore/AbilityScoresComp";
@@ -40,19 +41,26 @@ const CharacterSheet: React.FC = () => {
 	if (!character) return <div>Character not found</div>;
 
 	return (
-		<div className="w-4/5 grid grid-rows-5 grid-cols-6 gap-5 place-items-center relative">
+		<div className="md:w-4/5 2xl:w-7/12 grid grid-rows-5 grid-cols-6 gap-5 place-items-center relative">
 			<div className="col-span-full w-full h-full">
 				<AbilitScoresComp
 					abilityScores={character.abilityScores}
 					characterID={character.ID}
 				/>
 			</div>
-			<div className="col-span-2 row-span-4">
+			<div className="w-full h-full col-span-2 row-span-4 flex flex-col gap-5 items-center">
 				<SkillsComp
 					skills={character.skills}
 					characterID={character.ID}
 					abilityScores={character.abilityScores}
 					proficiencyBonus={character.proficiencyBonus}
+				/>
+				<PassivePerception
+					value={character.passivePerception}
+					wisdom={character.abilityScores.wisdom}
+					perception={character.skills.perception}
+					proficiencyBonus={character.proficiencyBonus}
+					characterId={character.ID}
 				/>
 			</div>
 
