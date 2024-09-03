@@ -37,16 +37,6 @@ func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, us
 	return characterDTO, nil
 }
 
-func (s *CharacterService) UpdateCharacter(character *dto.CharacterDTO, userID int) error {
-	characterModel := convertToCharacterModel(character)
-	err := s.Repo.Update(characterModel, userID)
-	if err != nil {
-		return err
-	}
-	*character = *convertToCharacterDTO(characterModel)
-	return nil
-}
-
 func (s *CharacterService) UpdateCharacterAbilityScores(abilityScores *dto.CharacterAbilityScoreDTO, characterID int) error {
 	abilityScoresModel := convertToCharacterAbilityScoreModel(abilityScores)
 	abilityScoresModel.CharacterID = uint(characterID)
@@ -61,6 +51,17 @@ func (s *CharacterService) UpdateCharacterSkills(skills *dto.CharacterSkillDTO, 
 	skillsModel := convertToCharacterSkillModel(skills)
 	skillsModel.CharacterID = uint(characterID)
 	err := s.Repo.UpdateSkills(&skillsModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *CharacterService) UpdateCharacterAttribute(attribute []string, character *dto.CharacterDTO, characterID int, userID int) error {
+	characterModel := convertToCharacterModel(character)
+	characterModel.ID = uint(characterID)
+	characterModel.UserID = uint(userID)
+	err := s.Repo.UpdateCharacterAttributes(attribute, characterModel)
 	if err != nil {
 		return err
 	}

@@ -40,9 +40,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	auth.GET("/characters/:id", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})
-	auth.PUT("/characters/:id", func(c *gin.Context) {
-		UpdateCharacterHandler(c, db)
-	})
 	auth.PATCH("/characters/favorite/:id", func(c *gin.Context) {
 		SetCharacterFavoriteHandler(c, db)
 	})
@@ -58,6 +55,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 	characters.PUT("/saving-throws", func(c *gin.Context) {
 		UpdateCharacterSavingThrowsHandler(c, db)
+	})
+	characters.PATCH("/attributes", func(c *gin.Context) {
+		UpdateCharacterAttribute(c, db)
 	})
 
 	// frontend routes

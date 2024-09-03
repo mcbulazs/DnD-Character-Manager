@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -30,27 +32,39 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, characterDTO)
 }
 
-func UpdateCharacterHandler(c *gin.Context, db *gorm.DB) {
-	var character dto.CharacterDTO
-	if err := c.ShouldBindJSON(&character); err != nil {
+func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
+	// Read the request body into a byte slice
+	bodyBytes, err := io.ReadAll(c.Request.Body)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	service := services.NewCharacterService(db)
-	userID := c.MustGet("user_id").(int)
 
-	characterID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
+	// Unmarshal the JSON body into a map to get the keys
+	var body map[string]interface{}
+	if err := json.Unmarshal(bodyBytes, &body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	character.ID = uint(characterID)
-	err = service.UpdateCharacter(&character, userID)
+
+	attributes := make([]string, 0, len(body))
+	for key := range body {
+		attributes = append(attributes, key)
+	}
+
+	// Unmarshal the JSON body into a CharacterDTO struct to get the character data
+	var character dto.CharacterDTO
+	if err := json.Unmarshal(bodyBytes, &character); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	service := services.NewCharacterService(db)
+	characterID := c.MustGet("character_id").(int)
+	userID := c.MustGet("user_id").(int)
+
+	err = service.UpdateCharacterAttribute(attributes, &character, characterID, userID)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Character not found"})
-			return
-		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

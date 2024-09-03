@@ -115,14 +115,18 @@ func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel
 	return characters, nil
 }
 
-func (r *CharacterRepository) Update(character *models.CharacterModel, userID int) error {
-	tx := r.DB.
-		Omit("user_id").
-		Clauses(clause.Returning{}).
-		Where("id = ? AND user_id = ?", character.ID, userID).
-		Save(&character)
+func (r *CharacterRepository) UpdateCharacterAttributes(attribute []string, character *models.CharacterModel) error {
+	tx := r.DB.Model(&models.CharacterModel{}).
+		Select(attribute).
+		Where("id = ? AND user_id = ?", character.ID, character.UserID).
+		Updates(&character)
 	if tx.Error != nil {
 		return tx.Error
+	}
+	updatedCharacter, err := r.FindByID(int(character.ID))
+	*character = *updatedCharacter
+	if err != nil {
+		return err
 	}
 	return nil
 }
