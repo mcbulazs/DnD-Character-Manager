@@ -84,7 +84,7 @@ const SavingThrow: React.FC<{
 						setModifier(val);
 						onSavingThrowUpdate({ modifier: val, prof: profficiency });
 					}}
-					className="bg-light-parchment-beiage w-8"
+					className="bg-light-parchment-beiage w-8 text-center\"
 				/>
 			</td>
 			<td>

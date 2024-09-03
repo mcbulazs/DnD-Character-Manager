@@ -82,7 +82,7 @@ const Skill: React.FC<{
 						setModifier(val);
 						onSkillUpdate({ modifier: val, rotation: profRotation });
 					}}
-					className="bg-light-parchment-beiage w-8"
+					className="bg-light-parchment-beiage w-8 text-center"
 				/>
 			</td>
 			<td>

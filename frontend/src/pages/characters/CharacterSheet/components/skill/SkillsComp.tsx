@@ -41,7 +41,7 @@ const SkillsComp: React.FC<{
 		[],
 	);
 	return (
-		<div className="mt-10 w-full  md:w-auto border-4 border-black rounded-xl p-2 relative ">
+		<div className="mt-10 w-full  md:w-auto border-4 border-black rounded-xl p-2 relative bg-light-parchment-beiage">
 			<div
 				className="absolute right-0 top-0"
 				onMouseEnter={() => setIsHovered(true)}
