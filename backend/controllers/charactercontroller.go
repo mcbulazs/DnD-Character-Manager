@@ -125,6 +125,24 @@ func UpdateCharacterSavingThrowsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, savingThrows)
 }
 
+func UpdateCharacterImageHandler(c *gin.Context, db *gorm.DB) {
+	var image dto.CharacterImageDTO
+	if err := c.ShouldBindJSON(&image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	service := services.NewCharacterService(db)
+	characterID := c.MustGet("character_id").(int)
+
+	err := service.UpdateCharacterImage(&image, characterID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, image)
+}
+
 func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
 	service := services.NewCharacterService(db)
 	userID := c.MustGet("user_id").(int)

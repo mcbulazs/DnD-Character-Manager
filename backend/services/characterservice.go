@@ -1,6 +1,7 @@
 package services
 
 import (
+	"slices"
 	"strings"
 
 	"gorm.io/gorm"
@@ -59,18 +60,22 @@ func (s *CharacterService) UpdateCharacterSkills(skills *dto.CharacterSkillDTO, 
 	return nil
 }
 
-func (s *CharacterService) UpdateCharacterAttribute(attributes []string, character *dto.CharacterDTO, characterID int, userID int) error {
+func (s *CharacterService) UpdateCharacterAttribute(attributesValue []string, character *dto.CharacterDTO, characterID int, userID int) error {
 	characterModel := convertToCharacterModel(character)
 	characterModel.ID = uint(characterID)
 	characterModel.UserID = uint(userID)
-	for i, attribute := range attributes {
-		attributes[i] = strings.ToUpper(string(attribute[0])) + attribute[1:]
+	attributes := make([]string, len(attributesValue))
+	for _, attribute := range attributesValue {
+		attr := strings.ToUpper(string(attribute[0])) + attribute[1:]
+		if slices.Contains([]string{"*", "ID", "CreatedAt", "UpdatedAt", "DeletedAt", "UserID", "Id"}, attr) {
+			continue
+		}
+		attributes = append(attributes, attr)
 	}
 	err := s.Repo.UpdateCharacterAttributes(attributes, characterModel)
 	if err != nil {
 		return err
 	}
-	*character = *convertToCharacterDTO(characterModel)
 	return nil
 }
 
@@ -78,6 +83,16 @@ func (s *CharacterService) UpdateCharacterSavingThrows(savingThrows *dto.Charact
 	savingThrowsModel := convertToCharacterSavingThrowModel(savingThrows)
 	savingThrowsModel.CharacterID = uint(characterID)
 	err := s.Repo.UpdateSavingThrows(&savingThrowsModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *CharacterService) UpdateCharacterImage(image *dto.CharacterImageDTO, characterID int) error {
+	imageModel := convertToCharacterImageModel(image)
+	imageModel.CharacterID = uint(characterID)
+	err := s.Repo.UpdateImage(&imageModel)
 	if err != nil {
 		return err
 	}

@@ -53,6 +53,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characters.PUT("/saving-throws", func(c *gin.Context) {
 		UpdateCharacterSavingThrowsHandler(c, db)
 	})
+	characters.PUT("/image", func(c *gin.Context) {
+		UpdateCharacterImageHandler(c, db)
+	})
 	characters.PATCH("/attributes", func(c *gin.Context) {
 		UpdateCharacterAttribute(c, db)
 	})

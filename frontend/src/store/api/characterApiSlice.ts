@@ -1,5 +1,6 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { type TagDescription, createApi } from "@reduxjs/toolkit/query/react";
+import type { BackgroundImageProps } from "../../types/backgroundImageProps";
 import type {
 	CharacterBase,
 	CreateCharacterBase,
@@ -97,6 +98,18 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character", "Characters"]),
 			invalidatesTags: ["Character", "Characters"],
 		}),
+		modifyCharacterImage: builder.mutation<
+			BackgroundImageProps,
+			{ image: BackgroundImageProps; characterID: number }
+		>({
+			query: ({ image, characterID }) => ({
+				url: `characters/${characterID}/image`,
+				method: "PUT",
+				body: image,
+			}),
+			onQueryStarted: onQueryStarted(["Character", "Characters"]),
+			invalidatesTags: ["Character", "Characters"],
+		}),
 		setCharacterAttribute: builder.mutation<
 			CharacterData,
 			{ data: Partial<CharacterData>; id: number }
@@ -124,5 +137,6 @@ export const {
 	useModifyCharacterAbilityScoresMutation,
 	useModifyCharacterSkillsMutation,
 	useModifyCharacterSavingThrowsMutation,
+	useModifyCharacterImageMutation,
 	useSetCharacterAttributeMutation,
 } = characterApiSlice;

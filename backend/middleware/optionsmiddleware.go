@@ -33,6 +33,8 @@ func getAllowedMethods(route string) string {
 		return "PUT, OPTIONS"
 	case "/api/characters/:id/saving-throws":
 		return "PUT, OPTIONS"
+	case "/api/characters/:id/image":
+		return "PUT, OPTIONS"
 	case "/api/characters/:id/attributes":
 		return "PATCH, OPTIONS"
 	default:
