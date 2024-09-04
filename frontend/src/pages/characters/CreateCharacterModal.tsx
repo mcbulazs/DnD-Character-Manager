@@ -1,6 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
 import { type FormEvent, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import ImageSizer from "../../components/ImageSizer";
 import Modal from "../../components/Modal";
 import { useCreateCharacterMutation } from "../../store/api/characterApiSlice";

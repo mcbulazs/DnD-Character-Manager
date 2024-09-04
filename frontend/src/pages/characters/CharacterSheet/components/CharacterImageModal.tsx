@@ -1,7 +1,5 @@
-import CloseIcon from "@mui/icons-material/Close";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import ImageSizer from "../../../../components/ImageSizer";
 import Modal from "../../../../components/Modal";
