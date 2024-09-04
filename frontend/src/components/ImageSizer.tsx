@@ -13,7 +13,16 @@ const ImageSizer: React.FC<{
 	setOutputImage: React.Dispatch<SetStateAction<BackgroundImageProps>>;
 	style?: React.CSSProperties;
 	className?: string;
-}> = ({ imageUrl, setOutputImage, style = null, className = "" }) => {
+	backgroundPosition?: string;
+	backgroundSize?: string;
+}> = ({
+	imageUrl,
+	setOutputImage,
+	style = null,
+	className = "",
+	backgroundPosition = null,
+	backgroundSize = null,
+}) => {
 	//the polygon that will be used to clip the image
 	const [polyPoints, setPolyPoints] = useState<string>("");
 
@@ -45,6 +54,40 @@ const ImageSizer: React.FC<{
 			//for some reason i only know the width
 			const width = clientRef.current.clientWidth;
 			const height = (width / dimensions.width) * dimensions.height;
+			let _width: number | null = null;
+			let _height: number | null = null;
+			let _x: number | null = null;
+			let _y: number | null = null;
+			if (backgroundSize && backgroundPosition) {
+				const width_percentageValue = Number(
+					backgroundSize.split(" ")[0].replace("%", ""),
+				);
+				console.log("backgroundSize", backgroundSize);
+				console.log("width_percentageValue", width_percentageValue);
+				_width = (width * 100) / width_percentageValue;
+
+				const height_percentageValue = Number(
+					backgroundSize.split(" ")[1].replace("%", ""),
+				);
+				_height = (height * 100) / height_percentageValue;
+
+				const x_percentageValue = Number(
+					backgroundPosition.split(" ")[0].replace("%", ""),
+				);
+				_x = (x_percentageValue * (width - _width)) / 100;
+
+				const y_percentageValue = Number(
+					backgroundPosition.split(" ")[1].replace("%", ""),
+				);
+				_y = (y_percentageValue * (height - _height)) / 100;
+				setDraggable({
+					x: _x,
+					y: _y,
+					width: _width,
+					height: _height,
+				});
+				return;
+			}
 
 			if (height / 4 > width / 3) {
 				const apparentHeight = (width / 3) * 4;
@@ -52,7 +95,7 @@ const ImageSizer: React.FC<{
 					x: 0,
 					y: (height - apparentHeight) / 2,
 					width: width,
-					height: apparentHeight,
+					height:apparentHeight,
 				});
 			} else {
 				const apparentWidth = (height * 3) / 4;
@@ -64,7 +107,7 @@ const ImageSizer: React.FC<{
 				});
 			}
 		}
-	}, [dimensions]);
+	}, [dimensions, backgroundSize, backgroundPosition]);
 
 	//when the image url changes, get the dimensions of the image
 	useEffect(() => {

@@ -136,7 +136,7 @@ const CharacterSheet: React.FC = () => {
 				sm:row-span-3 2xl:row-span-4
 				order-12 sm:order-11 2xl:order-9"
 			>
-				<CharacterImage image={character.image} />
+				<CharacterImage image={character.image} characterID={character.ID} />
 			</div>
 			<div className="w-full h-full 
 				row-span-1
