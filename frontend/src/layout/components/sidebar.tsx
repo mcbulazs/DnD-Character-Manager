@@ -1,11 +1,10 @@
 import InfoIcon from "@mui/icons-material/Info";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useEffect, useRef, useState } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import { Scrollbars } from "react-custom-scrollbars-2";
 import { NavLink } from "react-router-dom";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
-import "react-perfect-scrollbar/dist/css/styles.css"; // Import the CSS for PerfectScrollbar
 
 const Menu: React.FC = () => {
 	const [open, setOpen] = useState(false);
@@ -123,6 +122,7 @@ const Menu: React.FC = () => {
 				w-full sm:w-64
 				text-3xl sm:text-2xl 
 				items-center sm:items-start
+				min-h-dvh 
 				${open ? "translate-x-0" : "-translate-x-full"}`}
 				ref={sidebarRef}
 			>
@@ -135,8 +135,8 @@ const Menu: React.FC = () => {
 				</button>
 
 				{/* Scrollable Content Area */}
-				<nav className="w-full overflow-hidden min-h-full">
-					<PerfectScrollbar className="w-full flex flex-grow flex-col  ">
+				<Scrollbars className="w-full">
+					<nav className="w-full flex flex-grow flex-col  ">
 						<NavLink
 							to="/"
 							onClick={() => setOpen(!open)}
@@ -190,8 +190,8 @@ const Menu: React.FC = () => {
 							<InfoIcon fontSize="small" />
 							About
 						</NavLink>
-					</PerfectScrollbar>
-				</nav>
+					</nav>
+				</Scrollbars>
 
 				{/* Footer or Non-Scrollable Content */}
 			</div>

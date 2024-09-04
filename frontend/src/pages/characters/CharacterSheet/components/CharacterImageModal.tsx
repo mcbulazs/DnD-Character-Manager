@@ -1,9 +1,10 @@
 import CloseIcon from "@mui/icons-material/Close";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import { Scrollbars } from "react-custom-scrollbars-2";
 import { toast } from "react-toastify";
 import ImageSizer from "../../../../components/ImageSizer";
+import Modal from "../../../../components/Modal";
 import { useModifyCharacterImageMutation } from "../../../../store/api/characterApiSlice";
 import type { BackgroundImageProps } from "../../../../types/backgroundImageProps";
 
@@ -34,58 +35,39 @@ const CharacterImageModal: React.FC<{
 		}
 	};
 
-	const innerScrollbarRef = useRef<HTMLDivElement>(null);
-
-	const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-
-        e.preventDefault();
-	};
-
 	return (
-		<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-			<div
-				className=" bg-white p-3 rounded-lg shadow-lg w-full max-w-md relative overflow-hidden flex flex-col max-h-[90vh]"
-			>
-				<button
-					className="absolute top-1 right-1 text-gray-500 hover:text-gray-800"
-					type="button"
-					onClick={onClose}
-				>
-					<CloseIcon />
-				</button>
-
-				<PerfectScrollbar className="h-full p-3 mt-4 overscroll-none">
-					<label className="block text-sm font-medium text-gray-700">
-						Image URL:
-					</label>
-					<span className="text-xs text-gray-500">
-						Might have to wait a few seconds for the image to load
-					</span>
-					<input
-						type="url"
-						value={imageUrl}
-						onChange={(e) => setImageUrl(e.target.value)}
-						className="p-2 border border-gray-300 rounded-lg w-full"
+		<Modal onClose={onClose} className="border-4 border-black ">
+			<div className="h-full">
+				<label className="block text-sm font-medium text-gray-700">
+					Image URL:
+				</label>
+				<span className="text-xs text-gray-500">
+					Might have to wait a few seconds for the image to load
+				</span>
+				<input
+					type="url"
+					value={imageUrl}
+					onChange={(e) => setImageUrl(e.target.value)}
+					className="p-2 border border-gray-300 rounded-lg w-full"
+				/>
+				{imageUrl !== "" && (
+					<ImageSizer
+						imageUrl={imageUrl}
+						setOutputImage={setImage}
+						className="my-4"
+						backgroundPosition={_image.backgroundPosition}
+						backgroundSize={_image.backgroundSize}
 					/>
-					{imageUrl !== "" && (
-						<ImageSizer
-							imageUrl={imageUrl}
-							setOutputImage={setImage}
-							className="my-4"
-							backgroundPosition={_image.backgroundPosition}
-							backgroundSize={_image.backgroundSize}
-						/>
-					)}
-					<button
-						type="button"
-						className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-						onClick={modifyBackgroundImage}
-					>
-						Save Image
-					</button>
-				</PerfectScrollbar>
+				)}
+				<button
+					type="button"
+					className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+					onClick={modifyBackgroundImage}
+				>
+					Save Image
+				</button>
 			</div>
-		</div>
+		</Modal>
 	);
 };
 
