@@ -32,6 +32,24 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, characterDTO)
 }
 
+func DeleteCharacterHandler(c *gin.Context, db *gorm.DB) {
+	characterID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
+		return
+	}
+	userID := c.MustGet("user_id").(int)
+
+	service := services.NewCharacterService(db)
+	err = service.DeleteCharacter(characterID, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
+
 func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
 	// Read the request body into a byte slice
 	bodyBytes, err := io.ReadAll(c.Request.Body)

@@ -9,7 +9,7 @@ const DesktopLayout = () => {
 	return (
 		<div className="h-dvh">
 			<Scrollbars className="bg-parchment-beige">
-				<header className="bg-ancient-gold text-parchment-beige px-4 py-1 min-h-16 flex items-center justify-between text-3xl">
+				<header className="bg-ancient-gold text-parchment-beige px-4 py-1 h-16 flex items-center justify-between text-3xl">
 					<Menu />
 					<div className="flex-1 text-center">{title}</div>
 				</header>

@@ -44,6 +44,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characters := auth.Group("/characters/:id", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
 	})
+	characters.DELETE("", func(c *gin.Context) {
+		DeleteCharacterHandler(c, db)
+	})
 	characters.PUT("/ability-scores", func(c *gin.Context) {
 		UpdateCharacterAbilityScoresHandler(c, db)
 	})

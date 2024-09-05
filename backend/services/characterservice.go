@@ -40,6 +40,14 @@ func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, us
 	return characterDTO, nil
 }
 
+func (s *CharacterService) DeleteCharacter(characterID int, userID int) error {
+	err := s.Repo.Delete(characterID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *CharacterService) UpdateCharacterAbilityScores(abilityScores *dto.CharacterAbilityScoreDTO, characterID int) error {
 	abilityScoresModel := convertToCharacterAbilityScoreModel(abilityScores)
 	abilityScoresModel.CharacterID = uint(characterID)

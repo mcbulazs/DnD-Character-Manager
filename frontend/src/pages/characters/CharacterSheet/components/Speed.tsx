@@ -16,7 +16,7 @@ const Speed:React.FC<{value: number, characterID: number}> = ({value, characterI
     return (
         <div className="w-full h-full flex flex-col items-center justify-evenly">
             <span className="text-sm text-center w-full font-bold">Speed</span>
-            <div className="w-2/3 aspect-square flex items-center justify-center border-4 border-black rounded-3xl bg-light-parchment-beiage">
+            <div className="w-2/3 aspect-square flex     items-center justify-center border-4 border-black rounded-3xl bg-light-parchment-beiage">
                 <UnstyledNumberInput
                     value={spd}
                     onChange={(val) => {

@@ -49,6 +49,14 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Characters"]),
 			invalidatesTags: ["Characters"],
 		}),
+		deleteCharacter: builder.mutation<void, number>({
+			query: (id) => ({
+				url: `characters/${id}`,
+				method: "DELETE",
+			}),
+			onQueryStarted: onQueryStarted(["Characters"]),
+			invalidatesTags: ["Characters"],
+		}),
 		getCharacterById: builder.query<CharacterData, number>({
 			query: (id) => `characters/${id}`,
 			providesTags: ["Character"],
@@ -131,6 +139,7 @@ export const characterApiSlice = createApi({
 
 export const {
 	useCreateCharacterMutation,
+	useDeleteCharacterMutation,
 	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 	useModifyCharacterMutation,

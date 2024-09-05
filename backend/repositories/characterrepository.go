@@ -54,6 +54,14 @@ func (r *CharacterRepository) Create(character *models.CharacterModel) error {
 	return nil
 }
 
+func (r *CharacterRepository) Delete(characterID int, userID int) error {
+	tx := r.DB.Where("id = ? AND user_id = ?", characterID, userID).Delete(&models.CharacterModel{})
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (r *CharacterRepository) UpdateAbilityScores(abilityScores *models.CharacterAbilityScoreModel) error {
 	tx := r.DB.Model(&abilityScores).
 		Clauses(clause.Returning{}).
@@ -106,13 +114,13 @@ func (r *CharacterRepository) UpdateImage(image *models.CharacterImageModel) err
 	return nil
 }
 
-func (r *CharacterRepository) FindByID(id int) (*models.CharacterModel, error) {
+func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel, error) {
 	var character models.CharacterModel
 	tx := r.DB.Preload("Image").
 		Preload("AbilityScores").
 		Preload("SavingThrows").
 		Preload("Skills").
-		First(&character, id)
+		First(&character, characterID)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
