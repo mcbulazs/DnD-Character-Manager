@@ -1,21 +1,21 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { useHeader } from "../../layout/components/HeaderProvider";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
-import { setHeaderText } from "../../store/utility/headerSlice";
 import CharacterListCard from "./CharacterListCard";
 import CreateCharacterButton from "./CreateCharacterButton";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
 	const { data: characters, error, isLoading } = useGetCharactersQuery();
-	const dispatch = useDispatch();
+
 	const [modalOpen, setModalOpen] = useState(false);
-	
+	const { setTitle } = useHeader();
+
 	useEffect(() => {
-		dispatch(setHeaderText("Character List"));
-	}, [dispatch]);
+		setTitle(<h1>Characters</h1>);
+	}, [setTitle]);
 
 	if (isLoading) {
 		return <div>Loading...</div>;

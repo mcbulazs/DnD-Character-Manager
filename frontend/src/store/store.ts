@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { characterApiSlice } from "./api/characterApiSlice";
 import { userApiSlice } from "./api/userApiSlice";
-import headerReducer from "./utility/headerSlice";
 
 export const store = configureStore({
 	reducer: {
-		header: headerReducer,
 		[userApiSlice.reducerPath]: userApiSlice.reducer,
 		[characterApiSlice.reducerPath]: characterApiSlice.reducer,
 	},

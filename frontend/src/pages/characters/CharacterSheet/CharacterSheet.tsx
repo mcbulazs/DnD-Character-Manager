@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useHeader } from "../../../layout/components/HeaderProvider";
 import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
-import { setHeaderText } from "../../../store/utility/headerSlice";
 import ArmorClass from "./components/ArmorClass";
 import CharacterClass from "./components/CharacterClass";
 import CharacterImage from "./components/CharacterImage";
@@ -22,6 +22,7 @@ import SkillsComp from "./components/skill/SkillsComp";
 const CharacterSheet: React.FC = () => {
 	const dispatch = useDispatch();
 	const { characterId } = useParams();
+	const { setTitle } = useHeader();
 
 	if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
 		return <div>Invalid character ID</div>;
@@ -34,8 +35,8 @@ const CharacterSheet: React.FC = () => {
 	} = useGetCharacterByIdQuery(Number.parseInt(characterId));
 
 	useEffect(() => {
-		dispatch(setHeaderText(character?.name ?? "Character Sheet"));
-	}, [dispatch, character]);
+		setTitle(<h1>{character?.name ?? "Character Sheet"}</h1>);
+	}, [setTitle, character]);
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error) {
@@ -58,8 +59,8 @@ const CharacterSheet: React.FC = () => {
 		>
 			<div
 				className="w-full
-				col-span-full
-				order-4 sm:order-1"
+			col-span-full
+			order-4 sm:order-1"
 			>
 				<AbilitScoresComp
 					abilityScores={character.abilityScores}
@@ -68,9 +69,9 @@ const CharacterSheet: React.FC = () => {
 			</div>
 			<div
 				className="w-full
-				col-span-2 
-				sm:row-span-4 2xl:row-span-5 
-				order-5 sm:order-2"
+			col-span-2 
+			sm:row-span-4 2xl:row-span-5 
+			order-5 sm:order-2"
 			>
 				<SkillsComp
 					skills={character.skills}
@@ -81,13 +82,14 @@ const CharacterSheet: React.FC = () => {
 			</div>
 			<div
 				className="
-				col-span-2
-				order-1 sm:order-3"
+			col-span-2
+			order-1 sm:order-3"
 			>
 				<CharacterName name={character.name} characterID={character.ID} />
 			</div>
-			<div className="w-full h-full
-				order-10 sm:order-8 2xl:order-4"
+			<div
+				className="w-full h-full
+			order-10 sm:order-8 2xl:order-4"
 			>
 				<CharacterClass
 					characterClass={character.class}
@@ -96,17 +98,17 @@ const CharacterSheet: React.FC = () => {
 			</div>
 			<div
 				className=" w-1/2 2xl:w-full
-				2xl:row-span-2
-				col-span-2 2xl:col-span-1
-				order-[13] sm:order-13 2xl:order-5"
+			2xl:row-span-2
+			col-span-2 2xl:col-span-1
+			order-[13] sm:order-13 2xl:order-5"
 			>
 				<CharacterLevel level={character.level} characterID={character.ID} />
 			</div>
 
 			<div
 				className="w-full h-full 
-				2xl:row-span-2
-				order-2 sm:order-4 2xl:order-6"
+			2xl:row-span-2
+			order-2 sm:order-4 2xl:order-6"
 			>
 				<ProficiencyBonus
 					value={character.proficiencyBonus}
@@ -115,8 +117,8 @@ const CharacterSheet: React.FC = () => {
 			</div>
 			<div
 				className="w-full h-full 
-				2xl:row-span-2
-				order-8 sm:order-5 md:order-7"
+			2xl:row-span-2
+			order-8 sm:order-5 md:order-7"
 			>
 				<Initiative
 					value={character.initiative}
@@ -126,35 +128,38 @@ const CharacterSheet: React.FC = () => {
 			</div>
 			<div
 				className="w-full h-full 
-				order-11 sm:order-9 2xl:order-8"
+			order-11 sm:order-9 2xl:order-8"
 			>
 				<CharacterRace race={character.race} characterID={character.ID} />
 			</div>
 			<div
 				className="w-full h-full
-				col-span-2
-				sm:row-span-3 2xl:row-span-4
-				order-12 sm:order-11 2xl:order-9"
+			col-span-2
+			sm:row-span-3 2xl:row-span-4
+			order-12 sm:order-11 2xl:order-9"
 			>
 				<CharacterImage image={character.image} characterID={character.ID} />
 			</div>
-			<div className="w-full h-full 
-				row-span-1
-				order-3 sm:order-6 2xl:order-10"
+			<div
+				className="w-full h-full 
+			row-span-1
+			order-3 sm:order-6 2xl:order-10"
 			>
 				<ArmorClass value={character.armorClass} characterID={character.ID} />
 			</div>
 
-			<div className="w-full h-full 
-				row-span-1
-				order-9 sm:order-7 2xl:order-11"
+			<div
+				className="w-full h-full 
+			row-span-1
+			order-9 sm:order-7 2xl:order-11"
 			>
 				<Speed value={character.speed} characterID={character.ID} />
 			</div>
-			<div className="w-full h-full
-				col-span-2 
-				sm:row-span-1 2xl:row-span-2 
-				order-7 sm:order-12 2xl:order-12"
+			<div
+				className="w-full h-full
+			col-span-2 
+			sm:row-span-1 2xl:row-span-2 
+			order-7 sm:order-12 2xl:order-12"
 			>
 				<SavingThrowsComp
 					savingThrows={character.savingThrows}
@@ -163,10 +168,11 @@ const CharacterSheet: React.FC = () => {
 					proficiencyBonus={character.proficiencyBonus}
 				/>
 			</div>
-			<div className="flex justify-center
-				col-span-2
-				2xl:row-span-1
-				order-6 sm:order-10 2xl:order-[13]"
+			<div
+				className="flex justify-center
+			col-span-2
+			2xl:row-span-1
+			order-6 sm:order-10 2xl:order-[13]"
 			>
 				<PassivePerception
 					value={character.passivePerception}
