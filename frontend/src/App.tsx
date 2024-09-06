@@ -11,6 +11,7 @@ import Register from "./pages/auth/Register";
 import CharacterList from "./pages/characters/CharacterList";
 import CharacterSheet from "./pages/characters/CharacterSheet/CharacterSheet";
 import Features from "./pages/characters/features/Features";
+import CharacterNavList from "./pages/navigation/CharacterNavList";
 
 function App() {
 	return (
@@ -51,7 +52,7 @@ function App() {
 								</AuthGuard>
 							}
 						/>
-						<Route path="characters/:characterId">
+						<Route path="characters/:characterId" element={<CharacterNavList />}>
 							<Route
 								path=""
 								element={

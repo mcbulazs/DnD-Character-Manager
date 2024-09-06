@@ -17,10 +17,8 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
                     "
 				onMouseDown={() => setShowFull(true)}
 			>
-				<h2 className="text-center text-xl font-bold border-b-2 border-black ">
-					{feature.name}
-				</h2>
-				<p className=" border-b-2 border-black">{feature.source}</p>
+				<h2 className="text-center text-xl font-bold ">{feature.name}</h2>
+				<p className=" border-y-4 border-dragon-blood">{feature.source}</p>
 				<div className=" relative pb-10">
 					<div className="h-48 line-clamp-[8]">{feature.description}</div>
 					<div className="absolute bottom-0 w-full flex justify-center z-10 text-md text-gray-800 font-bold">
@@ -29,7 +27,10 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
 				</div>
 			</div>
 			{showFull && (
-				<Modal onClose={() => setShowFull(false)} className="w-4/5">
+				<Modal
+					onClose={() => setShowFull(false)}
+					className="w-4/5"
+				>
 					<div className="p-4">
 						<h2 className="text-2xl font-bold">{feature.name}</h2>
 						<p className="my-5">Source: {feature.source}</p>

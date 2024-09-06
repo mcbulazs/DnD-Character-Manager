@@ -4,16 +4,20 @@ import { toast } from "react-toastify";
 import { useGetFeaturesQuery } from "../../../store/api/characterApiSlice";
 import FeatureCard from "./FeatureCard";
 
-const Features: React.FC = () => {
-	const { characterId } = useParams();
-	if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
-		return <div>Invalid character ID</div>;
+const Features: React.FC<{ characterId?: number }> = ({
+	characterId: _characterId = undefined,
+}) => {
+	let characterId: number;
+	if (_characterId) {
+		characterId = _characterId;
+	} else {
+		const { characterId: paramCharacterId } = useParams();
+		if (!paramCharacterId || Number.isNaN(Number.parseInt(paramCharacterId))) {
+			return <div>Invalid character ID</div>;
+		}
+		characterId = Number.parseInt(paramCharacterId);
 	}
-	const {
-		data: features,
-		error,
-		isLoading,
-	} = useGetFeaturesQuery(Number.parseInt(characterId));
+	const { data: features, error, isLoading } = useGetFeaturesQuery(characterId);
 
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -23,7 +27,7 @@ const Features: React.FC = () => {
 		toast("Error loading features", { type: "error" });
 		return <div>Error loading features</div>;
 	}
-    console.log(features)
+	console.log(features);
 	return (
 		<div className="flex gap-2 w-full justify-center">
 			{features?.map((feature) => (

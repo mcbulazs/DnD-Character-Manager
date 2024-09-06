@@ -62,7 +62,7 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 			toast("Error deleting character", { type: "error" });
 			console.error("Error deleting character", error);
 		}
-	}
+	};
 
 	return (
 		<div className="flex justify-center items-center gap-2">
@@ -115,19 +115,26 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 	);
 };
 
-const CharacterSheet: React.FC = () => {
-	const { characterId } = useParams();
-	const { setTitle } = useHeader();
-
-	if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
-		return <div>Invalid character ID</div>;
+const CharacterSheet: React.FC<{ characterId?: number }> = ({
+	characterId: _characterId = undefined,
+}) => {
+	let characterId: number;
+	if (_characterId) {
+		characterId = _characterId;
+	} else {
+		const { characterId: paramCharacterId } = useParams();
+		if (!paramCharacterId || Number.isNaN(Number.parseInt(paramCharacterId))) {
+			return <div>Invalid character ID</div>;
+		}
+		characterId = Number.parseInt(paramCharacterId);
 	}
+	const { setTitle } = useHeader();
 
 	const {
 		data: character,
 		error,
 		isLoading,
-	} = useGetCharacterByIdQuery(Number.parseInt(characterId));
+	} = useGetCharacterByIdQuery(characterId);
 
 	useEffect(() => {
 		if (!character) return;
