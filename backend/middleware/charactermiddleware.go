@@ -11,7 +11,7 @@ import (
 )
 
 func CharacterMiddleware(c *gin.Context, db *gorm.DB) {
-	characterID, err := strconv.Atoi(c.Param("id"))
+	characterID, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		c.Abort()

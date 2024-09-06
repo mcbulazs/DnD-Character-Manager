@@ -23,6 +23,14 @@ const CreateCharacterModal: React.FC<{
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
+			if (name.trim().length < 1) {
+				toast("Name is required", { type: "warning" });
+				return;
+			}
+			if (className.trim().length < 1) {
+				toast("Class is required", { type: "warning" });
+				return;
+			}
 			const data = await createCharacterMutation({
 				name,
 				class: className,

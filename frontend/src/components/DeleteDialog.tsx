@@ -1,10 +1,33 @@
 import type React from "react";
+import { useEffect, useState } from "react";
 
 const DeleteDialog: React.FC<{
 	message: string;
 	onConfirm: () => void;
 	onCancel: () => void;
 }> = ({ message, onConfirm, onCancel }) => {
+	const [isVisible, setIsVisible] = useState(false);
+
+	useEffect(() => {
+		setIsVisible(true);
+	}, []);
+
+	const handleCancel = () => {
+		setIsVisible(false);
+
+		setTimeout(() => {
+			onCancel();
+		}, 300);
+	};
+
+	const handleConfirm = () => {
+		setIsVisible(false);
+
+		setTimeout(() => {
+			onConfirm();
+		}, 300);
+	}
+
 	return (
 		<div
 			style={{
@@ -16,6 +39,8 @@ const DeleteDialog: React.FC<{
 				backgroundColor: "rgba(0, 0, 0, 0.5)",
 				overflow: "hidden",
 				zIndex: 1000,
+				opacity: isVisible ? 1 : 0,
+				transition: "opacity 0.3s ease-in-out",
 			}}
 		>
 			<div
@@ -27,14 +52,14 @@ const DeleteDialog: React.FC<{
 					<button
 						type="button"
 						className="text-xl text-white bg-blue-500 hover:bg-blue-600 px-3 py-0 rounded-lg transition-all"
-						onClick={onCancel}
+						onClick={handleCancel}
 					>
 						Cancel
 					</button>
 					<button
 						type="button"
 						className="text-xl text-white bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg transition-all"
-						onClick={onConfirm}
+						onClick={handleConfirm}
 					>
 						Delete
 					</button>

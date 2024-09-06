@@ -45,7 +45,7 @@ func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	featureID, err := strconv.Atoi(c.Param("id"))
+	featureID, err := strconv.Atoi(c.Param("featureId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid feature ID"})
 		return
@@ -65,7 +65,7 @@ func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func DeleteFeatureHandler(c *gin.Context, db *gorm.DB) {
-	featureID, err := strconv.Atoi(c.Param("id"))
+	featureID, err := strconv.Atoi(c.Param("featureId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid feature ID"})
 		return

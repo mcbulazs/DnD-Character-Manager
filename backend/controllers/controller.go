@@ -37,11 +37,11 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	auth.GET("/characters", func(c *gin.Context) {
 		GetCharactersHandler(c, db)
 	})
-	auth.GET("/characters/:id", func(c *gin.Context) {
+	auth.GET("/characters/:characterId", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})
 
-	characters := auth.Group("/characters/:id", func(c *gin.Context) {
+	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
 	})
 	characters.DELETE("", func(c *gin.Context) {
@@ -70,10 +70,10 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	features.POST("", func(c *gin.Context) {
 		CreateFeatureHandler(c, db)
 	})
-	features.PUT("/:id", func(c *gin.Context) {
+	features.PUT("/:featureId", func(c *gin.Context) {
 		UpdateFeatureHandler(c, db)
 	})
-	features.DELETE("/:id", func(c *gin.Context) {
+	features.DELETE("/:featureId", func(c *gin.Context) {
 		DeleteFeatureHandler(c, db)
 	})
 

@@ -1,7 +1,8 @@
-import AddIcon from "@mui/icons-material/Add";
-import { type SetStateAction, useState } from "react";
 
-const CreateButton: React.FC<{
+import EditIcon from "@mui/icons-material/Edit";
+import { useState } from "react";
+
+const EditButton: React.FC<{
 	onClick: () => void;
 	text: string;
 }> = ({ onClick, text }) => {
@@ -10,8 +11,7 @@ const CreateButton: React.FC<{
 		<button
 			className={`bg-blue-500 hover:bg-blue-700 text-white font-bold
                                 ${!hover ? "w-12" : "w-48"} h-12 
-                                fixed bottom-16 right-0
-                                rounded-full m-5 p-1 z-10 
+                                rounded-full p-1 z-10 
                                 transition-all duration-300 ease-in-out overflow-hidden`}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
@@ -21,10 +21,10 @@ const CreateButton: React.FC<{
 			{hover ? (
 				<span className="text-white text-center whitespace-nowrap">{text}</span>
 			) : (
-				<AddIcon />
+				<EditIcon />
 			)}
 		</button>
 	);
 };
 
-export default CreateButton;
+export default EditButton;

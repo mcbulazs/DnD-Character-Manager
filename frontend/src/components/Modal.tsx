@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 const Modal: React.FC<{
@@ -8,6 +9,19 @@ const Modal: React.FC<{
 	style?: React.CSSProperties;
 	className?: string;
 }> = ({ children, onClose, style, className }) => {
+	const [isVisible, setIsVisible] = useState(false);
+
+	useEffect(() => {
+		setIsVisible(true);
+	}, []);
+
+	const handleClose = () => {
+		setIsVisible(false);
+
+		setTimeout(() => {
+			onClose();
+		}, 300);
+	};
 	return (
 		<div
 			style={{
@@ -19,6 +33,8 @@ const Modal: React.FC<{
 				backgroundColor: "rgba(0, 0, 0, 0.5)",
 				overflow: "hidden",
 				zIndex: 1000,
+				opacity: isVisible ? 1 : 0,
+				transition: "opacity 0.3s ease-in-out",
 			}}
 		>
 			<div
@@ -29,7 +45,7 @@ const Modal: React.FC<{
 					paddingTop: "1.05rem",
 					paddingBottom: "1rem",
 					...style,
-                    backgroundColor: "#f6e1bc",
+					backgroundColor: "#f6e1bc",
 					position: "relative",
 					display: "flex",
 				}}
@@ -41,10 +57,10 @@ const Modal: React.FC<{
 						top: "0.25rem",
 						right: "0.25rem",
 						color: "rgb(107,114,128)",
-                        zIndex: 3,
+						zIndex: 3,
 					}}
 					type="button"
-					onClick={onClose}
+					onClick={handleClose}
 				>
 					<CloseIcon />
 				</button>
@@ -55,7 +71,7 @@ const Modal: React.FC<{
 					autoHeightMax={"90vh"}
 					style={{ flexGrow: 1, marginRight: "0.2rem", marginBottom: "0.2rem" }}
 				>
-					<div style={{ overflowX: "hidden", padding: "0 1rem 1rem"}}>
+					<div style={{ overflowX: "hidden", padding: "0 1rem 1rem" }}>
 						{children}
 					</div>
 				</Scrollbars>

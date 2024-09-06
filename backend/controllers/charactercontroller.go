@@ -33,7 +33,7 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func DeleteCharacterHandler(c *gin.Context, db *gorm.DB) {
-	characterID, err := strconv.Atoi(c.Param("id"))
+	characterID, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
@@ -177,7 +177,7 @@ func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
 func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 	service := services.NewCharacterService(db)
 
-	characterID, err := strconv.Atoi(c.Param("id"))
+	characterID, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return

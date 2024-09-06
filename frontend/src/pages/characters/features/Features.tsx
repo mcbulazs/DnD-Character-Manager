@@ -2,8 +2,8 @@ import type React from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import CreateButton from "../../../components/buttons/CreateButton";
 import { useGetFeaturesQuery } from "../../../store/api/characterApiSlice";
-import CreateButton from "../CreateButton";
 import CreateFeatureModal from "./CreateFeatureModal";
 import FeatureCard from "./FeatureCard";
 
@@ -32,7 +32,6 @@ const Features: React.FC<{ characterId?: number }> = ({
 		toast("Error loading features", { type: "error" });
 		return <div>Error loading features</div>;
 	}
-	console.log(features);
 	return (
 		<>
 			<div className="gap-2 w-11/12  xl:w-4/5 2xl:w-3/5
@@ -48,7 +47,9 @@ const Features: React.FC<{ characterId?: number }> = ({
 					characterId={characterId}
 				/>
 			) : (
-				<CreateButton text="Add feature" onClick={() => setIsModalOpen(true)} />
+                <div className="fixed bottom-0 right-0 m-5">
+				    <CreateButton text="Add feature" onClick={() => setIsModalOpen(true)} />
+                </div>
 			)}
 		</>
 	);

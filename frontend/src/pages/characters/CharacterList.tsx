@@ -1,10 +1,10 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import CreateButton from "../../components/buttons/CreateButton";
 import { useHeader } from "../../layout/components/HeaderProvider";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import CharacterListCard from "./CharacterListCard";
-import CreateButton from "./CreateButton";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
@@ -34,7 +34,12 @@ const CharacterList: React.FC = () => {
 				))}
 			</div>
 			{!modalOpen ? (
-				<CreateButton onClick={()=>setModalOpen(true)} text="Create Character"/>
+				<div className="fixed bottom-0 right-0 m-5">
+					<CreateButton
+						onClick={() => setModalOpen(true)}
+						text="Create Character"
+					/>
+				</div>
 			) : (
 				<CreateCharacterModal onClose={() => setModalOpen(false)} />
 			)}
