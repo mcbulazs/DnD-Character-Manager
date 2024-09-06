@@ -30,6 +30,7 @@ type CharacterDTO struct {
 	AbilityScores     CharacterAbilityScoreDTO `json:"abilityScores"`
 	SavingThrows      CharacterSavingThrowDTO  `json:"savingThrows"`
 	Skills            CharacterSkillDTO        `json:"skills"`
+	Features          []CharacterFeatureDTO    `json:"features"`
 }
 
 type CharacterImageDTO struct {
@@ -90,4 +91,18 @@ type CharacterSkillDTO struct {
 	SleightOfHand  Skill `json:"sleightOfHand"`
 	Stealth        Skill `json:"stealth"`
 	Survival       Skill `json:"survival"`
+}
+
+type CharacterFeatureDTO struct {
+	ID          uint   `json:"id"`
+	CharacterID uint   `json:"characterID"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Source      string `json:"source"`
+}
+
+type CharacterCreateFeatureDTO struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Source      string `json:"source"`
 }

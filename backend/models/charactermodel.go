@@ -7,20 +7,21 @@ import (
 type CharacterModel struct {
 	gorm.Model
 	UserID            uint
-	Name              string                     `gorm:"default:''"`
-	Class             string                     `gorm:"default:''"`
-	Race              string                     `gorm:"default:''"`
-	Level             int                        `gorm:"default:1"`
-	IsFavorite        bool                       `gorm:"default:false"`
-	ArmorClass        int                        `gorm:"default:null"`
-	Initiative        int                        `gorm:"default:null"`
-	Speed             int                        `gorm:"default:null"`
-	PassivePerception int                        `gorm:"default:null"`
-	ProficiencyBonus  int                        `gorm:"default:null"`
+	Name              string
+	Class             string
+	Race              string
+	Level             int `gorm:"default:1"`
+	IsFavorite        bool
+	ArmorClass        int
+	Initiative        int
+	Speed             int
+	PassivePerception int
+	ProficiencyBonus  int
 	Image             CharacterImageModel        `gorm:"foreignKey:CharacterID"`
 	AbilityScores     CharacterAbilityScoreModel `gorm:"foreignKey:CharacterID"`
 	SavingThrows      CharacterSavingThrowModel  `gorm:"foreignKey:CharacterID"`
 	Skills            CharacterSkillModel        `gorm:"foreignKey:CharacterID"`
+	Features          []CharacterFeatureModel    `gorm:"foreignKey:CharacterID"`
 }
 
 func (c *CharacterModel) TableName() string {
@@ -30,7 +31,7 @@ func (c *CharacterModel) TableName() string {
 type CharacterImageModel struct {
 	gorm.Model
 	CharacterID        uint
-	BackgroundImage    string `gorm:"default:''"`
+	BackgroundImage    string
 	BackgroundSize     string `gorm:"default:'cover'"`
 	BackgroundPosition string `gorm:"default:'top'"`
 }
@@ -113,4 +114,16 @@ type CharacterSkillModel struct {
 
 func (c *CharacterSkillModel) TableName() string {
 	return "character_skills"
+}
+
+type CharacterFeatureModel struct {
+	gorm.Model
+	CharacterID uint
+	Name        string
+	Description string
+	Source      string
+}
+
+func (c *CharacterFeatureModel) TableName() string {
+	return "character_features"
 }

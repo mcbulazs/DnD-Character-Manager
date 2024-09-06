@@ -10,6 +10,7 @@ import HeaderProvider from "./layout/components/HeaderProvider";
 import Register from "./pages/auth/Register";
 import CharacterList from "./pages/characters/CharacterList";
 import CharacterSheet from "./pages/characters/CharacterSheet/CharacterSheet";
+import Features from "./pages/characters/features/Features";
 
 function App() {
 	return (
@@ -50,14 +51,24 @@ function App() {
 								</AuthGuard>
 							}
 						/>
-						<Route
-							path="characters/:characterId"
-							element={
-								<AuthGuard loggedInRequired={true}>
-									<CharacterSheet />
-								</AuthGuard>
-							}
-						/>
+						<Route path="characters/:characterId">
+							<Route
+								path=""
+								element={
+									<AuthGuard loggedInRequired={true}>
+										<CharacterSheet />
+									</AuthGuard>
+								}
+							/>
+							<Route
+								path="features"
+								element={
+									<AuthGuard loggedInRequired={true}>
+										<Features />
+									</AuthGuard>
+								}
+							/>
+						</Route>
 
 						<Route path="*" element={<div>404 Not Found</div>} />
 					</Route>

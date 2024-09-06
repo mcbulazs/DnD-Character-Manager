@@ -63,6 +63,20 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		UpdateCharacterAttribute(c, db)
 	})
 
+	features := characters.Group("/features")
+	features.GET("", func(c *gin.Context) {
+		GetFeaturesHandler(c, db)
+	})
+	features.POST("", func(c *gin.Context) {
+		CreateFeatureHandler(c, db)
+	})
+	features.PUT("/:id", func(c *gin.Context) {
+		UpdateFeatureHandler(c, db)
+	})
+	features.DELETE("/:id", func(c *gin.Context) {
+		DeleteFeatureHandler(c, db)
+	})
+
 	// frontend routes
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(200, "index.html", nil)
