@@ -13,14 +13,14 @@ const CharacterNavList: React.FC = () => {
 				<button
 					type="button"
 					className="
-                    aspect-square bg-white bg-opacity-40
+                    aspect-square bg-white
                     flex items-center justify-center 
                     rounded-full  p-1 pl-3"
 					onClick={() => setIsOpen(!isOpen)}
 				>
 					{!isOpen ? <ArrowForwardIosIcon /> : <ArrowBackIosIcon />}
 				</button>
-				<ul className="flex flex-col gap-4 text-xl font-bold  text-forest-green bg-white bg-opacity-40 p-2 rounded-3xl">
+				<ul className="flex flex-col gap-4 text-xl font-bold  text-forest-green bg-white p-2 rounded-xl">
 					<li>
 						<Link to={""}>
 							<div className="w-24 ">Basic Info</div>
