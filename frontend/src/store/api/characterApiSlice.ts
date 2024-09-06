@@ -14,7 +14,7 @@ import type {
 import type { CreateFeature, Feature } from "../../types/feature";
 import baseQuery from "./baseQuery";
 
-type Tags = TagDescription<"Characters" | "Character" | "Features">;
+type Tags = TagDescription<"Characters" | "Character">;
 
 const onQueryStarted =
 	(tags: Tags[]) =>
@@ -39,7 +39,7 @@ const onQueryStarted =
 export const characterApiSlice = createApi({
 	reducerPath: "characterApi",
 	baseQuery,
-	tagTypes: ["Characters", "Character", "Features"],
+	tagTypes: ["Characters", "Character"],
 	endpoints: (builder) => ({
 		createCharacter: builder.mutation<CharacterBase, CreateCharacterBase>({
 			query: (characterData) => ({
@@ -145,16 +145,16 @@ export const characterApiSlice = createApi({
 				method: "POST",
 				body: feature,
 			}),
-			onQueryStarted: onQueryStarted(["Features"]),
-			invalidatesTags: ["Features"],
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
 		}),
 		deleteFeature: builder.mutation<void, { id: number; characterId: number }>({
 			query: ({ id, characterId }) => ({
 				url: `characters/${characterId}/features/${id}`,
 				method: "DELETE",
 			}),
-			onQueryStarted: onQueryStarted(["Features"]),
-			invalidatesTags: ["Features"],
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
 		}),
 		modifyFeature: builder.mutation<
 			void,
@@ -165,12 +165,8 @@ export const characterApiSlice = createApi({
 				method: "PUT",
 				body: feature,
 			}),
-			onQueryStarted: onQueryStarted(["Features"]),
-			invalidatesTags: ["Features"],
-		}),
-		getFeatures: builder.query<Feature[], number>({
-			query: (characterId) => `characters/${characterId}/features`,
-			providesTags: ["Features"],
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
 		}),
 	}),
 });
@@ -195,5 +191,4 @@ export const {
 	useCreateFeatureMutation,
 	useDeleteFeatureMutation,
 	useModifyFeatureMutation,
-	useGetFeaturesQuery,
 } = characterApiSlice;

@@ -18,7 +18,7 @@ func NewFeatureService(DB *gorm.DB) *FeatureService {
 	}
 }
 
-func (s *FeatureService) GetFeatures(characterID int) ([]*dto.CharacterFeatureDTO, error) {
+func (s *FeatureService) GetFeatures(characterID int) ([]dto.CharacterFeatureDTO, error) {
 	featureModels, err := s.Repo.GetFeatures(characterID)
 	if err != nil {
 		return nil, err
@@ -42,8 +42,9 @@ func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateF
 	return featureDTO, nil
 }
 
-func (s *FeatureService) UpdateFeature(characterFeatureDTO *dto.CharacterFeatureDTO) error {
+func (s *FeatureService) UpdateFeature(characterFeatureDTO *dto.CharacterFeatureDTO, characterID int) error {
 	featureModel := convertToCharacterFeatureModel(characterFeatureDTO)
+	featureModel.CharacterID = uint(characterID)
 	err := s.Repo.UpdateFeature(featureModel)
 	if err != nil {
 		return err
@@ -62,24 +63,22 @@ func (s *FeatureService) DeleteFeature(featureID int, characterID int) error {
 func convertToCharacterFeatureDTO(characterFeature *models.CharacterFeatureModel) *dto.CharacterFeatureDTO {
 	return &dto.CharacterFeatureDTO{
 		ID:          characterFeature.ID,
-		CharacterID: characterFeature.CharacterID,
 		Name:        characterFeature.Name,
 		Description: characterFeature.Description,
 		Source:      characterFeature.Source,
 	}
 }
 
-func convertToCharacterFeatureDTOs(characterFeatures []*models.CharacterFeatureModel) []*dto.CharacterFeatureDTO {
-	var characterFeaturesDTO []*dto.CharacterFeatureDTO
-	for _, feature := range characterFeatures {
-		characterFeaturesDTO = append(characterFeaturesDTO, convertToCharacterFeatureDTO(feature))
+func convertToCharacterFeatureDTOs(characterFeatures []models.CharacterFeatureModel) []dto.CharacterFeatureDTO {
+	dtos := make([]dto.CharacterFeatureDTO, len(characterFeatures))
+	for i, feature := range characterFeatures {
+		dtos[i] = *convertToCharacterFeatureDTO(&feature)
 	}
-	return characterFeaturesDTO
+	return dtos
 }
 
 func convertToCharacterFeatureModel(characterFeatureDTO *dto.CharacterFeatureDTO) *models.CharacterFeatureModel {
 	featureModel := models.CharacterFeatureModel{
-		CharacterID: characterFeatureDTO.CharacterID,
 		Name:        characterFeatureDTO.Name,
 		Description: characterFeatureDTO.Description,
 		Source:      characterFeatureDTO.Source,

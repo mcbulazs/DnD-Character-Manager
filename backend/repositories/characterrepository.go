@@ -120,6 +120,7 @@ func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel,
 		Preload("AbilityScores").
 		Preload("SavingThrows").
 		Preload("Skills").
+		Preload("Features").
 		First(&character, characterID)
 	if tx.Error != nil {
 		return nil, tx.Error

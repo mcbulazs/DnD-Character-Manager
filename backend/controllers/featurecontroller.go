@@ -53,10 +53,9 @@ func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
 	featureDTO.ID = uint(featureID)
 
 	characterID := c.MustGet("character_id").(int)
-	featureDTO.CharacterID = uint(characterID)
 
 	featureService := services.NewFeatureService(db)
-	err = featureService.UpdateFeature(&featureDTO)
+	err = featureService.UpdateFeature(&featureDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

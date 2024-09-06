@@ -45,12 +45,10 @@ const CreateFeatureModal: React.FC<{
 				return;
 			}
 			const updatedFeature = { name, description, source };
-            console.log(feature.id);
 			await modifyFeatureMutation({
 				feature: {
 					...updatedFeature,
 					id: feature.id,
-					characterID: feature.characterID,
 				},
 				characterId,
 			}).unwrap();

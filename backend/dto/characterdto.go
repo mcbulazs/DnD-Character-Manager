@@ -95,7 +95,6 @@ type CharacterSkillDTO struct {
 
 type CharacterFeatureDTO struct {
 	ID          uint   `json:"id"`
-	CharacterID uint   `json:"characterID"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Source      string `json:"source"`

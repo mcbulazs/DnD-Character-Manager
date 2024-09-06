@@ -1,17 +1,17 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteDialog from "../../../components/DeleteDialog";
 import { useHeader } from "../../../layout/components/HeaderProvider";
-import { useGetCharacterByIdQuery } from "../../../store/api/characterApiSlice";
 import {
 	useDeleteCharacterMutation,
 	useSetCharacterAttributeMutation,
 } from "../../../store/api/characterApiSlice";
 import type { CharacterData } from "../../../types/characterData";
 import debounce from "../../../utility/debounce";
+import { useCharacterContext } from "../CharacterProvider";
 import ArmorClass from "./components/ArmorClass";
 import CharacterClass from "./components/CharacterClass";
 import CharacterImage from "./components/CharacterImage";
@@ -115,26 +115,10 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 	);
 };
 
-const CharacterSheet: React.FC<{ characterId?: number }> = ({
-	characterId: _characterId = undefined,
-}) => {
-	let characterId: number;
-	if (_characterId) {
-		characterId = _characterId;
-	} else {
-		const { characterId: paramCharacterId } = useParams();
-		if (!paramCharacterId || Number.isNaN(Number.parseInt(paramCharacterId))) {
-			return <div>Invalid character ID</div>;
-		}
-		characterId = Number.parseInt(paramCharacterId);
-	}
+const CharacterSheet: React.FC = () => {
 	const { setTitle } = useHeader();
 
-	const {
-		data: character,
-		error,
-		isLoading,
-	} = useGetCharacterByIdQuery(characterId);
+	const { character, error, isLoading } = useCharacterContext();
 
 	useEffect(() => {
 		if (!character) return;
@@ -149,17 +133,17 @@ const CharacterSheet: React.FC<{ characterId?: number }> = ({
 		return <div>Error loading character</div>;
 	}
 	if (!character) return <div>Character not found</div>;
-
+	//biome going insane on class formatting
 	return (
 		<div
-			className={`
-				grid
-				w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
-				grid-cols-2 sm:grid-cols-4 2xl:grid-cols-6
-				
-				gap-5 
-				justify-items-center items-center place-items-center
-				 relative`}
+			className="
+grid
+w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
+grid-cols-2 sm:grid-cols-4 2xl:grid-cols-6
+
+gap-5 
+justify-items-center items-center place-items-center
+ relative"
 		>
 			<div
 				className="w-full
@@ -201,7 +185,8 @@ order-10 sm:order-8 2xl:order-4"
 				/>
 			</div>
 			<div
-				className=" w-1/2 2xl:w-full
+				className="
+w-1/2 2xl:w-full
 2xl:row-span-2
 col-span-2 2xl:col-span-1
 order-[13] sm:order-13 2xl:order-5"

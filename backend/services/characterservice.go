@@ -142,8 +142,8 @@ func convertToCharacterImageModel(image *dto.CharacterImageDTO) models.Character
 	}
 }
 
-func convertToCharacterBaseDTO(character *models.CharacterModel) dto.CharacterBaseDTO {
-	return dto.CharacterBaseDTO{
+func convertToCharacterBaseDTO(character *models.CharacterModel) *dto.CharacterBaseDTO {
+	return &dto.CharacterBaseDTO{
 		ID:         character.ID,
 		Name:       character.Name,
 		Class:      character.Class,
@@ -155,7 +155,7 @@ func convertToCharacterBaseDTO(character *models.CharacterModel) dto.CharacterBa
 func convertToCharacterBaseDTOs(characters []models.CharacterModel) []dto.CharacterBaseDTO {
 	dtos := make([]dto.CharacterBaseDTO, len(characters))
 	for i, character := range characters {
-		dtos[i] = convertToCharacterBaseDTO(&character)
+		dtos[i] = *convertToCharacterBaseDTO(&character)
 	}
 	return dtos
 }
@@ -291,6 +291,7 @@ func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 		AbilityScores:     convertToCharacterAbilityScoreDTO(&character.AbilityScores),
 		SavingThrows:      convertToCharacterSavingThrowDTO(&character.SavingThrows),
 		Skills:            convertToCharacterSkillDTO(&character.Skills),
+		Features:          convertToCharacterFeatureDTOs(character.Features),
 	}
 }
 

@@ -8,7 +8,10 @@ import { useDeleteFeatureMutation } from "../../../store/api/characterApiSlice";
 import type { Feature } from "../../../types/feature";
 import CreateFeatureModal from "./CreateFeatureModal";
 
-const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
+const FeatureCard: React.FC<{ feature: Feature; characterId: number }> = ({
+	feature,
+	characterId,
+}) => {
 	const [showFull, setShowFull] = useState(false);
 	const [inEdit, setInEdit] = useState(false);
 	const [deleteFeature] = useDeleteFeatureMutation();
@@ -17,7 +20,7 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
 		try {
 			await deleteFeature({
 				id: feature.id,
-				characterId: feature.characterID,
+				characterId,
 			}).unwrap();
 			toast("Feature deleted", { type: "success" });
 		} catch (error) {
@@ -64,7 +67,7 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
 							<DeleteButton
 								text="Delete Feature"
 								onDelete={() => {
-                                    handleDelete();
+									handleDelete();
 									setShowFull(false);
 								}}
 								dialogMessage="Are you sure you want to delete this feature?"
@@ -87,7 +90,7 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
 						setShowFull(true);
 					}}
 					feature={feature}
-					characterId={feature.characterID}
+					characterId={characterId}
 				/>
 			)}
 		</>

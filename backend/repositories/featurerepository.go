@@ -15,8 +15,8 @@ func NewFeatureRepository(db *gorm.DB) *FeatureRepository {
 	return &FeatureRepository{DB: db}
 }
 
-func (r *FeatureRepository) GetFeatures(characterID int) ([]*models.CharacterFeatureModel, error) {
-	var features []*models.CharacterFeatureModel
+func (r *FeatureRepository) GetFeatures(characterID int) ([]models.CharacterFeatureModel, error) {
+	var features []models.CharacterFeatureModel
 	tx := r.DB.Where("character_id = ?", characterID).Find(&features)
 	if tx.Error != nil {
 		return nil, tx.Error
