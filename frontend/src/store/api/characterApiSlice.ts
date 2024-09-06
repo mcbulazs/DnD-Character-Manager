@@ -11,9 +11,10 @@ import type {
 	SavingThrows,
 	Skills,
 } from "../../types/characterData";
+import type { CreateFeature, Feature } from "../../types/feature";
 import baseQuery from "./baseQuery";
 
-type Tags = TagDescription<"Characters" | "Character">;
+type Tags = TagDescription<"Characters" | "Character" | "Features">;
 
 const onQueryStarted =
 	(tags: Tags[]) =>
@@ -38,9 +39,9 @@ const onQueryStarted =
 export const characterApiSlice = createApi({
 	reducerPath: "characterApi",
 	baseQuery,
-	tagTypes: ["Characters", "Character"],
+	tagTypes: ["Characters", "Character", "Features"],
 	endpoints: (builder) => ({
-		createCharacter: builder.mutation<void, CreateCharacterBase>({
+		createCharacter: builder.mutation<CharacterBase, CreateCharacterBase>({
 			query: (characterData) => ({
 				url: "characters",
 				method: "POST",
@@ -134,6 +135,43 @@ export const characterApiSlice = createApi({
 			query: () => "characters",
 			providesTags: ["Characters"],
 		}),
+
+		createFeature: builder.mutation<
+			Feature,
+			{ feature: CreateFeature; characterId: number }
+		>({
+			query: ({ feature, characterId }) => ({
+				url: `characters/${characterId}/features`,
+				method: "POST",
+				body: feature,
+			}),
+			onQueryStarted: onQueryStarted(["Features"]),
+			invalidatesTags: ["Features"],
+		}),
+		deleteFeature: builder.mutation<void, { id: number; characterId: number }>({
+			query: ({ id, characterId }) => ({
+				url: `characters/${characterId}/features/${id}`,
+				method: "DELETE",
+			}),
+			onQueryStarted: onQueryStarted(["Features"]),
+			invalidatesTags: ["Features"],
+		}),
+		modifyFeature: builder.mutation<
+			void,
+			{ feature: Feature; characterId: number }
+		>({
+			query: ({ feature, characterId }) => ({
+				url: `characters/${characterId}/features/${feature.id}`,
+				method: "PUT",
+				body: feature,
+			}),
+			onQueryStarted: onQueryStarted(["Features"]),
+			invalidatesTags: ["Features"],
+		}),
+		getFeatures: builder.query<Feature[], number>({
+			query: (characterId) => `characters/${characterId}/features`,
+			providesTags: ["Features"],
+		}),
 	}),
 });
 
@@ -143,9 +181,19 @@ export const {
 	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 	useModifyCharacterMutation,
+} = characterApiSlice;
+
+export const {
 	useModifyCharacterAbilityScoresMutation,
 	useModifyCharacterSkillsMutation,
 	useModifyCharacterSavingThrowsMutation,
 	useModifyCharacterImageMutation,
 	useSetCharacterAttributeMutation,
+} = characterApiSlice;
+
+export const {
+	useCreateFeatureMutation,
+	useDeleteFeatureMutation,
+	useModifyFeatureMutation,
+	useGetFeaturesQuery,
 } = characterApiSlice;

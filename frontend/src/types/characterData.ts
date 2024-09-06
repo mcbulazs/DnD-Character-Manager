@@ -1,4 +1,5 @@
 import type { BackgroundImageProps } from "./backgroundImageProps";
+import type { Feature } from "./feature";
 
 export interface Attribute {
 	value: number;
@@ -53,6 +54,7 @@ export interface Skills {
 	survival: ExpertiseAttribute;
 }
 
+
 export type CharacterData = {
 	ID: number;
 	name: string;
@@ -69,4 +71,5 @@ export type CharacterData = {
 	savingThrows: SavingThrows;
 	skills: Skills;
 	image: BackgroundImageProps;
+	features: Feature[];
 };

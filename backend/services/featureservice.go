@@ -26,7 +26,7 @@ func (s *FeatureService) GetFeatures(characterID int) ([]*dto.CharacterFeatureDT
 	return convertToCharacterFeatureDTOs(featureModels), nil
 }
 
-func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateFeatureDTO, characterID int) error {
+func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateFeatureDTO, characterID int) (*dto.CharacterFeatureDTO, error) {
 	featureModel := models.CharacterFeatureModel{
 		Name:        characterFeatureDTO.Name,
 		Description: characterFeatureDTO.Description,
@@ -35,9 +35,11 @@ func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateF
 	featureModel.CharacterID = uint(characterID)
 	err := s.Repo.CreateFeature(&featureModel)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	featureDTO := convertToCharacterFeatureDTO(&featureModel)
+
+	return featureDTO, nil
 }
 
 func (s *FeatureService) UpdateFeature(characterFeatureDTO *dto.CharacterFeatureDTO) error {
@@ -63,6 +65,7 @@ func convertToCharacterFeatureDTO(characterFeature *models.CharacterFeatureModel
 		CharacterID: characterFeature.CharacterID,
 		Name:        characterFeature.Name,
 		Description: characterFeature.Description,
+		Source:      characterFeature.Source,
 	}
 }
 
@@ -79,6 +82,7 @@ func convertToCharacterFeatureModel(characterFeatureDTO *dto.CharacterFeatureDTO
 		CharacterID: characterFeatureDTO.CharacterID,
 		Name:        characterFeatureDTO.Name,
 		Description: characterFeatureDTO.Description,
+		Source:      characterFeatureDTO.Source,
 	}
 	featureModel.ID = characterFeatureDTO.ID
 	return &featureModel

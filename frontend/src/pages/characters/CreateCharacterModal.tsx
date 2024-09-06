@@ -1,4 +1,6 @@
 import { type FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import ImageSizer from "../../components/ImageSizer";
 import Modal from "../../components/Modal";
 import { useCreateCharacterMutation } from "../../store/api/characterApiSlice";
@@ -16,10 +18,18 @@ const CreateCharacterModal: React.FC<{
 	});
 	const [imageUrl, setImageUrl] = useState("");
 	const [createCharacterMutation] = useCreateCharacterMutation();
+	const navigate = useNavigate();
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		createCharacterMutation({ name, class: className, image });
+		try {
+			const data = await createCharacterMutation({ name, class: className, image }).unwrap();
+			toast("Character created", { type: "success" });
+			navigate(`/characters/${data.id}`);
+		} catch (error) {
+			console.error("Error creating character", error);
+			toast("Error creating character", { type: "error" });
+		}
 		onClose();
 	};
 

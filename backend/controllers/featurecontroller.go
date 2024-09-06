@@ -24,18 +24,18 @@ func GetFeaturesHandler(c *gin.Context, db *gorm.DB) {
 
 func CreateFeatureHandler(c *gin.Context, db *gorm.DB) {
 	characterID := c.MustGet("character_id").(int)
-	var featureDTO dto.CharacterCreateFeatureDTO
-	if err := c.ShouldBindJSON(&featureDTO); err != nil {
+	var createFeatureDTO dto.CharacterCreateFeatureDTO
+	if err := c.ShouldBindJSON(&createFeatureDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	featureService := services.NewFeatureService(db)
-	err := featureService.CreateFeature(&featureDTO, characterID)
+	featureDTO, err := featureService.CreateFeature(&createFeatureDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "Feature created successfully"})
+	c.JSON(http.StatusCreated, featureDTO)
 }
 
 func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {

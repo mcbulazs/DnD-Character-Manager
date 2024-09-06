@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -46,7 +48,8 @@ func (r *FeatureRepository) UpdateFeature(feature *models.CharacterFeatureModel)
 }
 
 func (r *FeatureRepository) DeleteFeature(featureID int, characterID int) error {
-	tx := r.DB.Where("id = ? AND character_id = ?", characterID, characterID).Delete(&models.CharacterFeatureModel{})
+	fmt.Println("asd", featureID, characterID)
+	tx := r.DB.Where("id = ? AND character_id = ?", featureID, characterID).Delete(&models.CharacterFeatureModel{})
 	if tx.Error != nil {
 		return tx.Error
 	}
