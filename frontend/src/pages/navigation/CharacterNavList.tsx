@@ -2,7 +2,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import type React from "react";
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 const CharacterNavList: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	return (
@@ -22,14 +22,14 @@ const CharacterNavList: React.FC = () => {
 				</button>
 				<ul className="flex flex-col gap-4 text-xl font-bold  text-forest-green bg-white p-2 rounded-xl">
 					<li>
-						<Link to={""}>
+						<NavLink to={""}>
 							<div className="w-24 ">Basic Info</div>
-						</Link>
+						</NavLink>
 					</li>
 					<li>
-						<Link to={"features"}>
+						<NavLink to={"features"}>
 							<div className="w-24 ">Features</div>
-						</Link>
+						</NavLink>
 					</li>
 				</ul>
 			</nav>
