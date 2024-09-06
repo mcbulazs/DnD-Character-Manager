@@ -123,7 +123,7 @@ const TextEditor: React.FC<{
 		},
 	};
 
-	const handleEditorChange = (event:EventInfo<string, unknown>, editor: ClassicEditor) => {
+	const handleEditorChange = (_event:EventInfo<string, unknown>, editor: ClassicEditor) => {
 		const data = editor.getData();
 		onChange(data);
 	};

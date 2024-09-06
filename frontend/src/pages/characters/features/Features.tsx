@@ -34,10 +34,14 @@ const Features: React.FC<{ characterId?: number }> = ({
 	}
 	console.log(features);
 	return (
-		<div className="flex gap-2 w-full justify-center">
-			{features?.map((feature) => (
-				<FeatureCard key={feature.id} feature={feature} />
-			))}
+		<>
+			<div className="gap-2 w-11/12  xl:w-4/5 2xl:w-3/5
+                grid gap-y-10
+                grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+				{features?.map((feature) => (
+					<FeatureCard key={feature.id} feature={feature} />
+				))}
+			</div>
 			{isModalOpen ? (
 				<CreateFeatureModal
 					onClose={() => setIsModalOpen(false)}
@@ -46,7 +50,7 @@ const Features: React.FC<{ characterId?: number }> = ({
 			) : (
 				<CreateButton text="Add feature" onClick={() => setIsModalOpen(true)} />
 			)}
-		</div>
+		</>
 	);
 };
 
