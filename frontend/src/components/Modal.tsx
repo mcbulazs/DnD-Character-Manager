@@ -27,7 +27,7 @@ const Modal: React.FC<{
 					borderRadius: "0.5rem",
 					height: "auto",
 					paddingTop: "1rem",
-					maxWidth: "28rem",
+					paddingBottom: "1rem",
 					...style,
                     backgroundColor: "#f6e1bc",
 					position: "relative",
@@ -53,9 +53,9 @@ const Modal: React.FC<{
 					autoHeight
 					autoHeightMin={"fit-content"}
 					autoHeightMax={"90vh"}
-					style={{ flexGrow: 1, marginRight: "0.2rem" }}
+					style={{ flexGrow: 1, marginRight: "0.2rem", marginBottom: "0.2rem" }}
 				>
-					<div style={{ overflowX: "hidden", padding: "0 1rem 1rem 1rem", marginTop:"1rem" }}>
+					<div style={{ overflowX: "hidden", padding: "0 1rem 1rem 1rem"}}>
 						{children}
 					</div>
 				</Scrollbars>
@@ -74,7 +74,7 @@ const Modal: React.FC<{
 				<div
 					style={{
 						position: "absolute",
-						bottom: 0,
+						bottom: "1rem",
 						left: 0,
 						right: 0,
 						height: "20px", // Adjust height as needed

@@ -25,8 +25,7 @@ const Features: React.FC = () => {
 	}
     console.log(features)
 	return (
-		<div>
-			<h1>Features</h1>
+		<div className="flex gap-2 w-full justify-center">
 			{features?.map((feature) => (
 				<FeatureCard key={feature.id} feature={feature} />
 			))}

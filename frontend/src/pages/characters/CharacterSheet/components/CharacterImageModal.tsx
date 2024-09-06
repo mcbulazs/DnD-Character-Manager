@@ -34,7 +34,13 @@ const CharacterImageModal: React.FC<{
 	};
 
 	return (
-		<Modal onClose={onClose} className="border-4 border-black ">
+		<Modal
+			onClose={onClose}
+			className="border-4 border-black "
+			style={{
+				maxWidth: "28rem",
+			}}
+		>
 			<div className="h-full">
 				<label className="block text-sm font-medium text-gray-700">
 					Image URL:

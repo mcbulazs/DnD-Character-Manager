@@ -23,7 +23,11 @@ const CreateCharacterModal: React.FC<{
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-			const data = await createCharacterMutation({ name, class: className, image }).unwrap();
+			const data = await createCharacterMutation({
+				name,
+				class: className,
+				image,
+			}).unwrap();
 			toast("Character created", { type: "success" });
 			navigate(`/characters/${data.id}`);
 		} catch (error) {
@@ -34,7 +38,12 @@ const CreateCharacterModal: React.FC<{
 	};
 
 	return (
-		<Modal onClose={onClose}>
+		<Modal
+			onClose={onClose}
+			style={{
+				maxWidth: "28rem",
+			}}
+		>
 			<form onSubmit={handleSubmit} className="w-full h-fit">
 				<div className="mb-4">
 					<label className="block text-sm font-medium text-gray-700">

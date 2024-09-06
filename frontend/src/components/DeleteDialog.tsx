@@ -1,5 +1,4 @@
 import type React from "react";
-import Modal from "./Modal";
 
 const DeleteDialog: React.FC<{
 	message: string;
