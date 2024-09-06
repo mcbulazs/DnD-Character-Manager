@@ -1,24 +1,25 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
 import CharacterList from "../pages/characters/CharacterList";
+import { CharacterProvider } from "../pages/characters/CharacterProvider";
 import CharacterSheet from "../pages/characters/CharacterSheet/CharacterSheet";
 import Features from "../pages/characters/features/Features";
 import CharacterNavList from "../pages/navigation/CharacterNavList";
 
-const CharacterRoutes = () => {
+const CharactersRoutes = () => {
 	return (
 		<Routes>
 			<Route
-				path=""
+				index
 				element={
 					<AuthGuard loggedInRequired={true}>
 						<CharacterList />
 					</AuthGuard>
 				}
 			/>
-			<Route path=":characterId" element={<CharacterNavList />}>
+			<Route path=":characterId" element={<CharacterLayout />}>
 				<Route
-					path=""
+					index
 					element={
 						<AuthGuard loggedInRequired={true}>
 							<CharacterSheet />
@@ -38,4 +39,16 @@ const CharacterRoutes = () => {
 	);
 };
 
-export default CharacterRoutes;
+const CharacterLayout = () => {
+	const { characterId } = useParams();
+	if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
+		return <div>Invalid character ID</div>;
+	}
+	return (
+		<CharacterProvider characterId={Number.parseInt(characterId)}>
+			<CharacterNavList />
+		</CharacterProvider>
+	);
+};
+
+export default CharactersRoutes;
