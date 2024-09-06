@@ -1,12 +1,17 @@
 import type React from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetFeaturesQuery } from "../../../store/api/characterApiSlice";
+import CreateButton from "../CreateButton";
+import CreateFeatureModal from "./CreateFeatureModal";
 import FeatureCard from "./FeatureCard";
 
 const Features: React.FC<{ characterId?: number }> = ({
 	characterId: _characterId = undefined,
 }) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	let characterId: number;
 	if (_characterId) {
 		characterId = _characterId;
@@ -33,6 +38,14 @@ const Features: React.FC<{ characterId?: number }> = ({
 			{features?.map((feature) => (
 				<FeatureCard key={feature.id} feature={feature} />
 			))}
+			{isModalOpen ? (
+				<CreateFeatureModal
+					onClose={() => setIsModalOpen(false)}
+					characterId={characterId}
+				/>
+			) : (
+				<CreateButton text="Add feature" onClick={() => setIsModalOpen(true)} />
+			)}
 		</div>
 	);
 };

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useHeader } from "../../layout/components/HeaderProvider";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import CharacterListCard from "./CharacterListCard";
-import CreateCharacterButton from "./CreateCharacterButton";
+import CreateButton from "./CreateButton";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
@@ -34,7 +34,7 @@ const CharacterList: React.FC = () => {
 				))}
 			</div>
 			{!modalOpen ? (
-				<CreateCharacterButton setOpen={setModalOpen} />
+				<CreateButton onClick={()=>setModalOpen(true)} text="Create Character"/>
 			) : (
 				<CreateCharacterModal onClose={() => setModalOpen(false)} />
 			)}
