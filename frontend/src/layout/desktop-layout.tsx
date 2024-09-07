@@ -1,6 +1,6 @@
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Outlet } from "react-router-dom";
-import { useHeaderContext } from "./components/HeaderProvider";
+import { useHeaderContext } from "./Contexts/HeaderContext";
 import Menu from "./components/Sidebar";
 
 const DesktopLayout = () => {

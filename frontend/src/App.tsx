@@ -2,7 +2,7 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Router from "./Routes/Router";
-import HeaderProvider from "./layout/components/HeaderProvider";
+import HeaderProvider from "./layout/Contexts/HeaderContext";
 
 function App() {
 	return (

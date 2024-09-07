@@ -3,8 +3,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useEffect, useRef, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { NavLink } from "react-router-dom";
-import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
+import { useCharactersContext } from "../Contexts/CharactersContext";
 
 const Menu: React.FC = () => {
 	const [open, setOpen] = useState(false);
@@ -73,7 +73,7 @@ const Menu: React.FC = () => {
 	}, []);
 
 	const FavoriteCharacters: React.FC = () => {
-		const { data: characters } = useGetCharactersQuery();
+		const { characters } = useCharactersContext();
 		return (
 			<>
 				{characters &&

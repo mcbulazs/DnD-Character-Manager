@@ -2,13 +2,13 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CreateButton from "../../components/buttons/CreateButton";
-import { useHeaderContext } from "../../layout/components/HeaderProvider";
-import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
+import { useCharactersContext } from "../../layout/Contexts/CharactersContext";
+import { useHeaderContext } from "../../layout/Contexts/HeaderContext";
 import CharacterListCard from "./CharacterListCard";
 import CreateCharacterModal from "./CreateCharacterModal";
 
 const CharacterList: React.FC = () => {
-	const { data: characters, error, isLoading } = useGetCharactersQuery();
+	const { characters, error, isLoading } = useCharactersContext();
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const { setTitle } = useHeaderContext();

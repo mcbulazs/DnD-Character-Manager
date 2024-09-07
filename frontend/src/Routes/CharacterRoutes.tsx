@@ -1,7 +1,7 @@
 import { Route, Routes, useParams } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
+import { CharacterProvider } from "../layout/Contexts/CharacterContext";
 import CharacterList from "../pages/characters/CharacterList";
-import { CharacterProvider } from "../pages/characters/CharacterProvider";
 import CharacterSheet from "../pages/characters/CharacterSheet/CharacterSheet";
 import Features from "../pages/characters/features/Features";
 import CharacterNavList from "../pages/navigation/CharacterNavList";

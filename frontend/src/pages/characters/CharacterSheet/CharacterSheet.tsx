@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteDialog from "../../../components/DeleteDialog";
-import { useHeaderContext } from "../../../layout/components/HeaderProvider";
+import { useCharacterContext } from "../../../layout/Contexts/CharacterContext";
+import { useHeaderContext } from "../../../layout/Contexts/HeaderContext";
 import {
 	useDeleteCharacterMutation,
 	useSetCharacterAttributeMutation,
 } from "../../../store/api/characterApiSlice";
 import type { CharacterData } from "../../../types/characterData";
 import debounce from "../../../utility/debounce";
-import { useCharacterContext } from "../CharacterProvider";
 import ArmorClass from "./components/ArmorClass";
 import CharacterClass from "./components/CharacterClass";
 import CharacterImage from "./components/CharacterImage";

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CreateButton from "../../../components/buttons/CreateButton";
-import { useHeaderContext } from "../../../layout/components/HeaderProvider";
-import { useCharacterContext } from "../CharacterProvider";
+import { useCharacterContext } from "../../../layout/Contexts/CharacterContext";
+import { useHeaderContext } from "../../../layout/Contexts/HeaderContext";
 import CreateFeatureModal from "./CreateFeatureModal";
 import FeatureCard from "./FeatureCard";
 
