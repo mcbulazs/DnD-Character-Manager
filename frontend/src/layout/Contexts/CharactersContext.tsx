@@ -1,9 +1,8 @@
 import type { SerializedError } from "@reduxjs/toolkit";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import {
-	useGetCharactersQuery,
-} from "../../store/api/characterApiSlice";
+import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
+import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
 import type { ApiError } from "../../types/apiError";
 import type { CharacterBase } from "../../types/characterBase";
 
@@ -34,10 +33,18 @@ export const useCharactersContext = () => {
 export const CharactersProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { data: characters, isLoading, error } = useGetCharactersQuery();
+	const { data } = useIsAuthenticatedQuery();
+	const isLoggedIn = data?.authenticated;
 	const [currentCharacters, setCurrentCharacters] = useState<
 		CharacterBase[] | null
 	>(null);
+	const {
+		data: characters,
+		isLoading,
+		error,
+	} = useGetCharactersQuery(undefined, {
+		skip: !isLoggedIn, // Conditionally skip fetching
+	});
 
 	useEffect(() => {
 		if (characters) {

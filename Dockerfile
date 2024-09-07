@@ -39,7 +39,7 @@ WORKDIR /root/
 COPY --from=GoBuild /app/app .
 
 COPY --from=ReactBuild /app/dist files
-
+COPY dockerbuildfiles/robots.txt /root/files/robots.txt
 
 
 EXPOSE 80
