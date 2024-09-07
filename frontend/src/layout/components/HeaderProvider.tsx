@@ -11,10 +11,10 @@ interface HeaderContextType {
 const HeaderContext = createContext<HeaderContextType | undefined>(undefined);
 
 // Custom hook for easier access to the context
-export const useHeader = () => {
+export const useHeaderContext = () => {
   const context = useContext(HeaderContext);
   if (context === undefined) {
-    throw new Error('useHeader must be used within a HeaderProvider');
+    throw new Error('useHeaderContext must be used within a HeaderProvider');
   }
   return context;
 };

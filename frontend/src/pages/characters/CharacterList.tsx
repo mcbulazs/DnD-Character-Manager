@@ -2,7 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CreateButton from "../../components/buttons/CreateButton";
-import { useHeader } from "../../layout/components/HeaderProvider";
+import { useHeaderContext } from "../../layout/components/HeaderProvider";
 import { useGetCharactersQuery } from "../../store/api/characterApiSlice";
 import CharacterListCard from "./CharacterListCard";
 import CreateCharacterModal from "./CreateCharacterModal";
@@ -11,7 +11,7 @@ const CharacterList: React.FC = () => {
 	const { data: characters, error, isLoading } = useGetCharactersQuery();
 
 	const [modalOpen, setModalOpen] = useState(false);
-	const { setTitle } = useHeader();
+	const { setTitle } = useHeaderContext();
 
 	useEffect(() => {
 		setTitle(<h1>Characters</h1>);

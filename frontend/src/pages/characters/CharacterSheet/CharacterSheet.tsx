@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteDialog from "../../../components/DeleteDialog";
-import { useHeader } from "../../../layout/components/HeaderProvider";
+import { useHeaderContext } from "../../../layout/components/HeaderProvider";
 import {
 	useDeleteCharacterMutation,
 	useSetCharacterAttributeMutation,
@@ -116,7 +116,7 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 };
 
 const CharacterSheet: React.FC = () => {
-	const { setTitle } = useHeader();
+	const { setTitle } = useHeaderContext();
 
 	const { character, error, isLoading } = useCharacterContext();
 

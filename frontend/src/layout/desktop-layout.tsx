@@ -1,10 +1,10 @@
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Outlet } from "react-router-dom";
-import { useHeader } from "./components/HeaderProvider";
+import { useHeaderContext } from "./components/HeaderProvider";
 import Menu from "./components/Sidebar";
 
 const DesktopLayout = () => {
-	const { title } = useHeader();
+	const { title } = useHeaderContext();
 
 	return (
 		<div className="h-dvh">

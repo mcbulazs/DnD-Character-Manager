@@ -35,7 +35,6 @@ export const CharacterProvider: React.FC<{ characterId: number; children: React.
 		if (character) {
 			setCurrentCharacter(character);
 		}
-        console.log(character);
 	}, [character]);
 
 	return (

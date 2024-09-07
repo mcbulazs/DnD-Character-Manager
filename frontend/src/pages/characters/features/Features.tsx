@@ -1,8 +1,9 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CreateButton from "../../../components/buttons/CreateButton";
+import { useHeaderContext } from "../../../layout/components/HeaderProvider";
 import { useCharacterContext } from "../CharacterProvider";
 import CreateFeatureModal from "./CreateFeatureModal";
 import FeatureCard from "./FeatureCard";
@@ -25,6 +26,12 @@ const Features: React.FC<{ characterId?: number }> = ({
 	//const { data: features, error, isLoading } = useGetFeaturesQuery(characterId);
 
 	const { character, error, isLoading } = useCharacterContext();
+	const { setTitle } = useHeaderContext();
+
+	useEffect(() => {
+		setTitle(<h1>{character?.name}'s features</h1>);
+	}, [setTitle, character]);
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -37,6 +44,7 @@ const Features: React.FC<{ characterId?: number }> = ({
 		return <div>No character found</div>;
 	}
 	const features = character.features;
+
 	return (
 		<>
 			<div
@@ -45,7 +53,11 @@ const Features: React.FC<{ characterId?: number }> = ({
                 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
 			>
 				{features?.map((feature) => (
-					<FeatureCard key={feature.id} feature={feature} characterId={character.ID} />
+					<FeatureCard
+						key={feature.id}
+						feature={feature}
+						characterId={character.ID}
+					/>
 				))}
 			</div>
 			{isModalOpen ? (
