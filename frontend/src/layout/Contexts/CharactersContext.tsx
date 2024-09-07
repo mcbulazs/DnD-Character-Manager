@@ -2,12 +2,10 @@ import type { SerializedError } from "@reduxjs/toolkit";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
-	useGetCharacterByIdQuery,
 	useGetCharactersQuery,
 } from "../../store/api/characterApiSlice";
 import type { ApiError } from "../../types/apiError";
 import type { CharacterBase } from "../../types/characterBase";
-import type { CharacterData } from "../../types/characterData";
 
 // Define the context shape
 interface CharactersContextType {
