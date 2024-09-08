@@ -3,17 +3,17 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../store/api/userApiSlice";
-import { resetApiState } from "../../store/store";
+//import { resetApiState } from "../../store/store";
 
 const Logout: React.FC = () => {
 	const [logout] = useLogoutMutation();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	//const dispatch = useDispatch();
 	useEffect(() => {
 		const performLogout = async () => {
 			try {
 				await logout();
-				resetApiState(dispatch);
+				//resetApiState(dispatch);
 				navigate("/login");
 			} catch (error) {
 				console.error("Logout failed", error);
@@ -21,7 +21,7 @@ const Logout: React.FC = () => {
 		};
 
 		performLogout();
-	}, [navigate, dispatch, logout]);
+	}, [navigate, logout]);
 
 	return (
 		<div className="w-1/3 m-auto mt-10 text-center">

@@ -1,13 +1,14 @@
 import type React from "react";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { toast } from "react-toastify";
-import TextEditor from "../../../components/CKEditor/CKEditor";
 import Modal from "../../../components/Modal";
 import {
 	useCreateFeatureMutation,
 	useModifyFeatureMutation,
 } from "../../../store/api/characterApiSlice";
 import type { Feature } from "../../../types/feature";
+//import TextEditor from "../../../components/CKEditor/CKEditor";
+const TextEditor = lazy(() => import("../../../components/CKEditor/CKEditor"));
 
 const CreateFeatureModal: React.FC<{
 	onClose: () => void;
@@ -82,12 +83,15 @@ const CreateFeatureModal: React.FC<{
 				<label className="block text-sm font-medium text-gray-700">
 					Description:
 				</label>
-				<TextEditor
-					value={description}
-					onChange={(val) => {
-						setDescription(val);
-					}}
-				/>
+
+				<Suspense fallback={<div>Loading editor...</div>}>
+					<TextEditor
+						value={description}
+						onChange={(val) => {
+							setDescription(val);
+						}}
+					/>
+				</Suspense>
 				<button
 					type="button"
 					onClick={feature ? updateFeature : createFeature}

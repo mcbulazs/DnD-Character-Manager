@@ -1,5 +1,5 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 import {
 	AccessibilityHelp,
@@ -7,6 +7,7 @@ import {
 	Autosave,
 	Bold,
 	ClassicEditor,
+	type Editor,
 	type EditorConfig,
 	Essentials,
 	type EventInfo,
@@ -123,7 +124,10 @@ const TextEditor: React.FC<{
 		},
 	};
 
-	const handleEditorChange = (_event:EventInfo<string, unknown>, editor: ClassicEditor) => {
+	const handleEditorChange = (
+		_event: EventInfo<string, unknown>,
+		editor: Editor,
+	) => {
 		const data = editor.getData();
 		onChange(data);
 	};
@@ -138,7 +142,12 @@ const TextEditor: React.FC<{
 					<div className="editor-container__editor">
 						<div ref={editorRef}>
 							{isLayoutReady && (
-								<CKEditor editor={ClassicEditor} config={editorConfig} data={value} onChange={handleEditorChange} />
+								<CKEditor
+									editor={ClassicEditor}
+									config={editorConfig}
+									data={value}
+									onChange={handleEditorChange}
+								/>
 							)}
 						</div>
 					</div>

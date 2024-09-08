@@ -1,5 +1,4 @@
-import InfoIcon from "@mui/icons-material/Info";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Info as InfoIcon, Menu as MenuIcon } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { NavLink } from "react-router-dom";

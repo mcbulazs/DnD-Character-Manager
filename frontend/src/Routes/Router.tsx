@@ -6,15 +6,13 @@ import CharactersRoutes from "./CharacterRoutes";
 
 const Router = () => {
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<CharactersLayout />}>
-					<Route path="/*" element={<AuthRoutes />} />
-					<Route path="characters/*" element={<CharactersRoutes />} />
-					<Route path="*" element={<div>404 Not Found</div>} />
-				</Route>
-			</Routes>
-		</BrowserRouter>
+		<Routes>
+			<Route path="/" element={<CharactersLayout />}>
+				<Route path="/*" element={<AuthRoutes />} />
+				<Route path="characters/*" element={<CharactersRoutes />} />
+				<Route path="*" element={<div>404 Not Found</div>} />
+			</Route>
+		</Routes>
 	);
 };
 

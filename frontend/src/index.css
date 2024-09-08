@@ -6,11 +6,6 @@
     box-sizing: border-box;
 }
 
-body,html {
-    margin: 0; 
-    padding: 0;
-}
-
 .inputNumberNoSpinner::-webkit-outer-spin-button,
 .inputNumberNoSpinner::-webkit-inner-spin-button {
   -webkit-appearance: none;
