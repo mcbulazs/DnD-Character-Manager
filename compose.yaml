@@ -13,6 +13,8 @@ services:
       - dbdata:/var/lib/postgresql/data
     networks:
       - base-network
+    ports:
+      - 5432:5432
 
   go:
     container_name: go

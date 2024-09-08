@@ -6,9 +6,9 @@ import argv from 'node:process';
 // Constants
 const isProduction = argv.argv[2] !== "dev"
 if (isProduction) {
-    console.log("Running in development mode")
-} else {
     console.log("Running in production mode")
+} else {
+    console.log("Running in development mode")
 }
 
 const port = process.env.FRONTEND_PORT || 5173
@@ -66,8 +66,8 @@ app.use('*', async (req, res) => {
             template = templateHtml
             render = (await import('./dist/server/entry-server.js')).render
         }
-
-        const rendered = await render(url)
+        console.log(`Rendering: ${url}`)
+        const rendered = await render(req.originalUrl)
         const html = template
             .replace(`<!--app-html-->`, rendered.html ?? '')
             .replace(
