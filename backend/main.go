@@ -8,6 +8,7 @@ import (
 
 	ctrl "DnDCharacterSheet/controllers"
 	db "DnDCharacterSheet/db"
+	"DnDCharacterSheet/env"
 	"DnDCharacterSheet/models"
 	"DnDCharacterSheet/utility"
 )
@@ -28,7 +29,7 @@ func main() {
 
 	// Start the server
 	fmt.Println("Starting server on port 80")
-	err := r.Run(":80")
+	err := r.Run(env.GetBackendPort())
 	if err != nil {
 		log.Fatal("Failed to start server:", err)
 	}

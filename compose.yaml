@@ -1,7 +1,7 @@
 # add the serivces needed (postgres,go)
 services:
   postgres:
-    container_name: database
+    container_name: postgres
     image: postgres:16.4
     env_file:
       - .env
@@ -9,22 +9,38 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5432:5432"
     volumes: 
       - dbdata:/var/lib/postgresql/data
+    networks:
+      - base-network
 
-  app:
-    container_name: app
+  go:
+    container_name: go
     build:
-      context: ./
+      context: backend
     depends_on:
       - "postgres"
     ports:
-      - 80:80
+      - ${API_PORT}:${API_PORT}
     env_file:
       - .env
-      
+    networks:
+      - base-network
+
+  react:
+    container_name: react
+    build:
+      context: frontend
+    env_file:
+      - .env
+    depends_on:
+      - "go"
+    networks:
+      - base-network
+
 volumes:
   dbdata: # create the volume for persisting data.
-            
+
+networks:
+  base-network:
+    driver: bridge

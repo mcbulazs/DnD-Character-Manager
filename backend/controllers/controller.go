@@ -9,18 +9,11 @@ import (
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
-	// Serve static files from the "static" directory
-	r.Static("/files", "./files")
 	r.StaticFile("/robots.txt", "./files/robots.txt")
-	r.LoadHTMLFiles("files/index.html")
-
-	// Define a route for the root path
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
-	})
 
 	api := r.Group("/api")
 	initCors(api)
+
 	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
 	api.POST("/register", func(c *gin.Context) {
@@ -79,10 +72,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		DeleteFeatureHandler(c, db)
 	})
 
-	// frontend routes
-	r.NoRoute(func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
-	})
+	InitProxy(r)
 }
 
 func initCors(r *gin.RouterGroup) {

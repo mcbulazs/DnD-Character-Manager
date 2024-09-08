@@ -17,3 +17,11 @@ func GetConnectionString() string {
 func GetStoreHash() string {
 	return "ygMSEbVbH8n4IPnnmIp2NIOg1teTUwc8"
 }
+
+func GetFrontendURL() string {
+	return "http://localhost:3000"
+}
+
+func GetBackendPort() string {
+	return ":80"
+}

@@ -11,8 +11,8 @@ if (isProduction) {
     console.log("Running in production mode")
 }
 
-const port = process.env.PORT || 5173
-const base = process.env.BASE || '/'
+const port = process.env.FRONTEND_PORT || 5173
+const base = '/'
 
 // Cached production assets
 const templatePath = isProduction
