@@ -1,5 +1,7 @@
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import {
+	ArrowBackIos as ArrowBackIosIcon,
+	ArrowForwardIos as ArrowForwardIosIcon,
+} from "@mui/icons-material";
 import type React from "react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";

@@ -1,6 +1,5 @@
 import {
 	type ConfigureStoreOptions,
-	type EnhancedStore,
 	configureStore,
 } from "@reduxjs/toolkit";
 import { characterApiSlice } from "./api/characterApiSlice";

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { CharactersProvider } from "../layout/Contexts/CharactersContext";
 import DesktopLayout from "../layout/Desktop-layout";
 import AuthRoutes from "./AuthRoutes";

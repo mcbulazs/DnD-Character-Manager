@@ -1,6 +1,5 @@
 import type React from "react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../store/api/userApiSlice";
 //import { resetApiState } from "../../store/store";

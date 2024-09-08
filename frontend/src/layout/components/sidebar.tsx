@@ -135,7 +135,7 @@ const Menu: React.FC = () => {
 				</button>
 
 				{/* Scrollable Content Area */}
-				<Scrollbars className="w-full">
+				<Scrollbars className="w-full" universal>
 					<nav className="w-full flex flex-grow flex-col  ">
 						<NavLink
 							to="/"
