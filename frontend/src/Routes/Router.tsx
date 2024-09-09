@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { CharactersProvider } from "../layout/Contexts/CharactersContext";
-import DesktopLayout from "../layout/Desktop-layout";
+import DesktopLayout from "../layout/DesktopLayout";
 import AuthRoutes from "./AuthRoutes";
 import CharactersRoutes from "./CharacterRoutes";
 
