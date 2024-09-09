@@ -1,12 +1,12 @@
-name: Go Build
+name: backend build
 
 on:
   push:
     branches:
-      - master  # Change this to your default branch if it's not 'main'
+      - master
   pull_request:
     branches:
-      - master  # Change this to your default branch if it's not 'main'
+      - master
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.22.6'  # Specify your Go version here
+          go-version: '1.22.6'
 
       - name: Install dependencies
         run: go mod download
@@ -29,5 +29,9 @@ jobs:
         run: go build
         working-directory: backend
 
-     # - name: Run tests (optional)
-     #   run: go test -v ./...
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            backend/main

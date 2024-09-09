@@ -1,12 +1,12 @@
-name: Build Frontend and Server
+name: frontend build
 
 on:
   push:
     branches:
-      - master  # Change this to your default branch if it's not 'main'
+      - master
   pull_request:
     branches:
-      - master  # Change this to your default branch if it's not 'main'
+      - master
 
 jobs:
   build:
