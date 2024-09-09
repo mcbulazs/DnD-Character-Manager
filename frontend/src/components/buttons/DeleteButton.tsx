@@ -18,7 +18,7 @@ const DeleteButton: React.FC<{
                 transition-all duration-300 ease-in-out overflow-hidden`}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
-				onMouseDown={() => setOpen(true)}
+				onClick={() => setOpen(true)}
 				type="button"
 			>
 				{hover ? (

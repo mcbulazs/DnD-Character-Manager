@@ -3,7 +3,10 @@ const RotationCircle: React.FC<{
 	setProfRotation: (val: number) => void;
 	max: number;
 }> = ({ profRotation, setProfRotation, max }) => {
-	const handleClick = () => {
+	const handleClick = (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
 		setProfRotation((profRotation + 1) % max);
 	};
 	const colors = ["transparent", "blue", "red", "green", "yellow"];

@@ -33,6 +33,11 @@ const CharacterNavList: React.FC = () => {
 							<div className="w-24 ">Features</div>
 						</NavLink>
 					</li>
+					<li>
+						<NavLink to={"spells"}>
+							<div className="w-24 ">Spells</div>
+						</NavLink>
+					</li>
 				</ul>
 			</nav>
 

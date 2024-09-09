@@ -28,6 +28,12 @@ const FeatureCard: React.FC<{ feature: Feature; characterId: number }> = ({
 			toast("Error deleting feature", { type: "error" });
 		}
 	};
+	const handleClick = (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
+		setShowFull(true);
+	}
 	return (
 		<>
 			<div
@@ -37,7 +43,7 @@ const FeatureCard: React.FC<{ feature: Feature; characterId: number }> = ({
                 border-4 border-black rounded-xl
                 cursor-pointer relative
                 "
-				onMouseDown={() => setShowFull(true)}
+				onMouseDown={handleClick}
 			>
 				<h2 className="text-center text-xl font-bold border-b-4 border-dragon-blood">
 					{feature.name}

@@ -15,7 +15,7 @@ const EditButton: React.FC<{
                                 transition-all duration-300 ease-in-out overflow-hidden`}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
-			onMouseDown={onClick}
+			onClick={onClick}
 			type="button"
 		>
 			{hover ? (

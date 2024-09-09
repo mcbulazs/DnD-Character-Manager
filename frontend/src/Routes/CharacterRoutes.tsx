@@ -4,6 +4,7 @@ import { CharacterProvider } from "../layout/Contexts/CharacterContext";
 import CharacterList from "../pages/characters/CharacterList";
 import CharacterSheet from "../pages/characters/CharacterSheet/CharacterSheet";
 import Features from "../pages/characters/features/Features";
+import Spells from "../pages/characters/spells/Spells";
 import CharacterNavList from "../pages/navigation/CharacterNavList";
 
 const CharactersRoutes = () => {
@@ -31,6 +32,14 @@ const CharactersRoutes = () => {
 					element={
 						<AuthGuard loggedInRequired={true}>
 							<Features />
+						</AuthGuard>
+					}
+				/>
+				<Route
+					path="spells"
+					element={
+						<AuthGuard loggedInRequired={true}>
+							<Spells />
 						</AuthGuard>
 					}
 				/>

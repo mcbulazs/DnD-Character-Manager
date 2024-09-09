@@ -8,6 +8,12 @@ const CharacterImage: React.FC<{
 	characterID: number;
 }> = ({ image, characterID }) => {
 	const [modalOpen, setModalOpen] = useState(false);
+	const handleClick = (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
+		setModalOpen(true);
+	}
 
 	return (
 		<div className="w-full aspect-[3/4] place-self-end">
@@ -18,9 +24,7 @@ const CharacterImage: React.FC<{
 					backgroundPosition: image.backgroundPosition,
 					backgroundSize: image.backgroundSize,
 				}}
-				onMouseDown={() => {
-					setModalOpen(true);
-				}}
+				onMouseDown={handleClick}
 			/>
 			{modalOpen && (
 				<CharacterImageModal

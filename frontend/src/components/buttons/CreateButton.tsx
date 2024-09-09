@@ -6,6 +6,12 @@ const CreateButton: React.FC<{
 	text: string;
 }> = ({ onClick, text }) => {
 	const [hover, setHover] = useState(false);
+	const handleClick = (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
+		onClick();
+	}
 	return (
 		<button
 			className={`bg-green-500 hover:bg-green-700 text-white font-bold
@@ -14,7 +20,7 @@ const CreateButton: React.FC<{
                                 transition-all duration-300 ease-in-out overflow-hidden`}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
-			onMouseDown={onClick}
+			onMouseDown={handleClick}
 			type="button"
 		>
 			{hover ? (

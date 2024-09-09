@@ -39,12 +39,18 @@ const CharacterListCard: React.FC<{ character: CharacterBase }> = ({
 		}, 300),
 		[],
 	);
-	const handleFavorite = async (_e: React.MouseEvent) => {
+	const handleFavorite = async (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
 		favoriteDebounce(!favorite);
 		setFavorite(!favorite);
 	};
 
 	const handleCardClick = (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
 		// If the target is not the favorite icon, navigate to the character's page
 		if ((e.target as HTMLElement).closest(".favorite-icon") === null) {
 			navigate(`/characters/${character.id}`);

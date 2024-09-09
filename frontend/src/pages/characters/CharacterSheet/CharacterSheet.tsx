@@ -49,7 +49,10 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 		}, 300),
 		[],
 	);
-	const handleFavorite = async (_e: React.MouseEvent) => {
+	const handleFavorite = async (e: React.MouseEvent) => {
+		if (e.button !== 0) {
+			return;
+		}
 		favoriteDebounce(!isFavorite);
 		setIsFavorite(!isFavorite);
 	};

@@ -56,6 +56,9 @@ const Menu: React.FC = () => {
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
+			if (e.button !== 0) {
+				return;
+			}
 			if (
 				sidebarRef.current &&
 				!sidebarRef.current.contains(e.target as Node)
