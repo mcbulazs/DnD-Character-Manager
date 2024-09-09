@@ -1,0 +1,42 @@
+name: Build Frontend and Server
+
+on:
+  push:
+    branches:
+      - master  # Change this to your default branch if it's not 'main'
+  pull_request:
+    branches:
+      - master  # Change this to your default branch if it's not 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run build:client
+        working-directory: frontend
+
+      - name: Build server
+        run: npm run build:server
+        working-directory: frontend
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            frontend/dist/client
+            frontend/dist/server
