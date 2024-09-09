@@ -1,5 +1,5 @@
 export type Tracker = {
-    ID: number;
+    id: number;
     name: string;
     type: string;
     maxValue: number;

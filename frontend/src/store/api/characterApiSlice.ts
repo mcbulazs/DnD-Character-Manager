@@ -13,6 +13,7 @@ import type {
 } from "../../types/characterData";
 import type { CreateFeature, Feature } from "../../types/feature";
 import type { CreateSpell, Spell } from "../../types/spell";
+import type { CreateTracker, Tracker } from "../../types/tracker";
 import baseQuery from "./baseQuery";
 
 type Tags = TagDescription<"Characters" | "Character">;
@@ -170,7 +171,10 @@ export const characterApiSlice = createApi({
 			invalidatesTags: ["Character"],
 		}),
 
-		createSpell: builder.mutation<Spell, { spell: CreateSpell, characterId: number }>({
+		createSpell: builder.mutation<
+			Spell,
+			{ spell: CreateSpell; characterId: number }
+		>({
 			query: ({ spell, characterId }) => ({
 				url: `characters/${characterId}/spells`,
 				method: "POST",
@@ -179,7 +183,7 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character"]),
 			invalidatesTags: ["Character"],
 		}),
-		modifySpell: builder.mutation<void, { spell: Spell, characterId: number }>({
+		modifySpell: builder.mutation<void, { spell: Spell; characterId: number }>({
 			query: ({ spell, characterId }) => ({
 				url: `characters/${characterId}/spells/${spell.id}`,
 				method: "PUT",
@@ -188,9 +192,42 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character"]),
 			invalidatesTags: ["Character"],
 		}),
-		deleteSpell: builder.mutation<void, { id: number, characterId: number }>({
+		deleteSpell: builder.mutation<void, { id: number; characterId: number }>({
 			query: ({ id, characterId }) => ({
 				url: `characters/${characterId}/spells/${id}`,
+				method: "DELETE",
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
+
+		createTracker: builder.mutation<
+			void,
+			{ tracker: CreateTracker; characterId: number }
+		>({
+			query: ({ tracker, characterId }) => ({
+				url: `characters/${characterId}/trackers`,
+				method: "POST",
+				body: tracker,
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
+		modifyTracker: builder.mutation<
+			void,
+			{ tracker: Tracker; characterId: number }
+		>({
+			query: ({ tracker, characterId }) => ({
+				url: `characters/${characterId}/trackers/${tracker.id}`,
+				method: "PUT",
+				body: tracker,
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
+		deleteTracker: builder.mutation<void, { id: number; characterId: number }>({
+			query: ({ id, characterId }) => ({
+				url: `characters/${characterId}/trackers/${id}`,
 				method: "DELETE",
 			}),
 			onQueryStarted: onQueryStarted(["Character"]),
@@ -225,4 +262,10 @@ export const {
 	useCreateSpellMutation,
 	useModifySpellMutation,
 	useDeleteSpellMutation,
+} = characterApiSlice;
+
+export const {
+	useCreateTrackerMutation,
+	useModifyTrackerMutation,
+	useDeleteTrackerMutation,
 } = characterApiSlice;
