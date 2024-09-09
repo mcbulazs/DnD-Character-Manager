@@ -9,7 +9,7 @@ const Accordion: React.FC<{
 	head: React.ReactNode;
 	children: React.ReactNode;
 }> = ({ head, children }) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(true);
 	const contentRef = useRef<HTMLDivElement>(null); // To measure content height
 
 	const toggleAccordion = (e: React.MouseEvent) => {
@@ -35,7 +35,7 @@ const Accordion: React.FC<{
 						: "0px",
 				}}
 			>
-				<div ref={contentRef} className="">
+				<div ref={contentRef} className="w-full">
 					{children}
 				</div>
 			</div>

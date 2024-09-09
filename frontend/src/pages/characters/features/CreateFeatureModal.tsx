@@ -95,7 +95,7 @@ const CreateFeatureModal: React.FC<{
 				<button
 					type="button"
 					onClick={feature ? updateFeature : createFeature}
-					className="p-2 bg-green-500 text-white rounded-lg mt-4"
+					className="p-2 bg-green-500 text-white rounded-lg my-4"
 				>
 					{feature ? "Update" : "Create"} Feature
 				</button>

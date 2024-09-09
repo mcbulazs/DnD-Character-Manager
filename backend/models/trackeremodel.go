@@ -22,7 +22,7 @@ type TrackerEnumStruct struct {
 // Initialize the enum with values
 var TrackerEnum = TrackerEnumStruct{
 	Health:      "Health",
-	Cantrip:     "Cantrip",
+	Cantrip:     "SpellSlot_0",
 	SpellSlot_1: "SpellSlot_1",
 	SpellSlot_2: "SpellSlot_2",
 	SpellSlot_3: "SpellSlot_3",
