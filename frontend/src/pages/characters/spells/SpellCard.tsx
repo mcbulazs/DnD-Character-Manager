@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal";
 import DeleteButton from "../../../components/buttons/DeleteButton";
 import EditButton from "../../../components/buttons/EditButton";
-import { useDeleteSpellMutation } from "../../../store/api/characterApiSlice";
+import {
+	useDeleteSpellMutation,
+	useModifySpellMutation,
+} from "../../../store/api/characterApiSlice";
 import type { Spell } from "../../../types/spell";
+import debounce from "../../../utility/debounce";
 import CreateSpellModal from "./CreateSpellModal";
 
 const getMainComponents = (components: string) => {
@@ -36,9 +40,11 @@ const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
 	spell,
 	characterId,
 }) => {
+	const [active, setActive] = useState(spell.active);
 	const [showFull, setShowFull] = useState(false);
 	const [inEdit, setInEdit] = useState(false);
 	const [deleteSpell] = useDeleteSpellMutation();
+	const [modifySpell] = useModifySpellMutation();
 
 	const handleDelete = async () => {
 		try {
@@ -53,22 +59,54 @@ const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
 		}
 	};
 	const handleClick = (e: React.MouseEvent) => {
+		if (e.target instanceof HTMLElement && e.target.tagName === "BUTTON") {
+			return;
+		}
 		if (e.button !== 0) {
 			return;
 		}
 		setShowFull(true);
 	};
+	const debounceActive = useCallback(
+		debounce(async (active) => {
+			try {
+				await modifySpell({
+					spell: {
+						...spell,
+						active,
+					},
+					characterId,
+				}).unwrap();
+			} catch (error) {
+				console.error("Error updating active", error);
+				toast("Error updating active", { type: "error" });
+			}
+		}, 300),
+		[],
+	);
+
+	const handleActive = () => {
+		debounceActive(!active);
+		setActive(!active);
+	};
 	return (
 		<>
 			<div
-				className="w-full h-64   
+				className={`w-full h-64 relative 
                 flex flex-col 
                 bg-light-parchment-beiage   
-                border-4 border-black rounded-xl
+                rounded-xl border-4 border-black
                 cursor-pointer
-                "
+                `}
 				onMouseDown={handleClick}
 			>
+				<button
+					type="button"
+					onClick={handleActive}
+					className="text-2xl absolute top-0 left-0"
+				>
+					{active ? "🟢" : "🔴"}
+				</button>
 				<div className=" text-center border-b-4 border-dragon-blood">
 					<h3 className=" text-xl font-bold ">{spell.name}</h3>
 					<span className="text-sm text-gray-500">{spell.school}</span>

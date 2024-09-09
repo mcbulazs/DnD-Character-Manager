@@ -8,6 +8,7 @@ export type Spell = {
     components: string;
     duration: string;
     description: string;
+    active: boolean;
 };
 
 export type CreateSpell = {

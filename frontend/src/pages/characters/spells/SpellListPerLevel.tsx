@@ -33,8 +33,8 @@ const AccordionHeader: React.FC<{
 		[],
 	);
 	return (
-		<div className="flex items-center gap-28">
-			{name}{" "}
+		<div className="flex items-center gap-10 sm:gap-28">
+			{name}
 			{level !== 0 && (
 				<div className="flex items-center">
 					<div className="flex items-center">
@@ -122,7 +122,9 @@ const SpellListPerLevel: React.FC<{
 	characterId: number;
 }> = ({ spells: _spells, trackers, level, characterId }) => {
 	//const levels = Array.from(new Set(spells.map((spell) => spell.level)));
-	const spells = _spells.filter((spell) => spell.level === level);
+	const spells = _spells
+		.filter((spell) => spell.level === level)
+		.sort((a) => (a.active ? -1 : 1));
 	const tracker = trackers.filter(
 		(tracker) => tracker.type === `SpellSlot_${level}`,
 	)[0];

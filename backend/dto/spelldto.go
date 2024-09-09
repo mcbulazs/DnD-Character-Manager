@@ -10,6 +10,7 @@ type CharacterSpellDTO struct {
 	Components  string `json:"components"`
 	Duration    string `json:"duration"`
 	Description string `json:"description"`
+	Active      bool   `json:"active"`
 }
 
 type CharacterCreateSpellDTO struct {

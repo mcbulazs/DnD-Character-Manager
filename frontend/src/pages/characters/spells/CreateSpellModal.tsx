@@ -1,5 +1,5 @@
 import type React from "react";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, act, lazy, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal";
 import {
@@ -100,7 +100,6 @@ const CreateSpellModal: React.FC<{
 	characterId: number;
 	spell?: Spell;
 }> = ({ onClose, characterId, spell }) => {
-	console.log("spell", spell);
 	const [name, setName] = useState(spell?.name || "");
 	const [level, setLevel] = useState<number>(spell?.level || 0);
 	const [school, setSchool] = useState(spell?.school || "abjuration");
@@ -163,6 +162,7 @@ const CreateSpellModal: React.FC<{
 				spell: {
 					...updatedSpell,
 					id: spell.id,
+					active: spell.active,
 				},
 				characterId,
 			}).unwrap();

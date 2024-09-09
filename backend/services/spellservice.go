@@ -68,6 +68,7 @@ func convertToCharacterSpellDTO(spellModel *models.CharacterSpellModel) *dto.Cha
 		Components:  spellModel.Components,
 		Duration:    spellModel.Duration,
 		Description: spellModel.Description,
+		Active:      spellModel.Active,
 	}
 }
 
@@ -89,6 +90,7 @@ func convertToCharacterSpellModel(spellDTO *dto.CharacterSpellDTO) *models.Chara
 		Components:  spellDTO.Components,
 		Duration:    spellDTO.Duration,
 		Description: spellDTO.Description,
+		Active:      spellDTO.Active,
 	}
 	spellModel.ID = spellDTO.ID
 	return &spellModel

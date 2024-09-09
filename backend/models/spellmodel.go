@@ -13,6 +13,7 @@ type CharacterSpellModel struct {
 	Components  string
 	Duration    string
 	Description string
+	Active      bool
 }
 
 func (s *CharacterSpellModel) TableName() string {
