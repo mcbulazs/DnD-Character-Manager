@@ -128,6 +128,9 @@ const SpellListPerLevel: React.FC<{
 	const tracker = trackers.filter(
 		(tracker) => tracker.type === `SpellSlot_${level}`,
 	)[0];
+    if (spells.length === 0) {
+        return null;        
+    }
 	return (
 		<Accordion
 			head={
@@ -137,7 +140,7 @@ const SpellListPerLevel: React.FC<{
 					characterId={characterId}
 				/>
 			}
-			defaultOpen={spells.length > 0}
+			defaultOpen
 		>
 			<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 p-2">
 				{spells.map((spell) => (
