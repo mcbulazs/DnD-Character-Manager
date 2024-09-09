@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Accordion from "../../../components/Accordion";
 import CreateButton from "../../../components/buttons/CreateButton";
 import { useCharacterContext } from "../../../layout/Contexts/CharacterContext";
 import { useHeaderContext } from "../../../layout/Contexts/HeaderContext";
-import type { Tracker } from "../../../types/tracker";
 import CreateSpellModal from "./CreateSpellModal";
-import SpellCard from "./SpellCard";
 import SpellListPerLevel from "./SpellListPerLevel";
 
 const Spells: React.FC<{ characterId?: number }> = ({
