@@ -15,6 +15,21 @@ func NewCharacterRepository(db *gorm.DB) *CharacterRepository {
 	return &CharacterRepository{DB: db}
 }
 
+func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel, error) {
+	var character models.CharacterModel
+	tx := r.DB.Preload("Image").
+		Preload("AbilityScores").
+		Preload("SavingThrows").
+		Preload("Skills").
+		Preload("Features").
+		Preload("Spells").
+		First(&character, characterID)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return &character, nil
+}
+
 func (r *CharacterRepository) IsUserCharacter(userID int, characterID int) bool {
 	var character models.CharacterModel
 	tx := r.DB.First(&character, characterID)
@@ -112,20 +127,6 @@ func (r *CharacterRepository) UpdateImage(image *models.CharacterImageModel) err
 		return tx.Error
 	}
 	return nil
-}
-
-func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel, error) {
-	var character models.CharacterModel
-	tx := r.DB.Preload("Image").
-		Preload("AbilityScores").
-		Preload("SavingThrows").
-		Preload("Skills").
-		Preload("Features").
-		First(&character, characterID)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-	return &character, nil
 }
 
 func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel, error) {

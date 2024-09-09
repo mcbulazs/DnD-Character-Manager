@@ -292,6 +292,7 @@ func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 		SavingThrows:      convertToCharacterSavingThrowDTO(&character.SavingThrows),
 		Skills:            convertToCharacterSkillDTO(&character.Skills),
 		Features:          convertToCharacterFeatureDTOs(character.Features),
+		Spells:            convertToCharacterSpellDTOs(character.Spells),
 	}
 }
 

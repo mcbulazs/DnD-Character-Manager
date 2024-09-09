@@ -22,6 +22,7 @@ type CharacterModel struct {
 	SavingThrows      CharacterSavingThrowModel  `gorm:"foreignKey:CharacterID"`
 	Skills            CharacterSkillModel        `gorm:"foreignKey:CharacterID"`
 	Features          []CharacterFeatureModel    `gorm:"foreignKey:CharacterID"`
+	Spells            []CharacterSpellModel      `gorm:"foreignKey:CharacterID"`
 }
 
 func (c *CharacterModel) TableName() string {

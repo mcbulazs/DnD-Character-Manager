@@ -72,6 +72,17 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		DeleteFeatureHandler(c, db)
 	})
 
+	spells := characters.Group("/spells")
+	spells.POST("", func(c *gin.Context) {
+		CreateSpellHandler(c, db)
+	})
+	spells.PUT("/:spellId", func(c *gin.Context) {
+		UpdateSpellHandler(c, db)
+	})
+	spells.DELETE("/:spellId", func(c *gin.Context) {
+		DeleteSpellHandler(c, db)
+	})
+
 	InitProxy(r)
 }
 
