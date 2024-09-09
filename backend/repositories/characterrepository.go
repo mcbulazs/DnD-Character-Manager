@@ -23,6 +23,7 @@ func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel,
 		Preload("Skills").
 		Preload("Features").
 		Preload("Spells").
+		Preload("Trackers").
 		First(&character, characterID)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -61,6 +62,11 @@ func (r *CharacterRepository) Create(character *models.CharacterModel) error {
 	}
 	character.Skills.CharacterID = character.ID
 	if err := tx.Create(&character.Skills).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := CreateDefaultTrackers(tx, character.ID); err != nil {
 		tx.Rollback()
 		return err
 	}

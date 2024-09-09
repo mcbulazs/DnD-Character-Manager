@@ -32,6 +32,7 @@ type CharacterDTO struct {
 	Skills            CharacterSkillDTO        `json:"skills"`
 	Features          []CharacterFeatureDTO    `json:"features"`
 	Spells            []CharacterSpellDTO      `json:"spells"`
+	Trackers          []CharacterTrackerDTO    `json:"trackers"`
 }
 
 type CharacterImageDTO struct {

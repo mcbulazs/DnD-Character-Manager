@@ -17,6 +17,7 @@ func MigrateModels(db *gorm.DB) {
 		&CharacterSkillModel{},
 		&CharacterFeatureModel{},
 		&CharacterSpellModel{},
+		&CharacterTrackerModel{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate models:", err)

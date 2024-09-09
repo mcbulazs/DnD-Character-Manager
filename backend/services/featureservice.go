@@ -31,8 +31,8 @@ func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateF
 		Name:        characterFeatureDTO.Name,
 		Description: characterFeatureDTO.Description,
 		Source:      characterFeatureDTO.Source,
+		CharacterID: uint(characterID),
 	}
-	featureModel.CharacterID = uint(characterID)
 	err := s.Repo.CreateFeature(&featureModel)
 	if err != nil {
 		return nil, err
