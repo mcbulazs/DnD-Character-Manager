@@ -46,7 +46,7 @@ func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerMode
 }
 
 func (r *TrackerRepository) DeleteTracker(trackableID int, characterID int) error {
-	tx := r.DB.Where("id = ? AND character_id = ?", trackableID, characterID).Delete(&models.CharacterTrackerModel{})
+	tx := r.DB.Where("id = ? AND character_id = ? AND type = Custom", trackableID, characterID).Delete(&models.CharacterTrackerModel{})
 	if tx.Error != nil {
 		return tx.Error
 	}

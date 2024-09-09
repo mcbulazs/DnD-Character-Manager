@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/pelletier/go-toml/v2/internal/tracker"
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/middleware"
@@ -81,6 +82,17 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 	spells.DELETE("/:spellId", func(c *gin.Context) {
 		DeleteSpellHandler(c, db)
+	})
+
+	tracker := characters.Group("/tracker")
+	tracker.POST("", func(c *gin.Context) {
+		CreateTrackerHandler(c, db)
+	})
+	tracker.PUT("/:trackerId", func(c *gin.Context) {
+		UpdateTrackerHandler(c, db)
+	})
+	tracker.DELETE("/:trackerId", func(c *gin.Context) {
+		DeleteTrackerHandler(c, db)
 	})
 
 	InitProxy(r)

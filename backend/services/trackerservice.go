@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
@@ -35,6 +37,14 @@ func (s *TrackerService) UpdateTracker(characterID int, trackerDTO *dto.Characte
 	trackerModel := convertToCharacterTrackerModel(*trackerDTO)
 	trackerModel.CharacterID = uint(characterID)
 	err := s.Repo.UpdateTracker(&trackerModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *TrackerService) DeleteTracker(characterID int, trackerID int) error {
+	err := s.Repo.DeleteTracker(characterID, trackerID)
 	if err != nil {
 		return err
 	}
