@@ -23,9 +23,11 @@ jobs:
 
       - name: Install dependencies
         run: go mod download
+        working-directory: backend
 
       - name: Build
-        run: go build -v ./...
+        run: go build
+        working-directory: backend
 
      # - name: Run tests (optional)
      #   run: go test -v ./...
