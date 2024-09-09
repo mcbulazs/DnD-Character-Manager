@@ -29,7 +29,7 @@ const Features: React.FC<{ characterId?: number }> = ({
 	const { setTitle } = useHeaderContext();
 
 	useEffect(() => {
-		setTitle(<h1>{character?.name}'s features</h1>);
+		setTitle(<h1 className="text-3xl font-bold">{character?.name}'s features</h1>);
 	}, [setTitle, character]);
 
 	if (isLoading) {

@@ -30,7 +30,6 @@ export const useCharacterContext = () => {
 export const CharacterProvider: React.FC<{ characterId: number; children: React.ReactNode }> = ({ characterId, children }) => {
 	const { data: character, isLoading, error } = useGetCharacterByIdQuery(characterId);
 	const [currentCharacter, setCurrentCharacter] = useState<CharacterData | null>(null);
-
 	useEffect(() => {
 		if (character) {
 			setCurrentCharacter(character);

@@ -80,7 +80,7 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
 				/>
 			)}
 
-			<span className="text-3xl font-bold">{character.name}</span>
+			<h1 className="text-3xl font-bold">{character.name}</h1>
 
 			<div className="right-0 top-0 m-2 z-2 cursor-pointer">
 				{isFavorite ? (

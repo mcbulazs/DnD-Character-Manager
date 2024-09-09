@@ -12,6 +12,7 @@ import type {
 	Skills,
 } from "../../types/characterData";
 import type { CreateFeature, Feature } from "../../types/feature";
+import type { CreateSpell, Spell } from "../../types/spell";
 import baseQuery from "./baseQuery";
 
 type Tags = TagDescription<"Characters" | "Character">;
@@ -168,6 +169,33 @@ export const characterApiSlice = createApi({
 			onQueryStarted: onQueryStarted(["Character"]),
 			invalidatesTags: ["Character"],
 		}),
+
+		createSpell: builder.mutation<Spell, { spell: CreateSpell, characterId: number }>({
+			query: ({ spell, characterId }) => ({
+				url: `characters/${characterId}/spells`,
+				method: "POST",
+				body: spell,
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
+		modifySpell: builder.mutation<void, { spell: Spell, characterId: number }>({
+			query: ({ spell, characterId }) => ({
+				url: `characters/${characterId}/spells/${spell.id}`,
+				method: "PUT",
+				body: spell,
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
+		deleteSpell: builder.mutation<void, { id: number, characterId: number }>({
+			query: ({ id, characterId }) => ({
+				url: `characters/${characterId}/spells/${id}`,
+				method: "DELETE",
+			}),
+			onQueryStarted: onQueryStarted(["Character"]),
+			invalidatesTags: ["Character"],
+		}),
 	}),
 });
 
@@ -191,4 +219,10 @@ export const {
 	useCreateFeatureMutation,
 	useDeleteFeatureMutation,
 	useModifyFeatureMutation,
+} = characterApiSlice;
+
+export const {
+	useCreateSpellMutation,
+	useModifySpellMutation,
+	useDeleteSpellMutation,
 } = characterApiSlice;

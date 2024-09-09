@@ -1,5 +1,6 @@
 import type { BackgroundImageProps } from "./backgroundImageProps";
 import type { Feature } from "./feature";
+import type { Spell } from "./spell";
 
 export interface Attribute {
 	value: number;
@@ -72,4 +73,5 @@ export type CharacterData = {
 	skills: Skills;
 	image: BackgroundImageProps;
 	features: Feature[];
+	spells: Spell[];
 };
