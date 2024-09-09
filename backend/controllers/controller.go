@@ -83,7 +83,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		DeleteSpellHandler(c, db)
 	})
 
-	tracker := characters.Group("/tracker")
+	tracker := characters.Group("/trackers")
 	tracker.POST("", func(c *gin.Context) {
 		CreateTrackerHandler(c, db)
 	})

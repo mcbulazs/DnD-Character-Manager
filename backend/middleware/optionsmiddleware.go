@@ -25,26 +25,31 @@ func getAllowedMethods(route string) string {
 		return "POST, OPTIONS"
 	case "/api/characters":
 		return "POST, GET, OPTIONS"
-	case "/api/characters/:id":
+	case "/api/characters/:characterId":
 		return "GET, OPTIONS"
-	case "/api/characters/:id/ability-scores":
+	case "/api/characters/:characterId/ability-scores":
 		return "PUT, OPTIONS"
-	case "/api/characters/:id/skills":
+	case "/api/characters/:characterId/skills":
 		return "PUT, OPTIONS"
-	case "/api/characters/:id/saving-throws":
+	case "/api/characters/characterId/saving-throws":
 		return "PUT, OPTIONS"
-	case "/api/characters/:id/image":
+	case "/api/characters/characterId/image":
 		return "PUT, OPTIONS"
-	case "/api/characters/:id/attributes":
+	case "/api/characters/characterId/attributes":
 		return "PATCH, OPTIONS"
-	case "/api/characters/:id/features":
+	case "/api/characters/characterId/features":
 		return "GET, POST, OPTIONS"
-	case "/api/characters/:id/features/:id":
+	case "/api/characters/characterId/features/:featureId":
 		return "PUT, DELTE, OPTIONS"
-	case "/api/characters/:id/spells":
+	case "/api/characters/characterId/spells":
 		return "POST, OPTIONS"
-	case "/api/characters/:id/spells/:id":
+	case "/api/characters/characterId/spells/:spellId":
 		return "PUT, DELETE, OPTIONS"
+	case "/api/characters/:characterId/trackers":
+		return "POST, OPTIONS"
+	case "/api/characters/:characterId/trackers/:trackerId":
+		return "PUT, DELETE, OPTIONS"
+
 	default:
 		return "GET, OPTIONS"
 	}

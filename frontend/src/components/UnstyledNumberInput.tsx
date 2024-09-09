@@ -27,4 +27,4 @@ const UnstyledNumberInput: React.FC<{
 	);
 };
 
-export default UnstyledNumberInput; 
+export default UnstyledNumberInput;
