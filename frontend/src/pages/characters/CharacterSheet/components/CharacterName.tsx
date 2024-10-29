@@ -4,32 +4,32 @@ import { useSetCharacterAttributeMutation } from "../../../../store/api/characte
 import debounce from "../../../../utility/debounce";
 
 const CharacterName: React.FC<{ name: string; characterID: number }> = ({
-	name,
-	characterID,
+    name,
+    characterID,
 }) => {
-	const [characterName, setCharacterName] = useState<string>(name);
-	const [setName] = useSetCharacterAttributeMutation();
+    const [characterName, setCharacterName] = useState<string>(name);
+    const [setName] = useSetCharacterAttributeMutation();
 
-	const debouncedSetName = useCallback(
-		debounce((name: string) => {
-			setName({ data: { name }, id: characterID });
-		}, 300),
-		[],
-	);
+    const debouncedSetName = useCallback(
+        debounce((name: string) => {
+            setName({ data: { name }, id: characterID });
+        }, 300),
+        [],
+    );
 
-	return (
-		<div className="bg-light-parchment-beiage border-4 border-black rounded-xl w-full">
-			<span className="">Character Name:</span>
-			<input
-				className="w-full bg-transparent text-center text-2xl"
-				value={characterName}
-				onChange={(e) => {
+    return (
+        <div className="bg-light-parchment-beiage border-4 border-black rounded-xl w-full">
+            <span className="">Character Name:</span>
+            <input
+                className="w-full bg-transparent text-center text-2xl outline-none"
+                value={characterName}
+                onChange={(e) => {
                     setCharacterName(e.target.value);
-					debouncedSetName(e.target.value);
-				}}
-			/>
-		</div>
-	);
+                    debouncedSetName(e.target.value);
+                }}
+            />
+        </div>
+    );
 };
 
 export default CharacterName;
