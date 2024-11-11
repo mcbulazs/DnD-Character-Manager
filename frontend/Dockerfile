@@ -22,7 +22,7 @@ WORKDIR /root
 COPY --from=reactbuild /app/dist dist
 COPY --from=reactbuild /app/package*.json .
 
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 COPY server.js .
 

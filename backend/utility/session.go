@@ -19,6 +19,7 @@ func CreateSession(c *gin.Context, user_id int) error {
 		Path:     "/",
 		HttpOnly: true,
 		MaxAge:   60 * 60 * 24, // 1 day
+		Secure:   c.Request.URL.Scheme == "https",
 	}
 	err := session.Save(c.Request, c.Writer)
 	if err != nil {

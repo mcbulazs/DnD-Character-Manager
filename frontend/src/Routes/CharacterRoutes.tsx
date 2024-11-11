@@ -8,56 +8,63 @@ import Spells from "../pages/characters/spells/Spells";
 import CharacterNavList from "../pages/navigation/CharacterNavList";
 
 const CharactersRoutes = () => {
-	return (
-		<Routes>
-			<Route
-				index
-				element={
-					<AuthGuard loggedInRequired={true}>
-						<CharacterList />
-					</AuthGuard>
-				}
-			/>
-			<Route path=":characterId" element={<CharacterLayout />}>
-				<Route
-					index
-					element={
-						<AuthGuard loggedInRequired={true}>
-							<CharacterSheet />
-						</AuthGuard>
-					}
-				/>
-				<Route
-					path="features"
-					element={
-						<AuthGuard loggedInRequired={true}>
-							<Features />
-						</AuthGuard>
-					}
-				/>
-				<Route
-					path="spells"
-					element={
-						<AuthGuard loggedInRequired={true}>
-							<Spells />
-						</AuthGuard>
-					}
-				/>
-			</Route>
-		</Routes>
-	);
+  return (
+    <Routes>
+      <Route
+        index
+        element={
+          <AuthGuard loggedInRequired={true}>
+            <CharacterList />
+          </AuthGuard>
+        }
+      />
+      <Route
+        path=":characterId"
+        element={
+          <AuthGuard loggedInRequired={true}>
+            <CharacterLayout />
+          </AuthGuard>
+        }
+      >
+        <Route
+          index
+          element={
+            <AuthGuard loggedInRequired={true}>
+              <CharacterSheet />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="features"
+          element={
+            <AuthGuard loggedInRequired={true}>
+              <Features />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="spells"
+          element={
+            <AuthGuard loggedInRequired={true}>
+              <Spells />
+            </AuthGuard>
+          }
+        />
+      </Route>
+    </Routes>
+  );
 };
 
 const CharacterLayout = () => {
-	const { characterId } = useParams();
-	if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
-		return <div>Invalid character ID</div>;
-	}
-	return (
-		<CharacterProvider characterId={Number.parseInt(characterId)}>
-			<CharacterNavList />
-		</CharacterProvider>
-	);
+  const { characterId } = useParams();
+  if (!characterId || Number.isNaN(Number.parseInt(characterId))) {
+    return <div>Invalid character ID</div>;
+  }
+  return (
+    <CharacterProvider characterId={Number.parseInt(characterId)}>
+      <CharacterNavList />
+    </CharacterProvider>
+  );
 };
 
 export default CharactersRoutes;
