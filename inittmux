@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+
+SESSION_NAME="DnD"
+SESSION_DIR="~/Projects/DnD-Character-Manager"
+
+if tmux has-session -t $SESSION_NAME 2>/dev/null; then
+  tmux attach -t $SESSION_NAME
+  exit 0;
+fi
+
+tmux new-session -d -s $SESSION_NAME
+
+#nvim
+tmux new-window $SESSION_NAME:1 -n "Editor"
+tmux send-keys -t $SESSION_NAME:1 "cd $SESSION_DIR" C-m
+tmux send-keys -t $SESSION_NAME:1 "nvim ." C-m
+
+#lazy (git, docker)
+tmux new-window -t $SESSION_NAME:2 -n "Lazy"
+tmux split-window -h -t $SESSION_NAME:2
+
+tmux send-keys -t $SESSION_NAME:2.1 "cd $SESSION_DIR" C-m
+tmux send-keys -t $SESSION_NAME:2.1 "lazygit" C-m
+
+tmux send-keys -t $SESSION_NAME:2.2 "cd $SESSION_DIR" C-m
+tmux send-keys -t $SESSION_NAME:2.2 "docker start postgres" C-m
+tmux send-keys -t $SESSION_NAME:2.2 "lazydocker" C-m
+
+#services (go, react)
+tmux new-window -t $SESSION_NAME:3 -n "Services"
+tmux split-window -h -t $SESSION_NAME:3
+
+tmux send-keys -t $SESSION_NAME:3.1 "cd $SESSION_DIR/backend" C-m
+tmux send-keys -t $SESSION_NAME:3.1 "clear" C-m
+tmux send-keys -t $SESSION_NAME:3.1 "sudo go run ." C-m
+
+tmux send-keys -t $SESSION_NAME:3.2 "cd $SESSION_DIR/frontend" C-m
+tmux send-keys -t $SESSION_NAME:3.2 "clear" C-m
+tmux send-keys -t $SESSION_NAME:3.2 "npm run dev" C-m
+
+#yazi
+tmux new-window -t $SESSION_NAME:4 -n "Yazi"
+tmux send-keys -t $SESSION_NAME:4 "cd $SESSION_DIR" C-m
+tmux send-keys -t $SESSION_NAME:4 "y" C-m
+
+#other
+tmux new-window -t $SESSION_NAME:5 -n "Other"
+tmux send-keys -t $SESSION_NAME:5 "cd $SESSION_DIR" C-m
+tmux send-keys -t $SESSION_NAME:5 "clear" C-m
+
+
+#attach
+tmux attach -t $SESSION_NAME:1
