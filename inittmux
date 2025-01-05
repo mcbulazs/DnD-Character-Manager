@@ -31,8 +31,9 @@ tmux new-window -t $SESSION_NAME:3 -n "Services"
 tmux split-window -h -t $SESSION_NAME:3
 
 tmux send-keys -t $SESSION_NAME:3.1 "cd $SESSION_DIR/backend" C-m
+tmux send-keys -t $SESSION_NAME:3.1 "alias air='$(go env GOPATH)/bin/air'" C-m
 tmux send-keys -t $SESSION_NAME:3.1 "clear" C-m
-tmux send-keys -t $SESSION_NAME:3.1 "sudo go run ." C-m
+tmux send-keys -t $SESSION_NAME:3.1 "air" C-m
 
 tmux send-keys -t $SESSION_NAME:3.2 "cd $SESSION_DIR/frontend" C-m
 tmux send-keys -t $SESSION_NAME:3.2 "clear" C-m

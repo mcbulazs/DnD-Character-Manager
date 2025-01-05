@@ -23,5 +23,5 @@ func GetFrontendURL() string {
 }
 
 func GetBackendPort() string {
-	return ":80"
+	return ":8080"
 }

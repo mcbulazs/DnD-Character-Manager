@@ -21,6 +21,8 @@ go.work.sum
 # env file
 .env
 
+# air tmp files
+/tmp/*
 
 #log files
 *.log

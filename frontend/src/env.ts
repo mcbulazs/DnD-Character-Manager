@@ -1,5 +1,5 @@
 const backendUrl = () => {
-  return "http://localhost/api/";
+  return "http://localhost:8080/api/";
 };
 
 export default backendUrl;
