@@ -19,12 +19,12 @@ FROM node:20.16-alpine
 
 WORKDIR /root
 
-COPY --from=reactbuild /app/dist dist
-COPY --from=reactbuild /app/package*.json .
+COPY --from=reactbuild /app/dist ./dist
+COPY --from=reactbuild /app/package*.json ./
 
 RUN npm ci --omit=dev
 
-COPY server.js .
+COPY server.js ./
 
 EXPOSE $FRONTEND_PORT
 CMD ["node", "server"]

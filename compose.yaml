@@ -1,7 +1,7 @@
 # add the serivces needed (postgres,go)
 services:
   postgres:
-    container_name: postgres
+    container_name: dnd_postgres
     image: postgres:16.4
     env_file:
       - .env
@@ -13,10 +13,8 @@ services:
       - dbdata:/var/lib/postgresql/data
     networks:
       - base-network
-    ports:
-      - 5432:5432
   go:
-    container_name: go
+    container_name: dnd_go
     build:
       context: backend
     depends_on:
@@ -28,7 +26,7 @@ services:
     networks:
       - base-network
   react:
-    container_name: react
+    container_name: dnd_react
     build:
       context: frontend
     env_file:

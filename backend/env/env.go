@@ -21,7 +21,3 @@ func GetStoreHash() string {
 func GetFrontendURL() string {
 	return "http://localhost:3000"
 }
-
-func GetBackendPort() string {
-	return ":8080"
-}

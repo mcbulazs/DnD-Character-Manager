@@ -23,6 +23,6 @@ COPY --from=gobuild /app/files .
 
 COPY files files
 
-EXPOSE $API_PORT
+EXPOSE 8080
 
 CMD ["./app"]

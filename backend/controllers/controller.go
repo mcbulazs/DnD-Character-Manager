@@ -99,7 +99,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 func initCors(r *gin.RouterGroup) {
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.221:5173"}, // Allow your dev origin
+		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.221:5173", "https://dnd.bulazs.com"}, // Allow your dev origin
 		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
