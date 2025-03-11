@@ -44,6 +44,14 @@ func (s *TrackerService) UpdateTracker(characterID int, trackerDTO *dto.Characte
 	return nil
 }
 
+func (s *TrackerService) UpdateTrackerOrder(characterID int, trackerOrderDTO *[]int) error {
+	err := s.Repo.UpdateTrackerOrder(characterID, trackerOrderDTO)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *TrackerService) DeleteTracker(characterID int, trackerID int) error {
 	err := s.Repo.DeleteTracker(characterID, trackerID)
 	if err != nil {
@@ -59,6 +67,7 @@ func convertToCharacterTrackerDTO(trackerModel *models.CharacterTrackerModel) *d
 		Name:         trackerModel.Name,
 		MaxValue:     trackerModel.MaxValue,
 		CurrentValue: trackerModel.CurrentValue,
+		Order:        trackerModel.Order,
 	}
 }
 
@@ -72,10 +81,9 @@ func convertToCharacterTrackerDTOs(trackerModels []models.CharacterTrackerModel)
 
 func convertToCharacterTrackerModel(trackerDTO dto.CharacterTrackerDTO) models.CharacterTrackerModel {
 	trackerModel := models.CharacterTrackerModel{
-		Type:         trackerDTO.Type,
-		Name:         trackerDTO.Name,
 		MaxValue:     trackerDTO.MaxValue,
 		CurrentValue: trackerDTO.CurrentValue,
+		Name:         trackerDTO.Name,
 	}
 	trackerModel.ID = trackerDTO.ID
 	return trackerModel

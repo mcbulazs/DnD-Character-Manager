@@ -1,6 +1,9 @@
 package repositories
 
 import (
+	"fmt"
+	"strings"
+
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/models"
@@ -35,10 +38,30 @@ func (r *TrackerRepository) CreateTracker(trackable *models.CharacterTrackerMode
 }
 
 func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerModel) error {
-	tx := r.DB.Model(&trackable).
+	var tracker models.CharacterTrackerModel
+	tx := r.DB.Model(&models.CharacterTrackerModel{}).Where("id = ?", trackable.ID).First(&tracker)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	trackable.Type = models.TrackerEnum.Custom // just in case
+	if tracker.Type != models.TrackerEnum.Custom {
+		trackable.Name = tracker.Name
+	}
+	tx = r.DB.Model(&trackable).
 		Select("name", "max_value", "current_value").
 		Where("id = ?", trackable.ID).
 		Updates(&trackable)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (r *TrackerRepository) UpdateTrackerOrder(characterID int, trackerOrder *[]int) error {
+	stringOrder := strings.Join(strings.Split(strings.Trim(fmt.Sprint(*trackerOrder), "[]"), " "), ",") //[1,2,3,4] => "1,2,3,4"
+	tx := r.DB.Model(&models.CharacterTrackerModel{}).
+		Where("character_id = ? AND type = 'Custom'", characterID).
+		Updates(map[string]interface{}{"order": gorm.Expr("array_position(ARRAY[" + stringOrder + "]::int[], id)")}) // there should be any fear of sql injection
 	if tx.Error != nil {
 		return tx.Error
 	}

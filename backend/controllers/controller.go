@@ -90,6 +90,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	tracker.PUT("/:trackerId", func(c *gin.Context) {
 		UpdateTrackerHandler(c, db)
 	})
+	tracker.PATCH("/order", func(c *gin.Context) {
+		UpdateTrackerOrderHandler(c, db)
+	})
 	tracker.DELETE("/:trackerId", func(c *gin.Context) {
 		DeleteTrackerHandler(c, db)
 	})
@@ -99,7 +102,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 func initCors(r *gin.RouterGroup) {
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.92:5173","http://192.168.0.92:8080", "https://dnd.bulazs.com"}, // Allow your dev origin
+		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.92:5173", "http://192.168.0.92:8080", "https://dnd.bulazs.com"}, // Allow your dev origin
 		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,

@@ -48,6 +48,20 @@ func UpdateTrackerHandler(c *gin.Context, db *gorm.DB) {
 	}
 }
 
+func UpdateTrackerOrderHandler(c *gin.Context, db *gorm.DB) {
+	var trackerOrderDTO []int
+	if err := c.ShouldBindJSON(&trackerOrderDTO); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	characterID := c.MustGet("character_id").(int)
+	trackerService := services.NewTrackerService(db)
+	err := trackerService.UpdateTrackerOrder(characterID, &trackerOrderDTO)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+}
+
 func DeleteTrackerHandler(c *gin.Context, db *gorm.DB) {
 	trackerID, err := strconv.Atoi(c.Param("trackerId"))
 	if err != nil {
