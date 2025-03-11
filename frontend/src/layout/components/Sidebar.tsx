@@ -124,7 +124,7 @@ const Menu: React.FC = () => {
 				bg-shadow-black text-ancient-gold h-full z-50 
 				flex flex-col gap-1
 				transition-transform duration-500
-				w-full sm:w-64
+				w-full sm:w-80
 				text-3xl sm:text-2xl 
 				items-center sm:items-start
 				min-h-dvh 
@@ -153,6 +153,7 @@ const Menu: React.FC = () => {
               <>
                 <NavLink
                   to="/login"
+                  tabIndex={-1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -160,6 +161,7 @@ const Menu: React.FC = () => {
                 </NavLink>
                 <NavLink
                   to="/register"
+                  tabIndex={-1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -170,6 +172,7 @@ const Menu: React.FC = () => {
               <>
                 <NavLink
                   to="/logout"
+                  tabIndex={-1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -178,6 +181,7 @@ const Menu: React.FC = () => {
                 <div className="w-11/12 self-center border-b-2 border-dragon-blood" />
                 <NavLink
                   to="/characters"
+                  tabIndex={-1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -189,6 +193,7 @@ const Menu: React.FC = () => {
             {/*<div className="w-11/12 self-center border-y-2 border-dragon-blood grow" />*/}
             <NavLink
               to=""
+              tabIndex={-1}
               onClick={() => setOpen(!open)}
               className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
             >

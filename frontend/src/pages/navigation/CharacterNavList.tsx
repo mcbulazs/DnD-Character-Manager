@@ -6,6 +6,7 @@ import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
+import Trackers from "../characters/trackers/trackers";
 
 // FIX: dont active the menu when closing this
 const CharacterNavList: React.FC = () => {
@@ -60,11 +61,13 @@ const CharacterNavList: React.FC = () => {
     <>
       <button
         type="button"
-        className="
+        className={`
         fixed right-2 top-24 z-[51]
         aspect-square bg-white
         flex items-center justify-center 
-        rounded-full  p-1 pl-3"
+        transition-transform duration-500
+        ${isOpen ? "-translate-x-80" : "translate-x-0"}
+        rounded-full  p-1 pl-3`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {!isOpen ? <ArrowForwardIosIcon /> : <ArrowBackIosIcon />}
@@ -75,7 +78,7 @@ const CharacterNavList: React.FC = () => {
             fixed right-0 top-0 
             bg-shadow-black 
             flex flex-col items-center
-            w-full sm:w-64
+            w-full sm:w-80
             transition-transform duration-500
             ${isOpen ? "-translate-x-0" : "translate-x-full"}
             z-50`}
@@ -121,14 +124,7 @@ const CharacterNavList: React.FC = () => {
               </ul>
             </nav>
           ) : (
-            <div>
-              <div>Trackers</div>
-              <div>Trackers</div>
-              <div>Trackers</div>
-              <div>Trackers</div>
-              <div>Trackers</div>
-              <div>Trackers</div>
-            </div>
+            <Trackers />
           )}
         </Scrollbars>
       </div>

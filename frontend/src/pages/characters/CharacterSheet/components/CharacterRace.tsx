@@ -4,31 +4,31 @@ import { useSetCharacterAttributeMutation } from "../../../../store/api/characte
 import debounce from "../../../../utility/debounce";
 
 const CharacterRace: React.FC<{ race: string; characterID: number }> = ({
-    race,
-    characterID,
+  race,
+  characterID,
 }) => {
-    const [raceValue, setRaceValue] = useState<string>(race);
-    const [setCharacterRace] = useSetCharacterAttributeMutation();
+  const [raceValue, setRaceValue] = useState<string>(race);
+  const [setCharacterRace] = useSetCharacterAttributeMutation();
 
-    const debouncedSetCharacterRace = useCallback(
-        debounce((val: string) => {
-            setCharacterRace({ data: { race: val }, id: characterID });
-        }, 300),
-        [],
-    );
-    return (
-        <div className="bg-light-parchment-beiage border-4 border-black rounded-xl">
-            <span className="">Character Race:</span>
-            <input
-                className="w-full bg-transparent text-center text-2xl outline-none"
-                value={raceValue}
-                onChange={(e) => {
-                    setRaceValue(e.target.value);
-                    debouncedSetCharacterRace(e.target.value);
-                }}
-            />
-        </div>
-    );
+  const debouncedSetCharacterRace = useCallback(
+    debounce((val: string) => {
+      setCharacterRace({ data: { race: val }, id: characterID });
+    }, 300),
+    [],
+  );
+  return (
+    <div className="bg-light-parchment-beige border-4 border-black rounded-xl">
+      <span className="">Character Race:</span>
+      <input
+        className="w-full bg-transparent text-center text-2xl outline-none"
+        value={raceValue}
+        onChange={(e) => {
+          setRaceValue(e.target.value);
+          debouncedSetCharacterRace(e.target.value);
+        }}
+      />
+    </div>
+  );
 };
 
 export default CharacterRace;

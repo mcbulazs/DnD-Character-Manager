@@ -21,6 +21,5 @@ func GetStoreHash() string {
 }
 
 func GetFrontendURL() string {
-	frontendPort := os.Getenv("FRONTEND_PORT")
-	return fmt.Sprintf("http://dnd_react:%s", frontendPort)
+	return "http://dnd_react:3000"
 }

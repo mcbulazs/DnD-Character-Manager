@@ -11,7 +11,7 @@ if (isProduction) {
     console.log("Running in development mode")
 }
 
-const port = process.env.FRONTEND_PORT || 5173
+const port = isProduction ? 3000 : 5173
 const base = '/'
 
 // Cached production assets

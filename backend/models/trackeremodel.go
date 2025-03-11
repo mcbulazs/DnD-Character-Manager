@@ -42,6 +42,7 @@ type CharacterTrackerModel struct {
 	Type         TrackerType
 	MaxValue     int
 	CurrentValue int
+	Order        int
 }
 
 func (s *CharacterTrackerModel) TableName() string {

@@ -8,6 +8,7 @@ type CharacterTrackerDTO struct {
 	Type         models.TrackerType `json:"type"`
 	MaxValue     int                `json:"maxValue"`
 	CurrentValue int                `json:"currentValue"`
+	Order        int                `json:"order"`
 }
 
 type CreateCharacterTrackerDTO struct {
