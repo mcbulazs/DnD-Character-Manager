@@ -1,10 +1,17 @@
 import { useSortable } from "@dnd-kit/sortable";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { CSS } from "@dnd-kit/utilities";
 import UnstyledNumberInput from "../../../components/UnstyledNumberInput";
 import type { Tracker as TrackerOBJ } from "../../../types/tracker";
-import { useState } from "react";
-import TrackerModal from "./trackerModal";
+import { useCallback, useState } from "react";
+import TrackerModal from "./TrackerModal";
+import debounce from "../../../utility/debounce";
+import {
+  useDeleteTrackerMutation,
+  useModifyTrackerMutation,
+} from "../../../store/api/characterApiSlice";
+import DeleteDialog from "../../../components/DeleteDialog";
 
 const Tracker: React.FC<{
   tracker: TrackerOBJ;
@@ -13,6 +20,7 @@ const Tracker: React.FC<{
   characterId: number;
 }> = ({ tracker, style, isEditing, characterId }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState(tracker.currentValue);
   const {
     setNodeRef,
@@ -24,7 +32,26 @@ const Tracker: React.FC<{
   } = useSortable({
     id: tracker.id,
   });
+  const [modifyTrackerMutation] = useModifyTrackerMutation();
+  const [deleteTrackerMutation] = useDeleteTrackerMutation();
   const isDisabled = isEditing;
+  const UpdateTrackerDebounce = useCallback(
+    debounce((value: number) => {
+      modifyTrackerMutation({
+        characterId,
+        tracker: {
+          id: tracker.id,
+          name: tracker.name,
+          maxValue: tracker.maxValue,
+          currentValue: value,
+          type: tracker.type,
+          order: tracker.order,
+        },
+      });
+    }, 300),
+    [],
+  );
+
   return (
     <>
       <div
@@ -32,16 +59,30 @@ const Tracker: React.FC<{
         style={{ ...style }}
       >
         {isDisabled && !isSorting && (
-          <button
-            type="button"
-            className="absolute top-0 right-0 text-orange-500"
-            onClick={() => {
-              console.log("edit");
-              setModalOpen(true);
-            }}
-          >
-            <EditIcon fontSize="large" />
-          </button>
+          <>
+            {tracker.type === "Custom" && (
+              <button
+                type="button"
+                className="absolute top-0 left-0 text-red-500"
+                onClick={() => {
+                  console.log("delete");
+                  setDeleteOpen(true);
+                }}
+              >
+                <DeleteIcon fontSize="large" />
+              </button>
+            )}
+            <button
+              type="button"
+              className="absolute top-0 right-0 text-orange-500"
+              onClick={() => {
+                console.log("edit");
+                setModalOpen(true);
+              }}
+            >
+              <EditIcon fontSize="large" />
+            </button>
+          </>
         )}
         <div
           className={`
@@ -57,7 +98,7 @@ const Tracker: React.FC<{
           <div
             className={`w-full whitespace-nowrap h-fit
         border-2 border-ancient-gold rounded-t-md 
-        bg-parchment-beige text-center`}
+        bg-parchment-beige text-center overflow-hidden`}
           >
             {tracker.name}
           </div>
@@ -77,6 +118,7 @@ const Tracker: React.FC<{
               minValue={0}
               onChange={(val) => {
                 setCurrentValue(val);
+                UpdateTrackerDebounce(val);
               }}
             />
             <UnstyledNumberInput
@@ -96,6 +138,7 @@ const Tracker: React.FC<{
               onClick={() => {
                 if (currentValue === 0) return;
                 setCurrentValue((value) => value - 1);
+                UpdateTrackerDebounce(currentValue - 1);
               }}
             >
               -
@@ -109,6 +152,7 @@ const Tracker: React.FC<{
               onClick={() => {
                 if (currentValue === tracker.maxValue) return;
                 setCurrentValue((value) => value + 1);
+                UpdateTrackerDebounce(currentValue + 1);
               }}
             >
               +
@@ -121,6 +165,16 @@ const Tracker: React.FC<{
           onClose={() => setModalOpen(false)}
           tracker={tracker}
           characterId={characterId}
+        />
+      )}
+      {deleteOpen && (
+        <DeleteDialog
+          message={`Are you sure you want to delete tracker: ${tracker.name}?`}
+          onCancel={() => setDeleteOpen(false)}
+          onConfirm={() => {
+            setDeleteOpen(false);
+            deleteTrackerMutation({ characterId, id: tracker.id });
+          }}
         />
       )}
     </>

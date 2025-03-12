@@ -10,6 +10,19 @@ const DeleteDialog: React.FC<{
 
   useEffect(() => {
     setIsVisible(true);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCancel();
+      }
+    };
+
+    // Attach event listener
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const handleCancel = () => {
@@ -44,10 +57,12 @@ const DeleteDialog: React.FC<{
       }}
     >
       <div
-        className="bg-light-parchment-beige rounded-xl border-4 border-black text-black p-4"
+        className="bg-light-parchment-beige rounded-xl border-4 border-black text-black p-4 w-full"
         style={{ maxWidth: "28rem" }}
       >
-        <p className="text-center text-lg font-semibold">{message}</p>
+        <p className="text-center text-lg font-semibold break-words">
+          {message}
+        </p>
         <div className="gap-4 mt-4 flex justify-evenly">
           <button
             type="button"

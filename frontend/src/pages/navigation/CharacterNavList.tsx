@@ -6,11 +6,10 @@ import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import Trackers from "../characters/trackers/trackers";
+import Trackers from "../characters/trackers/Trackers";
 
 // FIX: dont active the menu when closing this
 const CharacterNavList: React.FC = () => {
-  const [isTracerEditing, setIsTrackerEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [startX, setStartX] = useState(0);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
@@ -27,7 +26,6 @@ const CharacterNavList: React.FC = () => {
           setIsOpen(true);
         } else if (isOpen && startX - currentX > 150) {
           setIsOpen(false);
-          setIsTrackerEditing(false);
         }
       }
     };
@@ -70,9 +68,6 @@ const CharacterNavList: React.FC = () => {
         rounded-full  p-1 pl-3`}
         onClick={() => {
           setIsOpen(!isOpen);
-          if (!isOpen) {
-            setIsTrackerEditing(false);
-          }
         }}
       >
         {isOpen ? <ArrowForwardIosIcon /> : <ArrowBackIosIcon />}
@@ -101,9 +96,12 @@ const CharacterNavList: React.FC = () => {
               <li className="min-h-dwh h-full">
                 <NavLink to={"spells"}>Spells</NavLink>
               </li>
+              <li>
+                <NavLink to={"notes"}>Notes</NavLink>
+              </li>
             </ul>
           </nav>
-          <Trackers isEditing={isTracerEditing} />
+          <Trackers />
         </Scrollbars>
       </div>
 

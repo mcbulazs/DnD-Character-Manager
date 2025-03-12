@@ -79,7 +79,7 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
         <DeleteDialog
           onCancel={() => setDeleteOpen(false)}
           onConfirm={handleDelete}
-          message={`Are you sure you want to delete  the character: ${character.name}?`}
+          message={`Are you sure you want to delete the character: ${character.name}?`}
         />
       )}
 

@@ -68,8 +68,8 @@ func (r *TrackerRepository) UpdateTrackerOrder(characterID int, trackerOrder *[]
 	return nil
 }
 
-func (r *TrackerRepository) DeleteTracker(trackableID int, characterID int) error {
-	tx := r.DB.Where("id = ? AND character_id = ? AND type = Custom", trackableID, characterID).Delete(&models.CharacterTrackerModel{})
+func (r *TrackerRepository) DeleteTracker(characterID int, trackableID int) error {
+	tx := r.DB.Where("id = ? AND character_id = ? AND type = 'Custom'", trackableID, characterID).Delete(&models.CharacterTrackerModel{})
 	if tx.Error != nil {
 		return tx.Error
 	}

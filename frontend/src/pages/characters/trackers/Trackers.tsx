@@ -1,5 +1,5 @@
 import { useCharacterContext } from "../../../layout/Contexts/CharacterContext";
-import Tracker from "./tracker";
+import Tracker from "./Tracker";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import {
   rectSortingStrategy,
@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import type { Tracker as TrackerObj } from "../../../types/tracker";
 import EditButton from "../../../components/buttons/EditButton";
 import CreateButton from "../../../components/buttons/CreateButton";
-import TrackerModal from "./trackerModal";
+import TrackerModal from "./TrackerModal";
 
 const Trackers: React.FC = () => {
   const [trackerModalOpen, setTrackerModalOpen] = useState(false);
