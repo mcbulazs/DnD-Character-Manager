@@ -15,24 +15,25 @@ type CreateCharacterDTO struct {
 }
 
 type CharacterDTO struct {
-	ID                uint                     `json:"ID"`
-	Name              string                   `json:"name"`
-	Class             string                   `json:"class"`
-	Race              string                   `json:"race"`
-	Level             int                      `json:"level"`
-	IsFavorite        bool                     `json:"isFavorite"`
-	Image             CharacterImageDTO        `json:"image"`
-	ArmorClass        int                      `json:"armorClass"`
-	Initiative        int                      `json:"initiative"`
-	Speed             int                      `json:"speed"`
-	PassivePerception int                      `json:"passivePerception"`
-	ProficiencyBonus  int                      `json:"proficiencyBonus"`
-	AbilityScores     CharacterAbilityScoreDTO `json:"abilityScores"`
-	SavingThrows      CharacterSavingThrowDTO  `json:"savingThrows"`
-	Skills            CharacterSkillDTO        `json:"skills"`
-	Features          []CharacterFeatureDTO    `json:"features"`
-	Spells            []CharacterSpellDTO      `json:"spells"`
-	Trackers          []CharacterTrackerDTO    `json:"trackers"`
+	ID                uint                       `json:"ID"`
+	Name              string                     `json:"name"`
+	Class             string                     `json:"class"`
+	Race              string                     `json:"race"`
+	Level             int                        `json:"level"`
+	IsFavorite        bool                       `json:"isFavorite"`
+	Image             CharacterImageDTO          `json:"image"`
+	ArmorClass        int                        `json:"armorClass"`
+	Initiative        int                        `json:"initiative"`
+	Speed             int                        `json:"speed"`
+	PassivePerception int                        `json:"passivePerception"`
+	ProficiencyBonus  int                        `json:"proficiencyBonus"`
+	AbilityScores     CharacterAbilityScoreDTO   `json:"abilityScores"`
+	SavingThrows      CharacterSavingThrowDTO    `json:"savingThrows"`
+	Skills            CharacterSkillDTO          `json:"skills"`
+	Features          []CharacterFeatureDTO      `json:"features"`
+	Spells            []CharacterSpellDTO        `json:"spells"`
+	Trackers          []CharacterTrackerDTO      `json:"trackers"`
+	NoteCategories    []CharacterNoteCategoryDTO `json:"noteCategories"`
 }
 
 type CharacterImageDTO struct {

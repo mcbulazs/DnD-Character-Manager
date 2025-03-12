@@ -294,6 +294,7 @@ func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 		Features:          convertToCharacterFeatureDTOs(character.Features),
 		Spells:            convertToCharacterSpellDTOs(character.Spells),
 		Trackers:          convertToCharacterTrackerDTOs(character.Trackers),
+		NoteCategories:    convertToCharacterNoteCategoryDTOs(character.NoteCategories),
 	}
 }
 
@@ -309,10 +310,6 @@ func convertToCharacterModel(character *dto.CharacterDTO) *models.CharacterModel
 		Speed:             character.Speed,
 		PassivePerception: character.PassivePerception,
 		ProficiencyBonus:  character.ProficiencyBonus,
-		Image:             convertToCharacterImageModel(&character.Image),
-		AbilityScores:     convertToCharacterAbilityScoreModel(&character.AbilityScores),
-		SavingThrows:      convertToCharacterSavingThrowModel(&character.SavingThrows),
-		Skills:            convertToCharacterSkillModel(&character.Skills),
 	}
 	char.ID = character.ID
 	return &char

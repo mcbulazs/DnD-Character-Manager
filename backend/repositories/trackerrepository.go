@@ -49,7 +49,7 @@ func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerMode
 	}
 	tx = r.DB.Model(&trackable).
 		Select("name", "max_value", "current_value").
-		Where("id = ?", trackable.ID).
+		Where("id = ? AND character_id", trackable.ID, trackable.CharacterID).
 		Updates(&trackable)
 	if tx.Error != nil {
 		return tx.Error

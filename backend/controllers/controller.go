@@ -59,9 +59,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 
 	features := characters.Group("/features")
-	features.GET("", func(c *gin.Context) {
-		GetFeaturesHandler(c, db)
-	})
 	features.POST("", func(c *gin.Context) {
 		CreateFeatureHandler(c, db)
 	})
@@ -96,6 +93,17 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	tracker.DELETE("/:trackerId", func(c *gin.Context) {
 		DeleteTrackerHandler(c, db)
 	})
+
+	noteCategories := characters.Group("/note")
+	noteCategories.POST("", func(c *gin.Context) {})
+	noteCategories.PUT("/:categeroyId", func(c *gin.Context) {})
+	noteCategories.DELETE("/:categeroyId", func(c *gin.Context) {})
+	note := noteCategories.Group("/:categeroyId", func(c *gin.Context) {
+		middleware.NoteMiddleware(c, db)
+	})
+	note.POST("", func(c *gin.Context) {})
+	note.PUT("/:noteId", func(c *gin.Context) {})
+	note.DELETE("/:noteId", func(c *gin.Context) {})
 
 	InitProxy(r)
 }

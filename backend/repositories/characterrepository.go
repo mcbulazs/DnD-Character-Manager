@@ -24,6 +24,8 @@ func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel,
 		Preload("Features").
 		Preload("Spells").
 		Preload("Trackers").
+		Preload("NoteCategories").
+		Preload("NoteCategories.Notes").
 		First(&character, characterID)
 	if tx.Error != nil {
 		return nil, tx.Error

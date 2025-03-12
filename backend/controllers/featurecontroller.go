@@ -11,17 +11,6 @@ import (
 	"DnDCharacterSheet/services"
 )
 
-func GetFeaturesHandler(c *gin.Context, db *gorm.DB) {
-	characterID := c.MustGet("character_id").(int)
-	featureService := services.NewFeatureService(db)
-	features, err := featureService.GetFeatures(characterID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, features)
-}
-
 func CreateFeatureHandler(c *gin.Context, db *gorm.DB) {
 	characterID := c.MustGet("character_id").(int)
 	var createFeatureDTO dto.CharacterCreateFeatureDTO

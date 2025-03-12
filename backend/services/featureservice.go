@@ -18,14 +18,6 @@ func NewFeatureService(DB *gorm.DB) *FeatureService {
 	}
 }
 
-func (s *FeatureService) GetFeatures(characterID int) ([]dto.CharacterFeatureDTO, error) {
-	featureModels, err := s.Repo.GetFeatures(characterID)
-	if err != nil {
-		return nil, err
-	}
-	return convertToCharacterFeatureDTOs(featureModels), nil
-}
-
 func (s *FeatureService) CreateFeature(characterFeatureDTO *dto.CharacterCreateFeatureDTO, characterID int) (*dto.CharacterFeatureDTO, error) {
 	featureModel := models.CharacterFeatureModel{
 		Name:        characterFeatureDTO.Name,

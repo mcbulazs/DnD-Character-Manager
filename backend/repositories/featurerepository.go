@@ -15,15 +15,6 @@ func NewFeatureRepository(db *gorm.DB) *FeatureRepository {
 	return &FeatureRepository{DB: db}
 }
 
-func (r *FeatureRepository) GetFeatures(characterID int) ([]models.CharacterFeatureModel, error) {
-	var features []models.CharacterFeatureModel
-	tx := r.DB.Where("character_id = ?", characterID).Find(&features)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-	return features, nil
-}
-
 func (r *FeatureRepository) CreateFeature(feature *models.CharacterFeatureModel) error {
 	tx := r.DB.Create(feature)
 	if tx.Error != nil {

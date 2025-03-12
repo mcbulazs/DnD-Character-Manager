@@ -17,13 +17,14 @@ type CharacterModel struct {
 	Speed             int
 	PassivePerception int
 	ProficiencyBonus  int
-	Image             CharacterImageModel        `gorm:"foreignKey:CharacterID"`
-	AbilityScores     CharacterAbilityScoreModel `gorm:"foreignKey:CharacterID"`
-	SavingThrows      CharacterSavingThrowModel  `gorm:"foreignKey:CharacterID"`
-	Skills            CharacterSkillModel        `gorm:"foreignKey:CharacterID"`
-	Features          []CharacterFeatureModel    `gorm:"foreignKey:CharacterID"`
-	Spells            []CharacterSpellModel      `gorm:"foreignKey:CharacterID"`
-	Trackers          []CharacterTrackerModel    `gorm:"foreignKey:CharacterID"`
+	Image             CharacterImageModel          `gorm:"foreignKey:CharacterID"`
+	AbilityScores     CharacterAbilityScoreModel   `gorm:"foreignKey:CharacterID"`
+	SavingThrows      CharacterSavingThrowModel    `gorm:"foreignKey:CharacterID"`
+	Skills            CharacterSkillModel          `gorm:"foreignKey:CharacterID"`
+	Features          []CharacterFeatureModel      `gorm:"foreignKey:CharacterID"`
+	Spells            []CharacterSpellModel        `gorm:"foreignKey:CharacterID"`
+	Trackers          []CharacterTrackerModel      `gorm:"foreignKey:CharacterID"`
+	NoteCategories    []CharacterNoteCategoryModel `gorm:"foreignKey:CharacterID"`
 }
 
 func (c *CharacterModel) TableName() string {
