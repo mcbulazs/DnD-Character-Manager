@@ -8,8 +8,13 @@ import {
 } from "@dnd-kit/sortable";
 import { useState, useEffect } from "react";
 import type { Tracker as TrackerObj } from "../../../types/tracker";
+import EditButton from "../../../components/buttons/EditButton";
+import CreateButton from "../../../components/buttons/CreateButton";
+import TrackerModal from "./trackerModal";
 
-const Trackers: React.FC<{ isEditing: boolean }> = ({ isEditing }) => {
+const Trackers: React.FC = () => {
+  const [trackerModalOpen, setTrackerModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [trackers, setTrackers] = useState<TrackerObj[]>([]);
   const { character, error, isLoading } = useCharacterContext();
   useEffect(() => {
@@ -55,34 +60,75 @@ const Trackers: React.FC<{ isEditing: boolean }> = ({ isEditing }) => {
     }
   }
   return (
-    <div className="w-full pt-1 flex flex-col items-center">
-      <div className="w-5/6 flex flex-wrap gap-2">
-        <Tracker
-          style={{ width: "100%" }}
-          tracker={
-            character.trackers.filter((tracker) => tracker.type === "Health")[0]
-          }
-          isEditing={isEditing}
+    <>
+      <div className="w-full pt-1 flex flex-col items-center">
+        <div className="w-5/6 flex flex-wrap gap-2">
+          <Tracker
+            style={{ width: "100%" }}
+            tracker={
+              character.trackers.filter(
+                (tracker) => tracker.type === "Health",
+              )[0]
+            }
+            isEditing={isEditing}
+            characterId={character.ID}
+          />
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext
+              items={trackers}
+              disabled={!isEditing}
+              strategy={rectSortingStrategy}
+            >
+              {trackers.map((tracker) => (
+                <Tracker
+                  key={tracker.id}
+                  tracker={tracker}
+                  isEditing={isEditing}
+                  characterId={character.ID}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
+      </div>
+      <div className="w-full h-16 absolute bottom-0 grid grid-cols-2">
+        <div className="w-full flex items-center justify-center p-2">
+          {!isEditing ? (
+            <EditButton
+              text="Edit trackers"
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            />
+          ) : (
+            <button
+              className={`bg-orange-500 hover:bg-orange-700 text-white font-bold
+                                w-48 h-12 
+                                rounded-full p-1 z-10 
+                                transition-all duration-300 ease-in-out overflow-hidden`}
+              onClick={() => setIsEditing(false)}
+              type="button"
+            >
+              <span className="text-white text-center whitespace-nowrap">
+                Stop Editing
+              </span>
+            </button>
+          )}
+        </div>
+        <div className="w-full flex items-center justify-center p-2">
+          <CreateButton
+            text="Create tracker"
+            onClick={() => setTrackerModalOpen(true)}
+          />
+        </div>
+      </div>
+      {trackerModalOpen && (
+        <TrackerModal
+          onClose={() => setTrackerModalOpen(false)}
           characterId={character.ID}
         />
-        <DndContext onDragEnd={handleDragEnd}>
-          <SortableContext
-            items={trackers}
-            disabled={!isEditing}
-            strategy={rectSortingStrategy}
-          >
-            {trackers.map((tracker) => (
-              <Tracker
-                key={tracker.id}
-                tracker={tracker}
-                isEditing={isEditing}
-                characterId={character.ID}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

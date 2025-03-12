@@ -7,16 +7,12 @@ import { useState, useEffect, useRef } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import Trackers from "../characters/trackers/trackers";
-import CreateButton from "../../components/buttons/CreateButton";
-import EditButton from "../../components/buttons/EditButton";
-import TrackerModal from "../characters/trackers/trackerModal";
 
 // FIX: dont active the menu when closing this
 const CharacterNavList: React.FC = () => {
+  const [isTracerEditing, setIsTrackerEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [startX, setStartX] = useState(0);
-  const [trackerModalOpen, setModalOpen] = useState(false);
-  const [isTracerEditing, setIsTrackerEditing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -108,34 +104,6 @@ const CharacterNavList: React.FC = () => {
             </ul>
           </nav>
           <Trackers isEditing={isTracerEditing} />
-          <div className="w-full h-16 absolute bottom-0 grid grid-cols-2">
-            <div className="w-full flex items-center justify-center p-2">
-              {!isTracerEditing ? (
-                <EditButton
-                  text="Edit trackers"
-                  onClick={() => {
-                    setIsTrackerEditing(true);
-                  }}
-                />
-              ) : (
-                <button
-                  className={`bg-orange-500 hover:bg-orange-700 text-white font-bold
-                                w-48 h-12 
-                                rounded-full p-1 z-10 
-                                transition-all duration-300 ease-in-out overflow-hidden`}
-                  onClick={() => setIsTrackerEditing(false)}
-                  type="button"
-                >
-                  <span className="text-white text-center whitespace-nowrap">
-                    Stop Editing
-                  </span>
-                </button>
-              )}
-            </div>
-            <div className="w-full flex items-center justify-center p-2">
-              <CreateButton text="Create tracker" onClick={() => { }} />
-            </div>
-          </div>
         </Scrollbars>
       </div>
 

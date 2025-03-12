@@ -58,7 +58,7 @@ const TrackerModal: React.FC<{
         <input
           type="text"
           value={name}
-          disabled={tracker?.type !== "Custom"}
+          disabled={tracker && tracker?.type !== "Custom"}
           onChange={(e) => setName(e.target.value)}
           className="p-2 border border-gray-300 rounded-lg w-full"
         />
