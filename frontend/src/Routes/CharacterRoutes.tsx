@@ -6,6 +6,7 @@ import CharacterSheet from "../pages/characters/CharacterSheet/CharacterSheet";
 import Features from "../pages/characters/features/Features";
 import Spells from "../pages/characters/spells/Spells";
 import CharacterNavList from "../pages/navigation/CharacterNavList";
+import Notes from "../pages/characters/notes/Notes";
 
 const CharactersRoutes = () => {
   return (
@@ -47,6 +48,14 @@ const CharactersRoutes = () => {
           element={
             <AuthGuard loggedInRequired={true}>
               <Spells />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="notes"
+          element={
+            <AuthGuard loggedInRequired={true}>
+              <Notes />
             </AuthGuard>
           }
         />

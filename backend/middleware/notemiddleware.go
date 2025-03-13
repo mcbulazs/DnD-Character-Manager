@@ -24,7 +24,6 @@ func NoteMiddleware(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.Set("character_id", characterID)
 	c.Set("category_id", categoryID)
 	noteService := services.NewNoteService(db)
 	isOwner := noteService.IsNoteCategoryCharacters(characterID, categoryID)

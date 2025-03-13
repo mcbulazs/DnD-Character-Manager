@@ -95,15 +95,28 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 
 	noteCategories := characters.Group("/note")
-	noteCategories.POST("", func(c *gin.Context) {})
-	noteCategories.PUT("/:categeroyId", func(c *gin.Context) {})
-	noteCategories.DELETE("/:categeroyId", func(c *gin.Context) {})
+	noteCategories.POST("", func(c *gin.Context) {
+		CreateNoteCategoryHandler(c, db)
+	})
+	noteCategories.PUT("/:categeroyId", func(c *gin.Context) {
+		UpdateNoteCategoryHandler(c, db)
+	})
+	noteCategories.DELETE("/:categeroyId", func(c *gin.Context) {
+		DeleteNoteCategoryHandler(c, db)
+	})
+
 	note := noteCategories.Group("/:categeroyId", func(c *gin.Context) {
 		middleware.NoteMiddleware(c, db)
 	})
-	note.POST("", func(c *gin.Context) {})
-	note.PUT("/:noteId", func(c *gin.Context) {})
-	note.DELETE("/:noteId", func(c *gin.Context) {})
+	note.POST("", func(c *gin.Context) {
+		CreateNoteHandler(c, db)
+	})
+	note.PUT("/:noteId", func(c *gin.Context) {
+		UpdateNoteHandler(c, db)
+	})
+	note.DELETE("/:noteId", func(c *gin.Context) {
+		DeleteNoteHandler(c, db)
+	})
 
 	InitProxy(r)
 }
