@@ -6,6 +6,7 @@ import CharacterSheet from "../pages/characters/CharacterSheet/CharacterSheet";
 import Features from "../pages/characters/features/Features";
 import Spells from "../pages/characters/spells/Spells";
 import CharacterNavList from "../pages/navigation/CharacterNavList";
+import NoteCategories from "../pages/characters/notes/NoteCategories";
 import Notes from "../pages/characters/notes/Notes";
 
 const CharactersRoutes = () => {
@@ -27,38 +28,13 @@ const CharactersRoutes = () => {
           </AuthGuard>
         }
       >
-        <Route
-          index
-          element={
-            <AuthGuard loggedInRequired={true}>
-              <CharacterSheet />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="features"
-          element={
-            <AuthGuard loggedInRequired={true}>
-              <Features />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="spells"
-          element={
-            <AuthGuard loggedInRequired={true}>
-              <Spells />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="notes"
-          element={
-            <AuthGuard loggedInRequired={true}>
-              <Notes />
-            </AuthGuard>
-          }
-        />
+        <Route index element={<CharacterSheet />} />
+        <Route path="features" element={<Features />} />
+        <Route path="spells" element={<Spells />} />
+        <Route path="notes">
+          <Route index element={<NoteCategories />} />
+          <Route path=":noteId" element={<Notes />} />
+        </Route>
       </Route>
     </Routes>
   );

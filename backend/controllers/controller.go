@@ -94,7 +94,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		DeleteTrackerHandler(c, db)
 	})
 
-	noteCategories := characters.Group("/note")
+	noteCategories := characters.Group("/notes")
 	noteCategories.POST("", func(c *gin.Context) {
 		CreateNoteCategoryHandler(c, db)
 	})

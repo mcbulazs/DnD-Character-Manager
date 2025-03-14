@@ -1,14 +1,14 @@
 export type Spell = {
-	id: number;
-    name: string;
-    level: number;
-    school: string;
-    castingTime: string;
-    range: string;
-    components: string;
-    duration: string;
-    description: string;
-    active: boolean;
+  id: number;
+  name: string;
+  level: number;
+  school: string;
+  castingTime: string;
+  range: string;
+  components: string;
+  duration: string;
+  description: string;
+  active: boolean;
 };
 
 export type CreateSpell = {
@@ -20,4 +20,4 @@ export type CreateSpell = {
   components: string;
   duration: string;
   description: string;
-}
+};

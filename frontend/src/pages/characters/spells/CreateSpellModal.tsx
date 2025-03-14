@@ -312,6 +312,7 @@ const CreateSpellModal: React.FC<{
 
 				<Suspense fallback={<div>Loading editor...</div>}>
 					<TextEditor
+            placeholder="Type or paste your spell description here!"
 						value={description}
 						onChange={(val) => {
 							setDescription(val);

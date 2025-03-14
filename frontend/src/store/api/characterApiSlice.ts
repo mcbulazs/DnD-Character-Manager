@@ -15,6 +15,7 @@ import type { CreateFeature, Feature } from "../../types/feature";
 import type { CreateSpell, Spell } from "../../types/spell";
 import type { CreateTracker, Tracker } from "../../types/tracker";
 import baseQuery from "./baseQuery";
+import type { CreateNoteCategory, NoteCategory } from "../../types/note";
 
 type Tags = TagDescription<"Characters" | "Character">;
 
@@ -245,6 +246,42 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character"]),
       invalidatesTags: ["Character"],
     }),
+
+    CreateNoteCategory: builder.mutation<
+      void,
+      { noteCategory: CreateNoteCategory; characterId: number }
+    >({
+      query: ({ noteCategory, characterId }) => ({
+        url: `characters/${characterId}/notes`,
+        method: "POST",
+        body: noteCategory,
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+    ModifyNoteCategory: builder.mutation<
+      void,
+      { noteCategory: NoteCategory; characterId: number }
+    >({
+      query: ({ noteCategory, characterId }) => ({
+        url: `characters/${characterId}/notes/${noteCategory.id}`,
+        method: "PUT",
+        body: noteCategory,
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+    deleteNoteCategory: builder.mutation<
+      void,
+      { id: number; characterId: number }
+    >({
+      query: ({ id, characterId }) => ({
+        url: `characters/${characterId}/notes/${id}`,
+        method: "DELETE",
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
   }),
 });
 
@@ -281,4 +318,10 @@ export const {
   useModifyTrackerMutation,
   useUpdateTrackerOrderMutation,
   useDeleteTrackerMutation,
+} = characterApiSlice;
+
+export const {
+  useCreateNoteCategoryMutation,
+  useModifyNoteCategoryMutation,
+  useDeleteNoteCategoryMutation,
 } = characterApiSlice;

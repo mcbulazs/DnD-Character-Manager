@@ -47,7 +47,13 @@ func getAllowedMethods(route string) string {
 		return "PUT, DELETE, OPTIONS"
 	case "/api/characters/:characterId/trackers":
 		return "POST, OPTIONS"
+	case "/api/characters/:characterId/trackers/order":
+		return "PATCH, OPTIONS"
 	case "/api/characters/:characterId/trackers/:trackerId":
+		return "PUT, DELETE, OPTIONS"
+	case "/api/characters/:characterId/notes":
+		return "POST, OPTIONS"
+	case "/api/characters/:characterId/notes/:noteId":
 		return "PUT, DELETE, OPTIONS"
 
 	default:
