@@ -33,7 +33,7 @@ const CharactersRoutes = () => {
         <Route path="spells" element={<Spells />} />
         <Route path="notes">
           <Route index element={<NoteCategories />} />
-          <Route path=":noteId" element={<Notes />} />
+          <Route path=":categoryId" element={<Notes />} />
         </Route>
       </Route>
     </Routes>

@@ -22,11 +22,11 @@ const Pager: React.FC<{
     pages.add(0);
     pages.add(count - 1);
 
-    let left = Math.max(1, currentPage - 1);
-    let right = Math.min(count - 2, currentPage + 1);
+    let left = Math.max(1, currentPage - (maxShown - 1) / 2);
+    let right = Math.min(count - 2, currentPage + (maxShown - 1) / 2);
 
-    if (currentPage === 0) right = left + maxShown - 1;
-    if (currentPage === count - 1) left = right - maxShown + 1;
+    if (currentPage === 0) right = left + maxShown - 2;
+    if (currentPage === count - 1) left = right - maxShown + 2;
 
     for (let i = left; i <= right; i++) pages.add(i);
 
