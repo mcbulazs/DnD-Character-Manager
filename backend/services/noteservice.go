@@ -55,10 +55,8 @@ func (s *NoteService) DeleteNoteCategory(noteCategoryID int, characterID int) er
 	return nil
 }
 
-func (s *NoteService) CreateNote(categoryId int, noteDTO *dto.CharacterCreateNoteDTO) (*dto.CharacterNoteDTO, error) {
-	noteModel := models.CharacterNoteModel{
-		Note: noteDTO.Note,
-	}
+func (s *NoteService) CreateNote(categoryId int) (*dto.CharacterNoteDTO, error) {
+	var noteModel models.CharacterNoteModel
 	noteModel.CategoryID = uint(categoryId)
 	err := s.Repo.CreateNote(&noteModel)
 	if err != nil {

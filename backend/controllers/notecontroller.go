@@ -28,14 +28,20 @@ func CreateNoteCategoryHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func UpdateNoteCategoryHandler(c *gin.Context, db *gorm.DB) {
+	categoryId, err := strconv.Atoi(c.Param("categoryId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note category ID"})
+		return
+	}
 	var noteCategoryDTO dto.CharacterNoteCategoryDTO
 	if err := c.ShouldBindJSON(&noteCategoryDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	noteCategoryDTO.ID = uint(categoryId)
 	characterID := c.MustGet("character_id").(int)
 	noteService := services.NewNoteService(db)
-	err := noteService.UpdateNoteCategory(characterID, &noteCategoryDTO)
+	err = noteService.UpdateNoteCategory(characterID, &noteCategoryDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -44,9 +50,9 @@ func UpdateNoteCategoryHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func DeleteNoteCategoryHandler(c *gin.Context, db *gorm.DB) {
-	categoryID, err := strconv.Atoi(c.Param("categoryID"))
+	categoryID, err := strconv.Atoi(c.Param("categoryId"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid feature ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note category ID"})
 		return
 	}
 	characterId := c.MustGet("character_id").(int)
@@ -60,14 +66,9 @@ func DeleteNoteCategoryHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func CreateNoteHandler(c *gin.Context, db *gorm.DB) {
-	var createNoteDTO dto.CharacterCreateNoteDTO
-	if err := c.ShouldBindJSON(&createNoteDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 	categoryID := c.MustGet("category_id").(int)
 	noteService := services.NewNoteService(db)
-	noteDTO, err := noteService.CreateNote(categoryID, &createNoteDTO)
+	noteDTO, err := noteService.CreateNote(categoryID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -94,12 +95,12 @@ func UpdateNoteHandler(c *gin.Context, db *gorm.DB) {
 func DeleteNoteHandler(c *gin.Context, db *gorm.DB) {
 	noteID, err := strconv.Atoi(c.Param("noteId"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid feature ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note ID"})
 		return
 	}
 	categoryID := c.MustGet("category_id").(int)
 	noteService := services.NewNoteService(db)
-	err = noteService.DeleteNoteCategory(noteID, categoryID)
+	err = noteService.DeleteNote(categoryID, noteID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

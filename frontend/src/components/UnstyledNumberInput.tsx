@@ -25,7 +25,6 @@ const UnstyledNumberInput: React.FC<{
 
     const handleCalculation = (val: string) => {
       const newValue = val.replace(/[+-]$/g, "");
-      console.log(newValue);
       const result: number = Number(new Function(`return ${newValue}`)());
 
       if (maxValue !== undefined && result > maxValue) {

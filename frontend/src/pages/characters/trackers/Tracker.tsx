@@ -65,7 +65,6 @@ const Tracker: React.FC<{
                 type="button"
                 className="absolute top-0 left-0 text-red-500"
                 onClick={() => {
-                  console.log("delete");
                   setDeleteOpen(true);
                 }}
               >
@@ -76,7 +75,6 @@ const Tracker: React.FC<{
               type="button"
               className="absolute top-0 right-0 text-orange-500"
               onClick={() => {
-                console.log("edit");
                 setModalOpen(true);
               }}
             >

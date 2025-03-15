@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -25,10 +27,23 @@ func (r *NoteRepository) IsCategoryBelongToCharacter(categoryID int, characterID
 }
 
 func (r *NoteRepository) CreateNoteCategory(categoryModel *models.CharacterNoteCategoryModel) error {
-	tx := r.DB.Create(categoryModel)
-	if tx.Error != nil {
-		return tx.Error
+	tx := r.DB.Begin()
+	fmt.Println(categoryModel)
+	err := tx.Create(categoryModel).Error
+	if err != nil {
+		tx.Rollback()
+		return err
 	}
+	note := models.CharacterNoteModel{
+		Note:       "",
+		CategoryID: categoryModel.ID,
+	}
+	err = tx.Create(&note).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
 	return nil
 }
 
@@ -46,17 +61,16 @@ func (r *NoteRepository) UpdateNoteCategory(categoryModel *models.CharacterNoteC
 
 func (r *NoteRepository) DeleteNoteCategory(categoryID int, characterID int) error {
 	tx := r.DB.Begin()
-
-	err := tx.Where("id = ? AND character_id = ?", categoryID, characterID).Delete(&models.CharacterNoteCategoryModel{}).Error
-	if err != nil {
+	rx := tx.Where("id = ? AND character_id = ?", categoryID, characterID).Delete(&models.CharacterNoteCategoryModel{})
+	if rx.Error != nil {
 		tx.Rollback()
-		return err
+		return rx.Error
 	}
-	if tx.RowsAffected == 0 {
+	if rx.RowsAffected == 0 {
 		tx.Rollback()
 		return nil
 	}
-	err = tx.Where("category_id = ?", categoryID, characterID).Delete(&models.CharacterNoteModel{}).Error
+	err := tx.Where("category_id = ?", categoryID).Delete(&models.CharacterNoteModel{}).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -86,8 +100,9 @@ func (r *NoteRepository) UpdateNote(noteModel *models.CharacterNoteModel, catego
 }
 
 func (r *NoteRepository) DeleteNote(noteID int, categoryID int) error {
+	fmt.Println(noteID, categoryID)
 	tx := r.DB.
-		Where("id = ? AND category_id - ?", noteID, categoryID).
+		Where("id = ? AND category_id = ?", noteID, categoryID).
 		Delete(&models.CharacterNoteModel{})
 	if tx.Error != nil {
 		return tx.Error

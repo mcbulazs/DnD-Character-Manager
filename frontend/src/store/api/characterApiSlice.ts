@@ -15,7 +15,12 @@ import type { CreateFeature, Feature } from "../../types/feature";
 import type { CreateSpell, Spell } from "../../types/spell";
 import type { CreateTracker, Tracker } from "../../types/tracker";
 import baseQuery from "./baseQuery";
-import type { CreateNoteCategory, NoteCategory } from "../../types/note";
+import type {
+  CreateNoteCategory,
+  NoteCategory,
+  CreateNote,
+  Note,
+} from "../../types/note";
 
 type Tags = TagDescription<"Characters" | "Character">;
 
@@ -282,6 +287,41 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character"]),
       invalidatesTags: ["Character"],
     }),
+    createNote: builder.mutation<
+      void,
+      { categoryId: number; characterId: number }
+    >({
+      query: ({ categoryId, characterId }) => ({
+        url: `characters/${characterId}/notes/${categoryId}`,
+        method: "POST",
+        body: {},
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+    modifyNote: builder.mutation<
+      void,
+      { note: Note; categoryId: number; characterId: number }
+    >({
+      query: ({ note, categoryId, characterId }) => ({
+        url: `characters/${characterId}/notes/${categoryId}/${note.id}`,
+        method: "PUT",
+        body: note,
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+    deleteNote: builder.mutation<
+      void,
+      { noteId: number; categoryId: number; characterId: number }
+    >({
+      query: ({ noteId, categoryId, characterId }) => ({
+        url: `characters/${characterId}/notes/${categoryId}/${noteId}`,
+        method: "DELETE",
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
   }),
 });
 
@@ -324,4 +364,7 @@ export const {
   useCreateNoteCategoryMutation,
   useModifyNoteCategoryMutation,
   useDeleteNoteCategoryMutation,
+  useCreateNoteMutation,
+  useModifyNoteMutation,
+  useDeleteNoteMutation,
 } = characterApiSlice;

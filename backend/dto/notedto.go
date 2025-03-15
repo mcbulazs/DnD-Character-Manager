@@ -16,7 +16,3 @@ type CharacterNoteDTO struct {
 	ID   uint   `json:"id"`
 	Note string `json:"note"`
 }
-
-type CharacterCreateNoteDTO struct {
-	Note string `json:"note"`
-}

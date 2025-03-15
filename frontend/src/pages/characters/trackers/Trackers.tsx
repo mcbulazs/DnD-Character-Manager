@@ -44,19 +44,9 @@ const Trackers: React.FC = () => {
         const newIndex = trackers.findIndex(
           (tracker) => tracker.id === over?.id,
         );
-        //const newIndex = trackers.indexOf(over.id);
 
         return arrayMove(trackers, oldIndex, newIndex);
       });
-      /*
-      if (character) {
-        console.log(trackers);
-        updateOrder({
-          trackerIds: trackers.map((tracker) => tracker.id),
-          characterId: character.ID,
-        });
-      }
-      */
     }
   }
   return (

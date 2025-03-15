@@ -98,14 +98,14 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	noteCategories.POST("", func(c *gin.Context) {
 		CreateNoteCategoryHandler(c, db)
 	})
-	noteCategories.PUT("/:categeroyId", func(c *gin.Context) {
+	noteCategories.PUT("/:categoryId", func(c *gin.Context) {
 		UpdateNoteCategoryHandler(c, db)
 	})
-	noteCategories.DELETE("/:categeroyId", func(c *gin.Context) {
+	noteCategories.DELETE("/:categoryId", func(c *gin.Context) {
 		DeleteNoteCategoryHandler(c, db)
 	})
 
-	note := noteCategories.Group("/:categeroyId", func(c *gin.Context) {
+	note := noteCategories.Group("/:categoryId", func(c *gin.Context) {
 		middleware.NoteMiddleware(c, db)
 	})
 	note.POST("", func(c *gin.Context) {

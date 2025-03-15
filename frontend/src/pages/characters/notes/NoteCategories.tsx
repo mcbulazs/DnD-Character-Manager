@@ -22,7 +22,6 @@ const NoteCategories: React.FC = () => {
   if (error || !character) {
     return <div>Error loading notes</div>;
   }
-  console.log(categories);
   return (
     <>
       <div

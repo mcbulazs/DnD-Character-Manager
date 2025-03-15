@@ -1,15 +1,12 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const DeleteDialog: React.FC<{
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
 }> = ({ message, onConfirm, onCancel }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
-    setIsVisible(true);
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         handleCancel();
@@ -26,16 +23,12 @@ const DeleteDialog: React.FC<{
   }, []);
 
   const handleCancel = () => {
-    setIsVisible(false);
-
     setTimeout(() => {
       onCancel();
     }, 300);
   };
 
   const handleConfirm = () => {
-    setIsVisible(false);
-
     setTimeout(() => {
       onConfirm();
     }, 300);
@@ -52,7 +45,6 @@ const DeleteDialog: React.FC<{
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         overflow: "hidden",
         zIndex: 1000,
-        opacity: isVisible ? 1 : 0,
         transition: "opacity 0.3s ease-in-out",
       }}
     >

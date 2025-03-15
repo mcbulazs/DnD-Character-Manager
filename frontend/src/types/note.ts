@@ -14,6 +14,3 @@ export type Note = {
   id: number;
   note: string;
 };
-export type CreateNoye = {
-  note: string;
-};

@@ -12,24 +12,25 @@ const NoteCategoryCard: React.FC<{
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <div
-        className={`w-full h-64 relative 
+      <div className="relative">
+        <div
+          className={`w-full h-64 relative 
                 flex flex-col 
                 bg-light-parchment-beige   
                 rounded-xl border-4 border-black
                 cursor-pointer
                 `}
-        onMouseUp={() => {
-          console.log("asd");
-          navigate(`/characters/${characterId}/notes/${category.id}`);
-        }}
-      >
-        <h2 className="text-center text-xl font-bold border-b-4 border-dragon-blood">
-          {category.name}
-        </h2>
-        <div className="pb-10 w-full h-full px-1">
-          <div className="w-full h-full line-clamp-[9]">
-            <p>{category.description}</p>
+          onMouseUp={() => {
+            navigate(`/characters/${characterId}/notes/${category.id}`);
+          }}
+        >
+          <h2 className="text-center text-xl font-bold border-b-4 border-dragon-blood">
+            {category.name}
+          </h2>
+          <div className="pb-10 w-full h-full px-1">
+            <div className="w-full h-full line-clamp-[9]">
+              <p>{category.description}</p>
+            </div>
           </div>
         </div>
         <button
