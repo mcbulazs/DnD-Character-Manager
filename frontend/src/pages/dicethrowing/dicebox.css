@@ -1,0 +1,16 @@
+#dice-box canvas {
+	width: 100%;
+	height: 100%;
+}
+.tabletop {
+	background-image: url("/wood.jpg"); /* Use a wood texture image */
+	background-size: cover; /* Ensure the texture covers the entire surface */
+	border: 15px solid #5a3e36; /* Dark brown border for depth */
+	border-radius: 10px; /* Slightly rounded corners */
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), /* Outer shadow for depth */ inset 0
+		0 20px rgba(0, 0, 0, 0.3); /* Inner shadow for bevel effect */
+	overflow: hidden; /* Ensures child elements don't overflow */
+}
+.adv-roller--clear {
+	color: #fff;
+}
