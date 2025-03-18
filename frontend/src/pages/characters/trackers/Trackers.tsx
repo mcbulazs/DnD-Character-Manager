@@ -49,6 +49,9 @@ const Trackers: React.FC = () => {
       });
     }
   }
+  if (character.trackers?.length < 1) {
+    return <div>Error loading trackers</div>;
+  }
   return (
     <>
       <div className="w-full pt-1 flex flex-col items-center">

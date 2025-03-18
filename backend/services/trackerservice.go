@@ -1,8 +1,6 @@
 package services
 
 import (
-	"math"
-
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
@@ -25,7 +23,6 @@ func (s *TrackerService) CreateTracker(characterID int, trackerDTO *dto.CreateCh
 		MaxValue:     trackerDTO.MaxValue,
 		CurrentValue: trackerDTO.MaxValue,
 		CharacterID:  uint(characterID),
-		Order:        math.MaxInt32,
 	}
 	err := s.Repo.CreateTracker(trackerModel)
 	if err != nil {
@@ -67,7 +64,7 @@ func convertToCharacterTrackerDTO(trackerModel *models.CharacterTrackerModel) *d
 		Name:         trackerModel.Name,
 		MaxValue:     trackerModel.MaxValue,
 		CurrentValue: trackerModel.CurrentValue,
-		Order:        trackerModel.Order,
+		Order:        trackerModel.TrackerOrder,
 	}
 }
 

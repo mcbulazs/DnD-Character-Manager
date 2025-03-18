@@ -10,7 +10,8 @@
     "build:client": "vite build --outDir dist/client --ssrManifest",
     "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
     "lint": "biome lint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
@@ -35,6 +36,7 @@
     "react-router-dom": "^6.26.0",
     "react-toastify": "^10.0.5",
     "sirv": "^2.0.4",
+    "patch-package": "^8.0.0",
     "string-strip-html": "^13.4.8"
   },
   "devDependencies": {

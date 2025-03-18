@@ -9,6 +9,9 @@ add race to character creation
 after character creation go to character
 
 ---------------Notes
+fix ntoes
+fix trackers
+
 Items, Weapons & Proficiencies
 
 Hit Die Tracker defualt
@@ -19,6 +22,7 @@ friendlist feature
 
 ---------------dice rolling feature
 
+cascading soft delete in gorm
 Level Up
 
 ABOUT section

@@ -56,11 +56,13 @@ const Notes: React.FC = () => {
       noteId: currentNoteId,
     });
   };
+  // biome-ignore lint/correctness/useExhaustiveDependencies: these are needed dependencies
   const updateNoteDebounce = useCallback(
     debounce((val: string) => {
       if (!categoryId || !character) {
         return;
       }
+      console.log(character);
       modifyNoteMutation({
         categoryId: Number.parseInt(categoryId),
         characterId: character.ID,
@@ -70,7 +72,7 @@ const Notes: React.FC = () => {
         },
       });
     }, 300),
-    [],
+    [character, currentNoteId],
   );
   if (isLoading) {
     return <div>Loading ... </div>;

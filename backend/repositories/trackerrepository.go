@@ -49,7 +49,7 @@ func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerMode
 	}
 	tx = r.DB.Model(&trackable).
 		Select("name", "max_value", "current_value").
-		Where("id = ? AND character_id", trackable.ID, trackable.CharacterID).
+		Where("id = ? AND character_id = ?", trackable.ID, trackable.CharacterID).
 		Updates(&trackable)
 	if tx.Error != nil {
 		return tx.Error
@@ -61,7 +61,7 @@ func (r *TrackerRepository) UpdateTrackerOrder(characterID int, trackerOrder *[]
 	stringOrder := strings.Join(strings.Split(strings.Trim(fmt.Sprint(*trackerOrder), "[]"), " "), ",") //[1,2,3,4] => "1,2,3,4"
 	tx := r.DB.Model(&models.CharacterTrackerModel{}).
 		Where("character_id = ? AND type = 'Custom'", characterID).
-		Updates(map[string]interface{}{"order": gorm.Expr("array_position(ARRAY[" + stringOrder + "]::int[], id)")}) // there should be any fear of sql injection
+		Updates(map[string]interface{}{"tracker_order": gorm.Expr("array_position(ARRAY[" + stringOrder + "]::int[], id)")}) // there should be any fear of sql injection
 	if tx.Error != nil {
 		return tx.Error
 	}

@@ -1,9 +1,10 @@
 # Stage 1: Build the React app using a Node.js image
-FROM node:20.16 AS reactbuild
+FROM node:23 AS reactbuild
 
 WORKDIR /app
 
 COPY package*.json ./
+COPY ./patches ./patches
 
 RUN npm install
 
@@ -15,7 +16,7 @@ RUN npm run build:server
 
 
 # Stage 2: Copy the built React app and the server to an Alpine image
-FROM node:20.16-alpine
+FROM node:23-alpine
 
 WORKDIR /root
 

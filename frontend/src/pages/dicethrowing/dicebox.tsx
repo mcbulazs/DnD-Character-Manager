@@ -38,7 +38,6 @@ const Dicebox: React.FC = () => {
         },
         //biome-ignore lint/suspicious/noExplicitAny: This is a third-party library, no clue of the type
         onResults: (results: any) => {
-          console.log(results);
           setResult(results.value);
         },
       });

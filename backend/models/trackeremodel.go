@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type TrackerType string
 
@@ -42,9 +44,22 @@ type CharacterTrackerModel struct {
 	Type         TrackerType
 	MaxValue     int
 	CurrentValue int
-	Order        int
+	TrackerOrder int `gorm:"column:tracker_order"`
 }
 
 func (s *CharacterTrackerModel) TableName() string {
 	return "character_trackers"
+}
+
+func (s *CharacterTrackerModel) BeforeCreate(tx *gorm.DB) error {
+	if s.Type != TrackerEnum.Custom {
+		return nil
+	}
+	var prevTracker CharacterTrackerModel
+	t := tx.Where("character_id = ?", s.CharacterID).Order("tracker_order desc").First(&prevTracker)
+	if t.Error != nil {
+		return t.Error
+	}
+	s.TrackerOrder = prevTracker.TrackerOrder + 1
+	return nil
 }
