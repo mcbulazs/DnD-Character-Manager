@@ -10,6 +10,8 @@ import (
 func MigrateModels(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&UserModel{},
+		&FriendRequest{},
+		&Friends{},
 		&CharacterModel{},
 		&CharacterImageModel{},
 		&CharacterAbilityScoreModel{},

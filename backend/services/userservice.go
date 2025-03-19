@@ -24,7 +24,7 @@ func NewUserService(db *gorm.DB) *UserService {
 
 var ErrUserExists = errors.New("user already exists")
 
-func (s *UserService) CreateUser(user *dto.UserDTO) (*models.UserModel, error) {
+func (s *UserService) CreateUser(user *dto.CreateUserDTO) (*models.UserModel, error) {
 	// Hash the password before saving the user
 	hashedPassword, err := utility.HashPassword(user.Password)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *UserService) CreateUser(user *dto.UserDTO) (*models.UserModel, error) {
 // Define specific error types
 var ErrAuthenticationFailed = errors.New("authentication failed")
 
-func (s *UserService) AuthenticateUser(user *dto.UserDTO) (int, error) {
+func (s *UserService) AuthenticateUser(user *dto.CreateUserDTO) (int, error) {
 	userModel, err := s.repo.FindByEmail(user.Email)
 	if err != nil {
 		if errors.Is(err, repositories.ErrUserNotFound) {
@@ -62,9 +62,25 @@ func (s *UserService) AuthenticateUser(user *dto.UserDTO) (int, error) {
 	return int(userModel.ID), nil
 }
 
-func convertToUser(userDTO *dto.UserDTO) *models.UserModel {
+func convertToUser(userDTO *dto.CreateUserDTO) *models.UserModel {
 	return &models.UserModel{
 		Email:    userDTO.Email,
 		Password: userDTO.Password,
 	}
+}
+
+func (s *UserService) SendFriendRequest(userID int, friendEmail string) error {
+	friend, err := s.repo.FindByEmail(friendEmail)
+	if err != nil {
+		return err
+	}
+	return s.repo.SendFriendRequest(uint(userID), friend.ID)
+}
+
+func (s *UserService) AcceptFriendRequest(userID int, friendRequestID int) error {
+	return s.repo.AcceptFriendRequest(uint(friendRequestID), uint(userID))
+}
+
+func (s *UserService) DeclineFriendRequest(userID int, friendRequestID int) error {
+	return s.repo.DeclineFriendRequest(uint(friendRequestID), uint(userID))
 }

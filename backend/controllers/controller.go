@@ -36,6 +36,17 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		GetCharacterHandler(c, db)
 	})
 
+	friends := auth.Group("/friends")
+	friends.POST("", func(c *gin.Context) {
+		SendFriendRequestHandler(c, db)
+	})
+	friends.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
+		AcceptFriendRequestHandler(c, db)
+	})
+	friends.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
+		DeclineFriendRequestHandler(c, db)
+	})
+
 	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
 	})
@@ -116,6 +127,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 	note.DELETE("/:noteId", func(c *gin.Context) {
 		DeleteNoteHandler(c, db)
+	})
+
+	api.GET("/test", func(c *gin.Context) {
 	})
 
 	InitProxy(r)
