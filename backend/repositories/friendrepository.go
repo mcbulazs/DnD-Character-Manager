@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"errors"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -13,6 +15,15 @@ type FriendRepository struct {
 
 func NewFriendRepository(db *gorm.DB) *FriendRepository {
 	return &FriendRepository{DB: db}
+}
+
+func (r *FriendRepository) IsUserFriend(userId uint, friendId uint) bool {
+	var Frend models.FriendsModel
+	tx := r.DB.Model(&models.FriendsModel{}).First(&Frend, "user_id = ? AND friend_id = ?", userId, friendId)
+	if tx.Error != nil || errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return false
+	}
+	return true
 }
 
 func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) error {

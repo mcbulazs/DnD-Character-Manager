@@ -83,11 +83,8 @@ func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
-	friendUserId, err := strconv.Atoi(c.Param("friendId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
+
+	friendUserId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
 	err = friendService.ShareCharacter(friendUserId, characterId)
 	if err != nil {
@@ -103,11 +100,7 @@ func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
-	friendUserId, err := strconv.Atoi(c.Param("friendId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
+	friendUserId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
 	err = friendService.UnshareCharacter(friendUserId, characterId)
 	if err != nil {

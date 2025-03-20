@@ -18,6 +18,10 @@ func NewFriendService(DB *gorm.DB) *FriendService {
 	}
 }
 
+func (s *FriendService) IsUserFriend(userID int, friendID int) bool {
+	return s.Repo.IsUserFriend(uint(userID), uint(friendID))
+}
+
 func (s *FriendService) SendFriendRequest(userID int, friendEmail string) error {
 	friend, err := s.UserRepo.FindByEmail(friendEmail)
 	if err != nil {
