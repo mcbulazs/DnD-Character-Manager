@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -62,56 +61,6 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User authenticated"})
-}
-
-func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
-	var Friend dto.UserDTO
-	err := c.BindJSON(&Friend)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	userId := c.MustGet("user_id").(int)
-	userService := services.NewUserService(db) // Initialize UserService with DB
-	err = userService.SendFriendRequest(userId, Friend.Email)
-	if err != nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "Friend request already exists"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Friend request sent"})
-}
-
-func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
-	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-	userId := c.MustGet("user_id").(int)
-	userService := services.NewUserService(db) // Initialize UserService with DB
-	err = userService.AcceptFriendRequest(userId, friendRequestId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Friend request accepted"})
-}
-
-func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
-	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-	userId := c.MustGet("user_id").(int)
-	userService := services.NewUserService(db) // Initialize UserService with DB
-	err = userService.DeclineFriendRequest(userId, friendRequestId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "Friend request declined"})
 }
 
 func AuthHandler(c *gin.Context) {

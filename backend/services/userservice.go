@@ -68,19 +68,3 @@ func convertToUser(userDTO *dto.CreateUserDTO) *models.UserModel {
 		Password: userDTO.Password,
 	}
 }
-
-func (s *UserService) SendFriendRequest(userID int, friendEmail string) error {
-	friend, err := s.repo.FindByEmail(friendEmail)
-	if err != nil {
-		return err
-	}
-	return s.repo.SendFriendRequest(uint(userID), friend.ID)
-}
-
-func (s *UserService) AcceptFriendRequest(userID int, friendRequestID int) error {
-	return s.repo.AcceptFriendRequest(uint(friendRequestID), uint(userID))
-}
-
-func (s *UserService) DeclineFriendRequest(userID int, friendRequestID int) error {
-	return s.repo.DeclineFriendRequest(uint(friendRequestID), uint(userID))
-}
