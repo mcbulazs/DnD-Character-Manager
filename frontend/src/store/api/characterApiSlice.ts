@@ -15,12 +15,7 @@ import type { CreateFeature, Feature } from "../../types/feature";
 import type { CreateSpell, Spell } from "../../types/spell";
 import type { CreateTracker, Tracker } from "../../types/tracker";
 import baseQuery from "./baseQuery";
-import type {
-  CreateNoteCategory,
-  NoteCategory,
-  CreateNote,
-  Note,
-} from "../../types/note";
+import type { CreateNoteCategory, NoteCategory, Note } from "../../types/note";
 
 type Tags = TagDescription<"Characters" | "Character">;
 
@@ -79,6 +74,30 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character", "Characters"]),
       invalidatesTags: ["Character", "Characters"],
     }),
+
+    shareCharacter: builder.mutation<
+      void,
+      { friendId: number; characterId: number }
+    >({
+      query: ({ friendId, characterId }) => ({
+        url: `characters/${characterId}/share/${friendId}`,
+        method: "POST",
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+    unshareCharacter: builder.mutation<
+      void,
+      { friendId: number; characterId: number }
+    >({
+      query: ({ friendId, characterId }) => ({
+        url: `characters/${characterId}/share/${friendId}`,
+        method: "DELETE",
+      }),
+      onQueryStarted: onQueryStarted(["Character"]),
+      invalidatesTags: ["Character"],
+    }),
+
     modifyCharacterAbilityScores: builder.mutation<
       AbilityScores,
       { abilityScores: AbilityScores; characterID: number }
@@ -91,6 +110,7 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character", "Characters"]),
       invalidatesTags: ["Character", "Characters"],
     }),
+
     modifyCharacterSkills: builder.mutation<
       Skills,
       { skills: Skills; characterID: number }
@@ -103,6 +123,7 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character", "Characters"]),
       invalidatesTags: ["Character", "Characters"],
     }),
+
     modifyCharacterSavingThrows: builder.mutation<
       SavingThrows,
       { savingThrows: SavingThrows; characterID: number }
@@ -115,6 +136,7 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character", "Characters"]),
       invalidatesTags: ["Character", "Characters"],
     }),
+
     modifyCharacterImage: builder.mutation<
       BackgroundImageProps,
       { image: BackgroundImageProps; characterID: number }
@@ -127,6 +149,7 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character", "Characters"]),
       invalidatesTags: ["Character", "Characters"],
     }),
+
     setCharacterAttribute: builder.mutation<
       CharacterData,
       { data: Partial<CharacterData>; id: number }
@@ -156,6 +179,7 @@ export const characterApiSlice = createApi({
       onQueryStarted: onQueryStarted(["Character"]),
       invalidatesTags: ["Character"],
     }),
+
     deleteFeature: builder.mutation<void, { id: number; characterId: number }>({
       query: ({ id, characterId }) => ({
         url: `characters/${characterId}/features/${id}`,
@@ -332,6 +356,9 @@ export const {
   useGetCharactersQuery,
   useModifyCharacterMutation,
 } = characterApiSlice;
+
+export const { useShareCharacterMutation, useUnshareCharacterMutation } =
+  characterApiSlice;
 
 export const {
   useModifyCharacterAbilityScoresMutation,
