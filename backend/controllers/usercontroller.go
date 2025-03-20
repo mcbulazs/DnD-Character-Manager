@@ -11,8 +11,19 @@ import (
 	"DnDCharacterSheet/utility"
 )
 
+func GetUserDataHandler(c *gin.Context, db *gorm.DB) {
+	userID := c.MustGet("user_id").(int)
+	userService := services.NewUserService(db)
+	user, err := userService.GetUserByID(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, user)
+}
+
 func RegisterHandler(c *gin.Context, db *gorm.DB) {
-	var user dto.CreateUserDTO
+	var user dto.AuthUserDTO
 	err := c.BindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -38,7 +49,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 }
 
 func LoginHandler(c *gin.Context, db *gorm.DB) {
-	var user dto.CreateUserDTO
+	var user dto.AuthUserDTO
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return

@@ -36,9 +36,9 @@ func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint
 	}
 
 	var Friend models.UserModel
-	Friend.ID = friendRequest.DestinationUserId
+	Friend.ID = friendRequest.DestinationUserID
 	var User models.UserModel
-	User.ID = friendRequest.SourceUserId
+	User.ID = friendRequest.SourceUserID
 	err = tx.Model(&User).Association("Friends").Append(&Friend)
 	if err != nil {
 		tx.Rollback()
@@ -62,7 +62,7 @@ func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uin
 }
 
 func (r *FriendRepository) SendFriendRequest(sourceUserId uint, destinationUserId uint) error {
-	tx := r.DB.Create(&models.FriendRequestModel{SourceUserId: sourceUserId, DestinationUserId: destinationUserId, Status: models.FriendRequestsStatusEnum.Pending})
+	tx := r.DB.Create(&models.FriendRequestModel{SourceUserID: sourceUserId, DestinationUserID: destinationUserId, Status: models.FriendRequestsStatusEnum.Pending})
 	if tx.Error != nil {
 		return tx.Error
 	}

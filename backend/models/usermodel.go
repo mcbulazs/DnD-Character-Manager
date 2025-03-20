@@ -6,11 +6,13 @@ import (
 
 type UserModel struct {
 	gorm.Model
-	Email            string `gorm:"unique"`
 	Password         string
+	Email            string                `gorm:"unique"`
 	Characters       []CharacterModel      `gorm:"foreignKey:UserID"`
-	Friends          []*UserModel          `gorm:"many2many:friends;joinForeignKey:UserID;joinReferences:FriendID"` // foreignKey:UserID"`
-	FriendRequests   []*FriendRequestModel `gorm:"many2many:friend_requests;joinForeignKey:SourceUserId;joinReferences:DestinationUserId"`
+	Friends          []*FriendsModel       `gorm:"foreignKey:UserID"`
+	FriendedBy       []*FriendsModel       `gorm:"foreignKey:FriendID"`
+	FriendRequests   []*FriendRequestModel `gorm:"foreignKey:SourceUserID"`
+	FriendRequestsBy []*FriendRequestModel `gorm:"foreignKey:DestinationUserID"`
 	SharedCharacters []*CharacterModel     `gorm:"many2many:friend_shares;joinForeignKey:FriendID;joinReferences:CharacterID"`
 }
 

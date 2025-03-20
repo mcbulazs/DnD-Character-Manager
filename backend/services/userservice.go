@@ -24,7 +24,29 @@ func NewUserService(db *gorm.DB) *UserService {
 
 var ErrUserExists = errors.New("user already exists")
 
-func (s *UserService) CreateUser(user *dto.CreateUserDTO) (*models.UserModel, error) {
+func (s *UserService) GetUserByID(id int) (*dto.UserDataDTO, error) {
+	user, err := s.repo.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+	var friends []dto.UserDataDTO
+	for _, friend := range user.Friends {
+		friends = append(friends, *convertToUserDataDTO(&friend.Friend))
+	}
+	var friendRequests []dto.FriendRequestDTO
+	for _, friendRequest := range user.FriendRequestsBy {
+		friendRequests = append(friendRequests, dto.FriendRequestDTO{
+			ID:     friendRequest.ID,
+			Sender: *convertToUserDataDTO(&friendRequest.SourceUser),
+		})
+	}
+	userDTO := convertToUserDataDTO(user)
+	userDTO.Friends = friends
+	userDTO.FriendRequests = friendRequests
+	return userDTO, nil
+}
+
+func (s *UserService) CreateUser(user *dto.AuthUserDTO) (*models.UserModel, error) {
 	// Hash the password before saving the user
 	hashedPassword, err := utility.HashPassword(user.Password)
 	if err != nil {
@@ -47,7 +69,7 @@ func (s *UserService) CreateUser(user *dto.CreateUserDTO) (*models.UserModel, er
 // Define specific error types
 var ErrAuthenticationFailed = errors.New("authentication failed")
 
-func (s *UserService) AuthenticateUser(user *dto.CreateUserDTO) (int, error) {
+func (s *UserService) AuthenticateUser(user *dto.AuthUserDTO) (int, error) {
 	userModel, err := s.repo.FindByEmail(user.Email)
 	if err != nil {
 		if errors.Is(err, repositories.ErrUserNotFound) {
@@ -62,9 +84,16 @@ func (s *UserService) AuthenticateUser(user *dto.CreateUserDTO) (int, error) {
 	return int(userModel.ID), nil
 }
 
-func convertToUser(userDTO *dto.CreateUserDTO) *models.UserModel {
+func convertToUser(userDTO *dto.AuthUserDTO) *models.UserModel {
 	return &models.UserModel{
 		Email:    userDTO.Email,
 		Password: userDTO.Password,
+	}
+}
+
+func convertToUserDataDTO(userModel *models.UserModel) *dto.UserDataDTO {
+	return &dto.UserDataDTO{
+		ID:    userModel.ID,
+		Email: userModel.Email,
 	}
 }

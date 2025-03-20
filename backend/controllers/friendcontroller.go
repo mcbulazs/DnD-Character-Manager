@@ -12,7 +12,7 @@ import (
 )
 
 func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
-	var Friend dto.UserDTO
+	var Friend dto.UserDataDTO
 	err := c.BindJSON(&Friend)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

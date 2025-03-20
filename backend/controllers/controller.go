@@ -25,6 +25,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	api.GET("/auth", AuthHandler)
 
 	auth := api.Group("/", middleware.AuthMiddleware())
+	auth.GET("/user", func(c *gin.Context) {
+		GetUserDataHandler(c, db)
+	})
 	auth.POST("/logout", LogoutHandler)
 
 	friendRequest := auth.Group("/friends")

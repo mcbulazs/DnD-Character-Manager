@@ -1,7 +1,8 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import type User from "../../types/user";
+import type AuthUser from "../../types/user";
 import baseQuery from "./baseQuery";
+import type { UserData } from "../../types/user";
 
 const onQueryStarted = async (
   _arg: unknown, // or you can make this generic <T>(arg: T, ...)
@@ -26,7 +27,7 @@ export const userApiSlice = createApi({
   baseQuery,
   tagTypes: ["AuthStatus"],
   endpoints: (builder) => ({
-    register: builder.mutation<void, User>({
+    register: builder.mutation<void, AuthUser>({
       query: (registerData) => ({
         url: "register",
         method: "POST",
@@ -34,7 +35,7 @@ export const userApiSlice = createApi({
       }),
       onQueryStarted,
     }),
-    login: builder.mutation<void, User>({
+    login: builder.mutation<void, AuthUser>({
       query: (loginData) => ({
         url: "login",
         method: "POST",
@@ -46,6 +47,13 @@ export const userApiSlice = createApi({
       query: () => ({
         url: "logout",
         method: "POST",
+      }),
+      onQueryStarted,
+    }),
+    getUserData: builder.query<UserData, void>({
+      query: () => ({
+        url: "user",
+        method: "GET",
       }),
       onQueryStarted,
     }),
@@ -92,6 +100,8 @@ export const {
   useDeclineFriendRequestMutation,
   useUnfriendMutation,
 } = userApiSlice;
+
+export const { useGetUserDataQuery } = userApiSlice;
 
 export const {
   useLoginMutation,
