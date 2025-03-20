@@ -17,7 +17,7 @@ func NewFriendRepository(db *gorm.DB) *FriendRepository {
 
 func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) error {
 	tx := r.DB.Begin()
-	var friendRequest models.FriendRequest
+	var friendRequest models.FriendRequestModel
 	err := tx.Model(&friendRequest).Clauses(clause.Returning{}).Where("id = ? AND destination_user_id = ?", friendRequestId, userId).Update("status", models.FriendRequestsStatusEnum.Accepted).Error
 	if err != nil {
 		tx.Rollback()
@@ -43,7 +43,7 @@ func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint
 }
 
 func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uint) error {
-	tx := r.DB.Model(&models.FriendRequest{}).Where("id = ? AND destination_user_id = ?", friendRequestId, userId).Update("status", models.FriendRequestsStatusEnum.Declined)
+	tx := r.DB.Model(&models.FriendRequestModel{}).Where("id = ? AND destination_user_id = ?", friendRequestId, userId).Update("status", models.FriendRequestsStatusEnum.Declined)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -51,7 +51,31 @@ func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uin
 }
 
 func (r *FriendRepository) SendFriendRequest(sourceUserId uint, destinationUserId uint) error {
-	tx := r.DB.Create(&models.FriendRequest{SourceUserId: sourceUserId, DestinationUserId: destinationUserId, Status: models.FriendRequestsStatusEnum.Pending})
+	tx := r.DB.Create(&models.FriendRequestModel{SourceUserId: sourceUserId, DestinationUserId: destinationUserId, Status: models.FriendRequestsStatusEnum.Pending})
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (r *FriendRepository) Unfriend(userId uint, friendId uint) error {
+	tx := r.DB.Where("user_id = ? AND friend_id = ?", userId, friendId).Delete(&models.FriendsModel{})
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (r *FriendRepository) ShareCharacter(characterId uint, friendId uint) error {
+	tx := r.DB.Create(&models.FriendShareModel{CharacterID: characterId, FriendID: friendId})
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (r *FriendRepository) UnshareCharacter(characterId uint, friendId uint) error {
+	tx := r.DB.Where("character_id = ? AND friend_id = ?", characterId, friendId).Delete(&models.FriendShareModel{})
 	if tx.Error != nil {
 		return tx.Error
 	}

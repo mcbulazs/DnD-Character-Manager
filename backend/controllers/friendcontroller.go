@@ -60,3 +60,59 @@ func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request declined"})
 }
+
+func UnfriendHandler(c *gin.Context, db *gorm.DB) {
+	friendId, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	userId := c.MustGet("user_id").(int)
+	friendService := services.NewFriendService(db) // Initialize UserService with DB
+	err = friendService.Unfriend(userId, friendId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Friend removed"})
+}
+
+func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
+	characterId, err := strconv.Atoi(c.Param("characterId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	friendUserId, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	friendService := services.NewFriendService(db) // Initialize UserService with DB
+	err = friendService.ShareCharacter(friendUserId, characterId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Character shared"})
+}
+
+func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
+	characterId, err := strconv.Atoi(c.Param("characterId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	friendUserId, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	friendService := services.NewFriendService(db) // Initialize UserService with DB
+	err = friendService.UnshareCharacter(friendUserId, characterId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Character unshared"})
+}

@@ -26,6 +26,21 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	auth := api.Group("/", middleware.AuthMiddleware())
 	auth.POST("/logout", LogoutHandler)
+
+	friends := auth.Group("/friends")
+	friends.POST("", func(c *gin.Context) {
+		SendFriendRequestHandler(c, db)
+	})
+	friends.DELETE("/:friendId", func(c *gin.Context) {
+		UnfriendHandler(c, db)
+	})
+	friends.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
+		AcceptFriendRequestHandler(c, db)
+	})
+	friends.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
+		DeclineFriendRequestHandler(c, db)
+	})
+
 	auth.POST("/characters", func(c *gin.Context) {
 		CreateCharacterHandler(c, db)
 	})
@@ -36,20 +51,16 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		GetCharacterHandler(c, db)
 	})
 
-	friends := auth.Group("/friends")
-	friends.POST("", func(c *gin.Context) {
-		SendFriendRequestHandler(c, db)
-	})
-	friends.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
-		AcceptFriendRequestHandler(c, db)
-	})
-	friends.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
-		DeclineFriendRequestHandler(c, db)
-	})
-
 	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
 	})
+	characters.POST("/share/:friendId", func(c *gin.Context) {
+		ShareCharacterHandler(c, db)
+	})
+	characters.DELETE("/share/:friendId", func(c *gin.Context) {
+		UnshareCharacterHandler(c, db)
+	})
+
 	characters.DELETE("", func(c *gin.Context) {
 		DeleteCharacterHandler(c, db)
 	})

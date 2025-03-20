@@ -16,18 +16,18 @@ var FriendRequestsStatusEnum = FriendRequestStatusEnumStruct{
 	Declined: "DECLINED",
 }
 
-type FriendRequest struct {
+type FriendRequestModel struct {
 	gorm.Model
 	SourceUserId      uint
 	DestinationUserId uint
 	Status            FriendRequestStatus
 }
 
-func (f *FriendRequest) TableName() string {
+func (f *FriendRequestModel) TableName() string {
 	return "friend_requests"
 }
 
-type Friends struct {
+type FriendsModel struct {
 	gorm.Model
 	UserID   uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
 	FriendID uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
@@ -35,6 +35,16 @@ type Friends struct {
 	Name     string
 }
 
-func (f *Friends) TableName() string {
+func (f *FriendsModel) TableName() string {
 	return "friends"
+}
+
+type FriendShareModel struct {
+	gorm.Model
+	CharacterID uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	FriendID    uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+}
+
+func (f *FriendShareModel) TableName() string {
+	return "friend_shares"
 }

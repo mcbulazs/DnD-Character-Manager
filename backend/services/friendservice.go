@@ -33,3 +33,15 @@ func (s *FriendService) AcceptFriendRequest(userID int, friendRequestID int) err
 func (s *FriendService) DeclineFriendRequest(userID int, friendRequestID int) error {
 	return s.Repo.DeclineFriendRequest(uint(friendRequestID), uint(userID))
 }
+
+func (s *FriendService) Unfriend(userID int, friendID int) error {
+	return s.Repo.Unfriend(uint(userID), uint(friendID))
+}
+
+func (s *FriendService) ShareCharacter(friendID int, characterID int) error {
+	return s.Repo.ShareCharacter(uint(characterID), uint(friendID))
+}
+
+func (s *FriendService) UnshareCharacter(friendID int, characterID int) error {
+	return s.Repo.UnshareCharacter(uint(characterID), uint(friendID))
+}
