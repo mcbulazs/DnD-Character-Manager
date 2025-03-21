@@ -7,8 +7,10 @@ export type UserData = {
   id: number;
   email: string;
   friends: UserData[];
-  friendRequests: {
-    id: number;
-    sender: UserData;
-  }[];
+  friendRequests: FriendRequest[];
+};
+
+export type FriendRequest = {
+  id: number;
+  sender: UserData;
 };

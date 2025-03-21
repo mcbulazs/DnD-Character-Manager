@@ -92,3 +92,19 @@ func (r *FriendRepository) UnshareCharacter(characterId uint, friendId uint) err
 	}
 	return nil
 }
+
+func (r *FriendRepository) FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.FriendShareModel, error) {
+	var characters []models.FriendShareModel
+	err := r.DB.
+		Joins("JOIN characters ON characters.id = friend_shares.character_id").
+		Joins("JOIN character_images ON character_images.character_id = characters.id").
+		Preload("Character").
+		Preload("Character.Image").
+		Where("friend_id = ? AND characters.user_id = ?", friendID, userID).
+		Find(&characters).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	return characters, nil
+}

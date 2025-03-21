@@ -30,18 +30,45 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	})
 	auth.POST("/logout", LogoutHandler)
 
-	friendRequest := auth.Group("/friends")
-	friendRequest.POST("", func(c *gin.Context) {
+	friendRequests := auth.Group("/friendRequest")
+	friendRequests.POST("", func(c *gin.Context) {
 		SendFriendRequestHandler(c, db)
 	})
-	friendRequest.DELETE("/:friendId", func(c *gin.Context) {
-		UnfriendHandler(c, db)
-	})
-	friendRequest.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
+	friendRequests.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
 		AcceptFriendRequestHandler(c, db)
 	})
-	friendRequest.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
+	friendRequests.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
 		DeclineFriendRequestHandler(c, db)
+	})
+
+	friends := auth.Group("/friends/:friendId")
+	friends.DELETE("", func(c *gin.Context) {
+		UnfriendHandler(c, db)
+	})
+	friendsCharacter := friends.Group("/share",
+		func(c *gin.Context) {
+			middleware.FriendMiddleware(c, db)
+		},
+	)
+
+	// friend to share with
+	friendsCharacter.POST("/:characterId",
+		func(c *gin.Context) {
+			middleware.CharacterMiddleware(c, db)
+		},
+		func(c *gin.Context) {
+			ShareCharacterHandler(c, db)
+		})
+	friendsCharacter.DELETE("/:characterId",
+		func(c *gin.Context) {
+			middleware.CharacterMiddleware(c, db)
+		},
+		func(c *gin.Context) {
+			UnshareCharacterHandler(c, db)
+		})
+	// friend who shared with me
+	friendsCharacter.GET("", func(c *gin.Context) {
+		GetSharedCharactersHandler(c, db)
 	})
 
 	auth.POST("/characters", func(c *gin.Context) {
@@ -56,15 +83,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
-	})
-	friends := characters.Group("/share/:friendId", func(c *gin.Context) {
-		middleware.FriendMiddleware(c, db)
-	})
-	friends.POST("", func(c *gin.Context) {
-		ShareCharacterHandler(c, db)
-	})
-	friends.DELETE("", func(c *gin.Context) {
-		UnshareCharacterHandler(c, db)
 	})
 
 	characters.DELETE("", func(c *gin.Context) {

@@ -25,6 +25,7 @@ type CharacterModel struct {
 	Spells            []CharacterSpellModel        `gorm:"foreignKey:CharacterID"`
 	Trackers          []CharacterTrackerModel      `gorm:"foreignKey:CharacterID"`
 	NoteCategories    []CharacterNoteCategoryModel `gorm:"foreignKey:CharacterID"`
+	SharedWith        []FriendShareModel           `gorm:"foreignKey:CharacterID"`
 }
 
 func (c *CharacterModel) TableName() string {

@@ -80,7 +80,7 @@ export const characterApiSlice = createApi({
       { friendId: number; characterId: number }
     >({
       query: ({ friendId, characterId }) => ({
-        url: `characters/${characterId}/share/${friendId}`,
+        url: `friends/${friendId}/share/${characterId}`,
         method: "POST",
       }),
       onQueryStarted: onQueryStarted(["Character"]),
@@ -91,7 +91,7 @@ export const characterApiSlice = createApi({
       { friendId: number; characterId: number }
     >({
       query: ({ friendId, characterId }) => ({
-        url: `characters/${characterId}/share/${friendId}`,
+        url: `friends/${friendId}/share/${characterId}`,
         method: "DELETE",
       }),
       onQueryStarted: onQueryStarted(["Character"]),

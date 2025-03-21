@@ -3,6 +3,7 @@ package services
 import (
 	"gorm.io/gorm"
 
+	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/repositories"
 )
 
@@ -48,4 +49,16 @@ func (s *FriendService) ShareCharacter(friendID int, characterID int) error {
 
 func (s *FriendService) UnshareCharacter(friendID int, characterID int) error {
 	return s.Repo.UnshareCharacter(uint(characterID), uint(friendID))
+}
+
+func (s *FriendService) FindByUserIDAndFriendID(userID uint, friendID uint) ([]dto.CharacterBaseDTO, error) {
+	characterShares, err := s.Repo.FindByUserIDAndFriendID(userID, friendID)
+	if err != nil {
+		return nil, err
+	}
+	var characters []dto.CharacterBaseDTO
+	for _, share := range characterShares {
+		characters = append(characters, *convertToCharacterBaseDTO(&share.Character))
+	}
+	return characters, nil
 }

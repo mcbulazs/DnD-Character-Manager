@@ -139,7 +139,12 @@ func (r *CharacterRepository) UpdateImage(image *models.CharacterImageModel) err
 
 func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel, error) {
 	var characters []models.CharacterModel
-	err := r.DB.Where("user_id = ?", userID).Order("is_favorite DESC").Preload("Image").Find(&characters).Error
+	err := r.DB.
+		Where("user_id = ?", userID).
+		Order("is_favorite DESC").
+		Preload("Image").
+		Find(&characters).
+		Error
 	if err != nil {
 		return nil, err
 	}

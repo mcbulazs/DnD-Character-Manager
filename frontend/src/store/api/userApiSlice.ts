@@ -59,7 +59,7 @@ export const userApiSlice = createApi({
     }),
     sendFriendRequest: builder.mutation<void, { email: string }>({
       query: ({ email }) => ({
-        url: "friends",
+        url: "friendRequest",
         method: "POST",
         body: { email },
       }),
@@ -67,14 +67,14 @@ export const userApiSlice = createApi({
     }),
     acceptFriendRequest: builder.mutation<void, { friendRequestId: number }>({
       query: ({ friendRequestId }) => ({
-        url: `friends/${friendRequestId}/accept`,
+        url: `friendRequest/${friendRequestId}/accept`,
         method: "PATCH",
       }),
       onQueryStarted,
     }),
     declineFriendRequest: builder.mutation<void, { friendRequestId: number }>({
       query: ({ friendRequestId }) => ({
-        url: `friends/${friendRequestId}/decline`,
+        url: `friendRequest/${friendRequestId}/decline`,
         method: "PATCH",
       }),
       onQueryStarted,

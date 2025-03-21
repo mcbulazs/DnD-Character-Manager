@@ -45,8 +45,10 @@ func (f *FriendsModel) TableName() string {
 
 type FriendShareModel struct {
 	gorm.Model
-	CharacterID uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-	FriendID    uint `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	Character   CharacterModel `gorm:"foreignKey:CharacterID"`
+	CharacterID uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	Friend      UserModel      `gorm:"foreignKey:FriendID"`
+	FriendID    uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
 }
 
 func (f *FriendShareModel) TableName() string {
