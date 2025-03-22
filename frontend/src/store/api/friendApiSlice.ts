@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQuery from "./baseQuery";
 import { userApiSlice } from "./userApiSlice";
 import type { Dispatch } from "@reduxjs/toolkit";
-import { CharacterBase } from "../../types/characterBase";
+import type { CharacterBase } from "../../types/characterBase";
 
 const onQueryStarted = async (
   _arg: unknown, // or you can make this generic <T>(arg: T, ...)

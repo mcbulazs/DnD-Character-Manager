@@ -93,7 +93,8 @@ func convertToUser(userDTO *dto.AuthUserDTO) *models.UserModel {
 
 func convertToUserDataDTO(userModel *models.UserModel) *dto.UserDataDTO {
 	return &dto.UserDataDTO{
-		ID:    userModel.ID,
-		Email: userModel.Email,
+		ID:         userModel.ID,
+		Email:      userModel.Email,
+		Characters: convertToCharacterBaseDTOs(userModel.Characters),
 	}
 }

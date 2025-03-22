@@ -28,7 +28,14 @@ func (r *UserRepository) Create(user *models.UserModel) error {
 
 func (r *UserRepository) FindByID(id int) (*models.UserModel, error) {
 	var foundUser models.UserModel
-	tx := r.DB.Preload("FriendRequestsBy.SourceUser").Preload("FriendRequestsBy", "status = ?", models.FriendRequestsStatusEnum.Pending).Preload("Friends.Friend").Preload("Friends").First(&foundUser, id)
+	tx := r.DB.
+		Preload("FriendRequestsBy.SourceUser").
+		Preload("FriendRequestsBy", "status = ?", models.FriendRequestsStatusEnum.Pending).
+		Preload("Friends.Friend").
+		Preload("Friends").
+		Preload("Characters").
+		Preload("Characters.Image").
+		First(&foundUser, id)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, ErrUserNotFound
 	}

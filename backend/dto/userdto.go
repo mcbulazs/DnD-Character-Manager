@@ -8,6 +8,7 @@ type AuthUserDTO struct {
 type UserDataDTO struct {
 	ID             uint               `json:"id"`
 	Email          string             `json:"email"`
+	Characters     []CharacterBaseDTO `json:"characters"`
 	Friends        []UserDataDTO      `json:"friends"`
 	FriendRequests []FriendRequestDTO `json:"friendRequests"`
 }

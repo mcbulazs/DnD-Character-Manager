@@ -7,7 +7,10 @@ import {
   useState,
 } from "react";
 import type { UserData } from "../../types/user";
-import { useGetUserDataQuery } from "../../store/api/userApiSlice";
+import {
+  useGetUserDataQuery,
+  useIsAuthenticatedQuery,
+} from "../../store/api/userApiSlice";
 
 // Define the shape of the context value
 interface UserContextType {
@@ -28,13 +31,17 @@ export const useUserContext = () => {
 
 // UserProvider component
 const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data } = useGetUserDataQuery();
+  const { data } = useIsAuthenticatedQuery();
+  const isLoggedIn = data?.authenticated;
+  const { data: userData } = useGetUserDataQuery(undefined, {
+    skip: !isLoggedIn,
+  });
   const [user, setUser] = useState<UserData | null>(null);
   useEffect(() => {
-    if (data) {
-      setUser(data);
+    if (userData) {
+      setUser(userData);
     }
-  }, [data]);
+  }, [userData]);
 
   return (
     <UserContext.Provider value={{ User: user }}>

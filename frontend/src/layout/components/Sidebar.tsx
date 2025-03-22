@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { NavLink } from "react-router-dom";
 import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
-import { useCharactersContext } from "../Contexts/CharactersContext";
+import { useUserContext } from "../Contexts/UserContext";
 
 // FIX: dont active the menu when closing the other sidebar
 // FIX: make nav elements unreachable when sidebar is closed
@@ -77,7 +77,8 @@ const Menu: React.FC = () => {
   }, []);
 
   const FavoriteCharacters: React.FC = () => {
-    const { characters } = useCharactersContext();
+    const { User } = useUserContext();
+    const characters = User?.characters;
     return (
       <>
         {characters &&

@@ -118,14 +118,6 @@ func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.Character
 	return convertToCharacterDTO(characterModel), nil
 }
 
-func (s *CharacterService) FindCharactersByUserID(userID uint) ([]dto.CharacterBaseDTO, error) {
-	characters, err := s.Repo.FindByUserID(userID)
-	if err != nil {
-		return nil, err
-	}
-	return convertToCharacterBaseDTOs(characters), nil
-}
-
 func convertToCharacterImageDTO(image *models.CharacterImageModel) dto.CharacterImageDTO {
 	return dto.CharacterImageDTO{
 		BackgroundImage:    image.BackgroundImage,

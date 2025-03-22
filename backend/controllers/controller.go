@@ -74,9 +74,6 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	auth.POST("/characters", func(c *gin.Context) {
 		CreateCharacterHandler(c, db)
 	})
-	auth.GET("/characters", func(c *gin.Context) {
-		GetCharactersHandler(c, db)
-	})
 	auth.GET("/characters/:characterId", func(c *gin.Context) {
 		GetCharacterHandler(c, db)
 	})

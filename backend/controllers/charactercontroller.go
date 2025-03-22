@@ -161,19 +161,6 @@ func UpdateCharacterImageHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, image)
 }
 
-func GetCharactersHandler(c *gin.Context, db *gorm.DB) {
-	service := services.NewCharacterService(db)
-	userID := c.MustGet("user_id").(int)
-
-	characters, err := service.FindCharactersByUserID(uint(userID))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, characters)
-}
-
 func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 	service := services.NewCharacterService(db)
 

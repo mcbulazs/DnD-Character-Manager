@@ -1,31 +1,13 @@
-import type { Dispatch } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import type AuthUser from "../../types/user";
 import baseQuery from "./baseQuery";
 import type { UserData } from "../../types/user";
-
-const onQueryStarted = async (
-  _arg: unknown, // or you can make this generic <T>(arg: T, ...)
-  {
-    dispatch,
-    queryFulfilled,
-  }: {
-    dispatch: Dispatch;
-    queryFulfilled: Promise<unknown>;
-  },
-) => {
-  try {
-    await queryFulfilled;
-    dispatch(userApiSlice.util.invalidateTags(["AuthStatus"]));
-  } catch (error) {
-    console.error("Failed to handle mutation:", error);
-  }
-};
+import { authStatusTag, userTag } from "./tags";
 
 export const userApiSlice = createApi({
   reducerPath: "userApi",
   baseQuery,
-  tagTypes: ["AuthStatus"],
+  tagTypes: [authStatusTag, userTag],
   endpoints: (builder) => ({
     register: builder.mutation<void, AuthUser>({
       query: (registerData) => ({
@@ -33,7 +15,7 @@ export const userApiSlice = createApi({
         method: "POST",
         body: registerData,
       }),
-      onQueryStarted,
+      invalidatesTags: [authStatusTag, userTag],
     }),
     login: builder.mutation<void, AuthUser>({
       query: (loginData) => ({
@@ -41,26 +23,34 @@ export const userApiSlice = createApi({
         method: "POST",
         body: loginData,
       }),
-      onQueryStarted,
+      invalidatesTags: [authStatusTag, userTag],
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
         url: "logout",
         method: "POST",
       }),
-      onQueryStarted,
+      invalidatesTags: [authStatusTag],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          // Manually clear the cache for getUserData
+          dispatch(
+            userApiSlice.util.upsertQueryData("getUserData", undefined, null),
+          );
+        } catch (error) {
+          console.error("Logout failed", error);
+        }
+      },
     }),
-    getUserData: builder.query<UserData, void>({
-      query: () => ({
-        url: "user",
-        method: "GET",
-      }),
-      onQueryStarted,
+    getUserData: builder.query<UserData | null, void>({
+      query: () => "user",
+      providesTags: [userTag],
     }),
 
     isAuthenticated: builder.query<{ authenticated: boolean }, void>({
       query: () => "auth",
-      providesTags: ["AuthStatus"],
+      providesTags: [authStatusTag],
     }),
   }),
 });

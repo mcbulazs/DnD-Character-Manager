@@ -137,20 +137,6 @@ func (r *CharacterRepository) UpdateImage(image *models.CharacterImageModel) err
 	return nil
 }
 
-func (r *CharacterRepository) FindByUserID(userID uint) ([]models.CharacterModel, error) {
-	var characters []models.CharacterModel
-	err := r.DB.
-		Where("user_id = ?", userID).
-		Order("is_favorite DESC").
-		Preload("Image").
-		Find(&characters).
-		Error
-	if err != nil {
-		return nil, err
-	}
-	return characters, nil
-}
-
 func (r *CharacterRepository) UpdateCharacterAttributes(attributes []string, character *models.CharacterModel) error {
 	tx := r.DB.Model(&models.CharacterModel{}).
 		Select(attributes).
