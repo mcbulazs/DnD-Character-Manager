@@ -57,35 +57,6 @@ export const userApiSlice = createApi({
       }),
       onQueryStarted,
     }),
-    sendFriendRequest: builder.mutation<void, { email: string }>({
-      query: ({ email }) => ({
-        url: "friendRequest",
-        method: "POST",
-        body: { email },
-      }),
-      onQueryStarted,
-    }),
-    acceptFriendRequest: builder.mutation<void, { friendRequestId: number }>({
-      query: ({ friendRequestId }) => ({
-        url: `friendRequest/${friendRequestId}/accept`,
-        method: "PATCH",
-      }),
-      onQueryStarted,
-    }),
-    declineFriendRequest: builder.mutation<void, { friendRequestId: number }>({
-      query: ({ friendRequestId }) => ({
-        url: `friendRequest/${friendRequestId}/decline`,
-        method: "PATCH",
-      }),
-      onQueryStarted,
-    }),
-    unfriend: builder.mutation<void, { friendId: number }>({
-      query: ({ friendId }) => ({
-        url: `friends/${friendId}`,
-        method: "DELETE",
-      }),
-      onQueryStarted,
-    }),
 
     isAuthenticated: builder.query<{ authenticated: boolean }, void>({
       query: () => "auth",
@@ -93,13 +64,6 @@ export const userApiSlice = createApi({
     }),
   }),
 });
-
-export const {
-  useSendFriendRequestMutation,
-  useAcceptFriendRequestMutation,
-  useDeclineFriendRequestMutation,
-  useUnfriendMutation,
-} = userApiSlice;
 
 export const { useGetUserDataQuery } = userApiSlice;
 

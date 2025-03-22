@@ -200,6 +200,14 @@ const Menu: React.FC = () => {
               Dice Throw
             </NavLink>
             <NavLink
+              to="friends"
+              tabIndex={-1}
+              onClick={() => setOpen(!open)}
+              className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
+            >
+              Friends
+            </NavLink>
+            <NavLink
               to=""
               tabIndex={-1}
               onClick={() => setOpen(!open)}

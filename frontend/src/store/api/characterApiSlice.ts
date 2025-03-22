@@ -75,29 +75,6 @@ export const characterApiSlice = createApi({
       invalidatesTags: ["Character", "Characters"],
     }),
 
-    shareCharacter: builder.mutation<
-      void,
-      { friendId: number; characterId: number }
-    >({
-      query: ({ friendId, characterId }) => ({
-        url: `friends/${friendId}/share/${characterId}`,
-        method: "POST",
-      }),
-      onQueryStarted: onQueryStarted(["Character"]),
-      invalidatesTags: ["Character"],
-    }),
-    unshareCharacter: builder.mutation<
-      void,
-      { friendId: number; characterId: number }
-    >({
-      query: ({ friendId, characterId }) => ({
-        url: `friends/${friendId}/share/${characterId}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: onQueryStarted(["Character"]),
-      invalidatesTags: ["Character"],
-    }),
-
     modifyCharacterAbilityScores: builder.mutation<
       AbilityScores,
       { abilityScores: AbilityScores; characterID: number }
@@ -356,9 +333,6 @@ export const {
   useGetCharactersQuery,
   useModifyCharacterMutation,
 } = characterApiSlice;
-
-export const { useShareCharacterMutation, useUnshareCharacterMutation } =
-  characterApiSlice;
 
 export const {
   useModifyCharacterAbilityScoresMutation,

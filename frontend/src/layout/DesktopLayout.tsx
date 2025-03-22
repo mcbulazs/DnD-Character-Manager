@@ -23,7 +23,7 @@ const DesktopLayout = () => {
           <Menu />
           <div className="flex-1 text-center">{title}</div>
         </header>
-        <main className="py-10 px-0 sm:px-10 flex justify-center">
+        <main className="py-10 h-[calc(100%-4rem)] px-0 sm:px-10 flex justify-center">
           <Outlet />
         </main>
       </Scrollbars>
