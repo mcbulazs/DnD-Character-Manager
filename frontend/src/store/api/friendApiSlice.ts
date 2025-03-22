@@ -3,28 +3,12 @@ import baseQuery from "./baseQuery";
 import { userApiSlice } from "./userApiSlice";
 import type { Dispatch } from "@reduxjs/toolkit";
 import type { CharacterBase } from "../../types/characterBase";
-
-const onQueryStarted = async (
-  _arg: unknown, // or you can make this generic <T>(arg: T, ...)
-  {
-    dispatch,
-    queryFulfilled,
-  }: {
-    dispatch: Dispatch;
-    queryFulfilled: Promise<unknown>;
-  },
-) => {
-  try {
-    await queryFulfilled;
-    dispatch(userApiSlice.util.invalidateTags(["AuthStatus"]));
-  } catch (error) {
-    console.error("Failed to handle mutation:", error);
-  }
-};
+import { userTag } from "./tags";
 
 export const friendApiSlice = createApi({
   reducerPath: "friendApi",
   baseQuery,
+  tagTypes: [userTag],
   endpoints: (builder) => ({
     sendFriendRequest: builder.mutation<void, { email: string }>({
       query: ({ email }) => ({
@@ -32,28 +16,26 @@ export const friendApiSlice = createApi({
         method: "POST",
         body: { email },
       }),
-      onQueryStarted,
     }),
     acceptFriendRequest: builder.mutation<void, { friendRequestId: number }>({
       query: ({ friendRequestId }) => ({
         url: `friendRequest/${friendRequestId}/accept`,
         method: "PATCH",
       }),
-      onQueryStarted,
+      invalidatesTags: [userTag],
     }),
     declineFriendRequest: builder.mutation<void, { friendRequestId: number }>({
       query: ({ friendRequestId }) => ({
         url: `friendRequest/${friendRequestId}/decline`,
         method: "PATCH",
       }),
-      onQueryStarted,
+      invalidatesTags: [userTag],
     }),
     unfriend: builder.mutation<void, { friendId: number }>({
       query: ({ friendId }) => ({
         url: `friends/${friendId}`,
         method: "DELETE",
       }),
-      onQueryStarted,
     }),
     shareCharacter: builder.mutation<
       void,
@@ -63,7 +45,6 @@ export const friendApiSlice = createApi({
         url: `friends/${friendId}/share/${characterId}`,
         method: "POST",
       }),
-      onQueryStarted,
     }),
     unshareCharacter: builder.mutation<
       void,
@@ -73,23 +54,25 @@ export const friendApiSlice = createApi({
         url: `friends/${friendId}/share/${characterId}`,
         method: "DELETE",
       }),
-      onQueryStarted,
     }),
     getSharedCharacters: builder.query<CharacterBase[], number>({
       query: (friendId) => ({
         url: `friends/${friendId}/share`,
         method: "GET",
       }),
-      onQueryStarted,
     }),
   }),
 });
 
 export const {
-  useAcceptFriendRequestMutation,
-  useDeclineFriendRequestMutation,
   useUnfriendMutation,
   useShareCharacterMutation,
   useUnshareCharacterMutation,
   useGetSharedCharactersQuery,
+} = friendApiSlice;
+
+export const {
+  useSendFriendRequestMutation,
+  useAcceptFriendRequestMutation,
+  useDeclineFriendRequestMutation,
 } = friendApiSlice;

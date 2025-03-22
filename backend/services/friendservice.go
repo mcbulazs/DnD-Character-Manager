@@ -28,6 +28,9 @@ func (s *FriendService) SendFriendRequest(userID int, friendEmail string) error 
 	if err != nil {
 		return err
 	}
+	if s.IsUserFriend(userID, int(friend.ID)) {
+		return gorm.ErrCheckConstraintViolated
+	}
 	return s.Repo.SendFriendRequest(uint(userID), friend.ID)
 }
 

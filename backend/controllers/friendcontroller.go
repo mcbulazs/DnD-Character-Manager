@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
 )
 
@@ -23,8 +24,14 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	FriendService := services.NewFriendService(db) // Initialize UserService with DB
 	err = FriendService.SendFriendRequest(userId, Friend.Email)
 	if err != nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "Friend request already exists"})
-		return
+		if err == repositories.ErrUserNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+			return
+		}
+		if err == gorm.ErrCheckConstraintViolated {
+			c.JSON(http.StatusConflict, gin.H{"error": "Friend request already exists"})
+			return
+		}
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request sent"})
 }

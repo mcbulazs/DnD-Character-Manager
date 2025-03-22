@@ -82,7 +82,12 @@ const Modal: React.FC<{
           autoHeight
           autoHeightMin={"fit-content"}
           autoHeightMax={"90vh"}
-          style={{ flexGrow: 1, marginRight: "0.2rem", marginBottom: "0.2rem" }}
+          style={{
+            flexGrow: 1,
+            marginRight: "0.2rem",
+            marginBottom: "1rem",
+            marginTop: "1rem",
+          }}
           universal
         >
           <div style={{ overflowX: "hidden", padding: "0 1rem 1rem" }}>
