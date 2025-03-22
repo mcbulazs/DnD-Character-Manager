@@ -18,6 +18,7 @@ func NewCharacterRepository(db *gorm.DB) *CharacterRepository {
 func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel, error) {
 	var character models.CharacterModel
 	tx := r.DB.Preload("Image").
+		Preload("SharedWith").
 		Preload("AbilityScores").
 		Preload("SavingThrows").
 		Preload("Skills").

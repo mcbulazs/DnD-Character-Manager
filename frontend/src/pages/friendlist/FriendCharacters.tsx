@@ -2,6 +2,7 @@ import type React from "react";
 import { toast } from "react-toastify";
 import { useGetSharedCharactersQuery } from "../../store/api/friendApiSlice";
 import CharacterListCard from "../characters/CharacterListCard";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const FriendCharacters: React.FC<{ friendId: number }> = ({ friendId }) => {
   const {
@@ -19,15 +20,17 @@ const FriendCharacters: React.FC<{ friendId: number }> = ({ friendId }) => {
   }
 
   return (
-    <div className="w-full lg:w-4/5 flex flex-wrap justify-evenly gap-4">
-      {characters?.map((character) => (
-        <CharacterListCard
-          key={character.id}
-          character={character}
-          isOwner={false}
-        />
-      ))}
-    </div>
+    <Scrollbars className="w-full h-full" universal>
+      <div className="w-full flex flex-wrap justify-evenly gap-4">
+        {characters?.map((character) => (
+          <CharacterListCard
+            key={character.id}
+            character={character}
+            isOwner={false}
+          />
+        ))}
+      </div>
+    </Scrollbars>
   );
 };
 export default FriendCharacters;

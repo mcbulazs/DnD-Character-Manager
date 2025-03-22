@@ -13,7 +13,8 @@ const AccordionHeader: React.FC<{
   tracker: Tracker;
   level: number;
   characterId: number;
-}> = ({ tracker, level, characterId }) => {
+  disabled: boolean;
+}> = ({ tracker, level, characterId, disabled }) => {
   const name = level === 0 ? "Cantrips" : `Spell level ${level}`;
   const [currentValue, setCurrentValue] = useState(tracker.currentValue);
   const [maxValue, setMaxValue] = useState(tracker.maxValue);
@@ -37,6 +38,7 @@ const AccordionHeader: React.FC<{
         <div className="flex items-center">
           <div className="flex items-center">
             <button
+              disabled={disabled}
               type="button"
               className="p-2 mx-1 rounded-full h-5 w-5 
                         flex justify-center items-center 
@@ -57,6 +59,7 @@ const AccordionHeader: React.FC<{
               <RemoveIcon fontSize="small" />
             </button>
             <UnstyledNumberInput
+              disabled={disabled}
               defaultValue={currentValue}
               minValue={0}
               maxValue={maxValue}
@@ -70,6 +73,7 @@ const AccordionHeader: React.FC<{
               className="bg-slate-500 w-14 text-center rounded-lg "
             />
             <button
+              disabled={disabled}
               type="button"
               className="p-2 mx-1 rounded-full h-5 w-5 
                         flex justify-center items-center
@@ -92,6 +96,7 @@ const AccordionHeader: React.FC<{
           </div>
           /{" "}
           <UnstyledNumberInput
+            disabled={disabled}
             defaultValue={maxValue}
             onChange={(val) => {
               setMaxValue(val);
@@ -113,7 +118,8 @@ const SpellListPerLevel: React.FC<{
   trackers: Tracker[];
   level: number;
   characterId: number;
-}> = ({ spells: _spells, trackers, level, characterId }) => {
+  canEdit: boolean;
+}> = ({ spells: _spells, trackers, level, characterId, canEdit }) => {
   //const levels = Array.from(new Set(spells.map((spell) => spell.level)));
   const spells = _spells
     .filter((spell) => spell.level === level)
@@ -128,6 +134,7 @@ const SpellListPerLevel: React.FC<{
     <Accordion
       head={
         <AccordionHeader
+          disabled={!canEdit}
           tracker={tracker}
           level={level}
           characterId={characterId}

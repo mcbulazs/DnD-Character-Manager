@@ -57,6 +57,7 @@ const Trackers: React.FC = () => {
       <div className="w-full pt-1 flex flex-col items-center">
         <div className="w-5/6 flex flex-wrap gap-2">
           <Tracker
+            canEdit={character.isOwner}
             style={{ width: "100%" }}
             tracker={
               character.trackers.filter(
@@ -74,6 +75,7 @@ const Trackers: React.FC = () => {
             >
               {trackers.map((tracker) => (
                 <Tracker
+                  canEdit={character.isOwner}
                   key={tracker.id}
                   tracker={tracker}
                   isEditing={isEditing}
@@ -84,37 +86,39 @@ const Trackers: React.FC = () => {
           </DndContext>
         </div>
       </div>
-      <div className="w-full h-16 absolute bottom-0 grid grid-cols-2">
-        <div className="w-full flex items-center justify-center p-2">
-          {!isEditing ? (
-            <EditButton
-              text="Edit trackers"
-              onClick={() => {
-                setIsEditing(true);
-              }}
-            />
-          ) : (
-            <button
-              className={`bg-orange-500 hover:bg-orange-700 text-white font-bold
+      {character.isOwner && (
+        <div className="w-full h-16 absolute bottom-0 grid grid-cols-2">
+          <div className="w-full flex items-center justify-center p-2">
+            {!isEditing ? (
+              <EditButton
+                text="Edit trackers"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            ) : (
+              <button
+                className={`bg-orange-500 hover:bg-orange-700 text-white font-bold
                                 w-48 h-12 
                                 rounded-full p-1 z-10 
                                 transition-all duration-300 ease-in-out overflow-hidden`}
-              onClick={() => setIsEditing(false)}
-              type="button"
-            >
-              <span className="text-white text-center whitespace-nowrap">
-                Stop Editing
-              </span>
-            </button>
-          )}
+                onClick={() => setIsEditing(false)}
+                type="button"
+              >
+                <span className="text-white text-center whitespace-nowrap">
+                  Stop Editing
+                </span>
+              </button>
+            )}
+          </div>
+          <div className="w-full flex items-center justify-center p-2">
+            <CreateButton
+              text="Create tracker"
+              onClick={() => setTrackerModalOpen(true)}
+            />
+          </div>
         </div>
-        <div className="w-full flex items-center justify-center p-2">
-          <CreateButton
-            text="Create tracker"
-            onClick={() => setTrackerModalOpen(true)}
-          />
-        </div>
-      </div>
+      )}
       {trackerModalOpen && (
         <TrackerModal
           onClose={() => setTrackerModalOpen(false)}

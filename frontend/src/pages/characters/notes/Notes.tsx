@@ -113,13 +113,15 @@ const Notes: React.FC = () => {
                 }}
               />
             </Suspense>
-            <button
-              type="button"
-              className="absolute top-0 right-0 text-red-500"
-              onClick={() => setDeleteDialogOpen(true)}
-            >
-              <DelteIcon />
-            </button>
+            {character.isOwner && (
+              <button
+                type="button"
+                className="absolute top-0 right-0 text-red-500"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
+                <DelteIcon />
+              </button>
+            )}
           </div>
         )}
       </div>

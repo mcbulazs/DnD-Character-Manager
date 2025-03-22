@@ -16,6 +16,7 @@ type CreateCharacterDTO struct {
 
 type CharacterDTO struct {
 	ID                uint                       `json:"ID"`
+	IsOwner           bool                       `json:"isOwner"`
 	Name              string                     `json:"name"`
 	Class             string                     `json:"class"`
 	Race              string                     `json:"race"`

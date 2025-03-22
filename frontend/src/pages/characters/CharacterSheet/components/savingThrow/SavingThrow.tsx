@@ -12,12 +12,14 @@ const SavingThrow: React.FC<{
   abilityScore: Attribute;
   proficiencyBonus: number;
   updateSavingThrow: (attr: ProficientAttribute) => void;
+  disabled?: boolean;
 }> = ({
   savingThrow,
   name,
   updateSavingThrow,
   abilityScore,
   proficiencyBonus,
+  disabled = false,
 }) => {
     const [modifier, setModifier] = useState<number>(savingThrow.modifier);
     const [trueModifier, setTrueModifier] = useState<number>(0);
@@ -63,6 +65,7 @@ const SavingThrow: React.FC<{
         {/*proficiency/expertise*/}
         <td className="text-center">
           <RotationCircle
+            disabled={disabled}
             profRotation={profficiency ? 1 : 0}
             setProfRotation={(val) => {
               setProfficiency(val === 1);
@@ -74,6 +77,7 @@ const SavingThrow: React.FC<{
         {/*modifier*/}
         <td className="text-center">
           <UnstyledNumberInput
+            disabled={disabled}
             defaultValue={modifier}
             onChange={(val) => {
               setModifier(val);

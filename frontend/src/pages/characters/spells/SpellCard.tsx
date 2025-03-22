@@ -36,10 +36,11 @@ const toSpellLevelSchoolString = (level: number, school: string) => {
   return `${level}${suffixes[level] || suffixes[0]}-level ${school.toLowerCase()}`;
 };
 
-const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
-  spell,
-  characterId,
-}) => {
+const SpellCard: React.FC<{
+  spell: Spell;
+  characterId: number;
+  canEdit: boolean;
+}> = ({ spell, characterId, canEdit }) => {
   const [active, setActive] = useState(spell.active);
   const [showFull, setShowFull] = useState(false);
   const [inEdit, setInEdit] = useState(false);
@@ -101,6 +102,7 @@ const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
         onMouseDown={handleClick}
       >
         <button
+          disabled={!canEdit}
           type="button"
           onClick={handleActive}
           className="text-2xl absolute top-0 left-0"
@@ -130,7 +132,7 @@ const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
           </div>
         </div>
         <div className="w-full flex justify-center text-md text-gray-600 font-bold">
-          Click to show full feature
+          Click to show full sepell
         </div>
       </div>
       {showFull && (
@@ -158,23 +160,25 @@ const SpellCard: React.FC<{ spell: Spell; characterId: number }> = ({
             </div>
             {/*biome-ignore lint/security/noDangerouslySetInnerHtml format: Safe as content comes from CKEditor and is sanitized.*/}
             <div dangerouslySetInnerHTML={{ __html: spell.description }} />
-            <div className="absolute top-0 right-0 m-5 flex gap-2">
-              <DeleteButton
-                text="Delete Spell"
-                onDelete={() => {
-                  handleDelete();
-                  setShowFull(false);
-                }}
-                dialogMessage="Are you sure you want to delete this spell?"
-              />
-              <EditButton
-                text="Edit Feature"
-                onClick={() => {
-                  setInEdit(true);
-                  setShowFull(false);
-                }}
-              />
-            </div>
+            {canEdit && (
+              <div className="absolute top-0 right-0 m-5 flex gap-2">
+                <DeleteButton
+                  text="Delete Spell"
+                  onDelete={() => {
+                    handleDelete();
+                    setShowFull(false);
+                  }}
+                  dialogMessage="Are you sure you want to delete this spell?"
+                />
+                <EditButton
+                  text="Edit Feature"
+                  onClick={() => {
+                    setInEdit(true);
+                    setShowFull(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
         </Modal>
       )}

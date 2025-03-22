@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -108,14 +109,30 @@ func (s *CharacterService) UpdateCharacterImage(image *dto.CharacterImageDTO, ch
 }
 
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {
+	hasAccess := false
 	characterModel, err := s.Repo.FindByID(id)
+	fmt.Println(characterModel.SharedWith)
 	if characterModel == nil {
 		return nil, err
 	}
-	if int(characterModel.UserID) != userID {
+
+	if characterModel.UserID == uint(userID) {
+		hasAccess = true
+	}
+	characterDTO := convertToCharacterDTO(characterModel)
+	for _, frined := range characterModel.SharedWith {
+		if frined.FriendID == uint(userID) {
+			characterDTO.IsOwner = false
+			hasAccess = true
+			break
+		}
+	}
+
+	if !hasAccess {
 		return nil, gorm.ErrRecordNotFound
 	}
-	return convertToCharacterDTO(characterModel), nil
+
+	return characterDTO, nil
 }
 
 func convertToCharacterImageDTO(image *models.CharacterImageModel) dto.CharacterImageDTO {
@@ -269,6 +286,7 @@ func convertToCharacterSkillModel(skills *dto.CharacterSkillDTO) models.Characte
 func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 	return &dto.CharacterDTO{
 		ID:                character.ID,
+		IsOwner:           true,
 		Name:              character.Name,
 		Class:             character.Class,
 		Race:              character.Race,

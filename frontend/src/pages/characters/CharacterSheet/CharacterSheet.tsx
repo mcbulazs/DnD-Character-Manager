@@ -66,7 +66,11 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
       console.error("Error deleting character", error);
     }
   };
-
+  if (character.isOwner) {
+    <div className="flex justify-center items-center gap-2">
+      <h1 className="text-3xl font-bold">{character.name}</h1>
+    </div>;
+  }
   return (
     <div className="flex justify-center items-center gap-2">
       <DeleteIcon
@@ -140,31 +144,33 @@ const CharacterSheet: React.FC = () => {
   return (
     <div
       className="
-grid
-w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
-grid-cols-2 sm:grid-cols-4 2xl:grid-cols-6
+              grid
+              w-4/5 xs:w-3/4 sm:w-full md:w-full lg:w-4/5 xl:w-7/12 
+              grid-cols-2 sm:grid-cols-4 2xl:grid-cols-6
 
-gap-5 
-justify-items-center items-center place-items-center
- relative"
+              gap-5 
+              justify-items-center items-center place-items-center
+               relative"
     >
       <div
         className="w-full
-col-span-full
-order-4 sm:order-1"
+                  col-span-full
+                  order-4 sm:order-1"
       >
         <AbilitScoresComp
           abilityScores={character.abilityScores}
           characterID={character.ID}
+          canEdit={character.isOwner}
         />
       </div>
       <div
         className="w-full
-col-span-2 
-sm:row-span-4 2xl:row-span-5 
-order-5 sm:order-2"
+                  col-span-2 
+                  sm:row-span-4 2xl:row-span-5 
+                  order-5 sm:order-2"
       >
         <SkillsComp
+          canEdit={character.isOwner}
           skills={character.skills}
           characterID={character.ID}
           abilityScores={character.abilityScores}
@@ -173,87 +179,115 @@ order-5 sm:order-2"
       </div>
       <div
         className="
-col-span-2
-order-1 sm:order-3"
+                col-span-2
+                order-1 sm:order-3"
       >
-        <CharacterName name={character.name} characterID={character.ID} />
+        <CharacterName
+          name={character.name}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
       <div
         className="w-full h-full
-order-10 sm:order-8 2xl:order-4"
+                  order-10 sm:order-8 2xl:order-4"
       >
         <CharacterClass
           characterClass={character.class}
           characterID={character.ID}
+          disabled={!character.isOwner}
         />
       </div>
       <div
         className="
-w-1/2 2xl:w-full
-2xl:row-span-2
-col-span-2 2xl:col-span-1
-order-[13] sm:order-13 2xl:order-5"
+              w-1/2 2xl:w-full
+              2xl:row-span-2
+              col-span-2 2xl:col-span-1
+              order-[13] sm:order-13 2xl:order-5"
       >
-        <CharacterLevel level={character.level} characterID={character.ID} />
+        <CharacterLevel
+          level={character.level}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
 
       <div
         className="w-full h-full 
-2xl:row-span-2
-order-2 sm:order-4 2xl:order-6"
+                  2xl:row-span-2
+                  order-2 sm:order-4 2xl:order-6"
       >
         <ProficiencyBonus
           value={character.proficiencyBonus}
           characterId={character.ID}
+          disabled={!character.isOwner}
         />
       </div>
       <div
         className="w-full h-full 
-2xl:row-span-2
-order-8 sm:order-5 md:order-7"
+                  2xl:row-span-2
+                  order-8 sm:order-5 md:order-7"
       >
         <Initiative
           value={character.initiative}
           characterId={character.ID}
           dexterity={character.abilityScores.dexterity}
+          disabled={!character.isOwner}
         />
       </div>
       <div
         className="w-full h-full 
-order-11 sm:order-9 2xl:order-8"
+              order-11 sm:order-9 2xl:order-8"
       >
-        <CharacterRace race={character.race} characterID={character.ID} />
+        <CharacterRace
+          race={character.race}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
       <div
         className="w-full h-full
-col-span-2
-sm:row-span-3 2xl:row-span-4
-order-12 sm:order-11 2xl:order-9"
+          col-span-2
+          sm:row-span-3 2xl:row-span-4
+          order-12 sm:order-11 2xl:order-9"
       >
-        <CharacterImage image={character.image} characterID={character.ID} />
+        <CharacterImage
+          image={character.image}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
       <div
         className="w-full h-full 
-row-span-1
-order-3 sm:order-6 2xl:order-10"
+          row-span-1
+          order-3 sm:order-6 2xl:order-10"
       >
-        <ArmorClass value={character.armorClass} characterID={character.ID} />
+        <ArmorClass
+          value={character.armorClass}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
 
       <div
         className="w-full h-full 
-row-span-1
-order-9 sm:order-7 2xl:order-11"
+          row-span-1
+          order-9 sm:order-7 2xl:order-11"
       >
-        <Speed value={character.speed} characterID={character.ID} />
+        <Speed
+          value={character.speed}
+          characterID={character.ID}
+          disabled={!character.isOwner}
+        />
       </div>
       <div
         className="w-full h-full
-col-span-2 
-sm:row-span-1 2xl:row-span-2 
-order-7 sm:order-12 2xl:order-12"
+          col-span-2 
+          sm:row-span-1 2xl:row-span-2 
+          order-7 sm:order-12 2xl:order-12"
       >
         <SavingThrowsComp
+          canEdit={character.isOwner}
           savingThrows={character.savingThrows}
           characterID={character.ID}
           abilityScores={character.abilityScores}
@@ -262,11 +296,12 @@ order-7 sm:order-12 2xl:order-12"
       </div>
       <div
         className="flex justify-center
-col-span-2
-2xl:row-span-1
-order-6 sm:order-10 2xl:order-[13]"
+                  col-span-2
+                  2xl:row-span-1
+                  order-6 sm:order-10 2xl:order-[13]"
       >
         <PassivePerception
+          disabled={!character.isOwner}
           value={character.passivePerception}
           wisdom={character.abilityScores.wisdom}
           perception={character.skills.perception}

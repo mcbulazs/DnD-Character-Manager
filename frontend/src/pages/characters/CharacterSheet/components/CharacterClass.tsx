@@ -6,7 +6,8 @@ import debounce from "../../../../utility/debounce";
 const CharacterClass: React.FC<{
   characterClass: string;
   characterID: number;
-}> = ({ characterClass, characterID }) => {
+  disabled?: boolean;
+}> = ({ characterClass, characterID, disabled = false }) => {
   const [classValue, setClassValue] = useState<string>(characterClass);
   const [setCharacterClass] = useSetCharacterAttributeMutation();
 
@@ -21,6 +22,7 @@ const CharacterClass: React.FC<{
     <div className="bg-light-parchment-beige border-4 border-black rounded-xl">
       <span className="">Character Class:</span>
       <input
+        disabled={disabled}
         className="w-full bg-transparent text-center text-2xl outline-none"
         value={classValue}
         onChange={(e) => {

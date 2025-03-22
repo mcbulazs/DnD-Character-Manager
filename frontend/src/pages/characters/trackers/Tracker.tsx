@@ -18,7 +18,8 @@ const Tracker: React.FC<{
   style?: React.CSSProperties;
   isEditing: boolean;
   characterId: number;
-}> = ({ tracker, style, isEditing, characterId }) => {
+  canEdit: boolean;
+}> = ({ tracker, style, isEditing, characterId, canEdit }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState(tracker.currentValue);
@@ -112,7 +113,7 @@ const Tracker: React.FC<{
             ${!isDisabled ? "" : "select-none"}`}
               defaultValue={currentValue}
               maxValue={tracker.maxValue}
-              disabled={isDisabled}
+              disabled={canEdit || isDisabled}
               minValue={0}
               onChange={(val) => {
                 setCurrentValue(val);
@@ -127,34 +128,38 @@ const Tracker: React.FC<{
               defaultValue={tracker.maxValue}
               onChange={() => { }}
             />
-            <button
-              type="button"
-              disabled={isDisabled}
-              className={`h-4 w-full flex items-center justify-center select-none text-xl border-2 border-ancient-gold
+            {canEdit && (
+              <>
+                <button
+                  type="button"
+                  disabled={isDisabled}
+                  className={`h-4 w-full flex items-center justify-center select-none text-xl border-2 border-ancient-gold
             ${!isDisabled ? "" : isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!isDisabled ? "" : "select-none"}`}
-              onClick={() => {
-                if (currentValue === 0) return;
-                setCurrentValue((value) => value - 1);
-                UpdateTrackerDebounce(currentValue - 1);
-              }}
-            >
-              -
-            </button>
-            <button
-              type="button"
-              disabled={isDisabled}
-              className={`h-4 w-full flex items-center justify-center select-none text-xl border-2 border-ancient-gold
+                  onClick={() => {
+                    if (currentValue === 0) return;
+                    setCurrentValue((value) => value - 1);
+                    UpdateTrackerDebounce(currentValue - 1);
+                  }}
+                >
+                  -
+                </button>
+                <button
+                  type="button"
+                  disabled={isDisabled}
+                  className={`h-4 w-full flex items-center justify-center select-none text-xl border-2 border-ancient-gold
             ${!isDisabled ? "" : isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!isDisabled ? "" : "select-none"}`}
-              onClick={() => {
-                if (currentValue === tracker.maxValue) return;
-                setCurrentValue((value) => value + 1);
-                UpdateTrackerDebounce(currentValue + 1);
-              }}
-            >
-              +
-            </button>
+                  onClick={() => {
+                    if (currentValue === tracker.maxValue) return;
+                    setCurrentValue((value) => value + 1);
+                    UpdateTrackerDebounce(currentValue + 1);
+                  }}
+                >
+                  +
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

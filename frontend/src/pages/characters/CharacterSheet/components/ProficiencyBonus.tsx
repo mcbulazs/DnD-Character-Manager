@@ -7,7 +7,8 @@ import debounce from "../../../../utility/debounce";
 const ProficiencyBonus: React.FC<{
   value: number;
   characterId: number;
-}> = ({ value, characterId }) => {
+  disabled?: boolean;
+}> = ({ value, characterId, disabled = false }) => {
   const [setProficiencyBonus] = useSetCharacterAttributeMutation();
   const debouncedSetProficiencyBonus = useCallback(
     debounce((proficiencyBonus: number) => {
@@ -24,6 +25,7 @@ const ProficiencyBonus: React.FC<{
       <div className="w-3/5 aspect-square flex items-center justify-center relative">
         <div className="absolute w-full aspect-square rotate-45 bg-light-parchment-beige border-4 border-black rounded-3xl " />
         <UnstyledNumberInput
+          disabled={disabled}
           defaultValue={value}
           onChange={(val) => {
             debouncedSetProficiencyBonus(val);

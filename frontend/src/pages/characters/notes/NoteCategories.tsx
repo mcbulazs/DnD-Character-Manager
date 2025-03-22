@@ -37,19 +37,20 @@ const NoteCategories: React.FC = () => {
           />
         ))}
       </div>
-      {!modalOpen ? (
-        <div className="fixed bottom-0 right-0 m-5">
-          <CreateButton
-            onClick={() => setModalOpen(true)}
-            text="Create Note Category"
+      {character.isOwner &&
+        (!modalOpen ? (
+          <div className="fixed bottom-0 right-0 m-5">
+            <CreateButton
+              onClick={() => setModalOpen(true)}
+              text="Create Note Category"
+            />
+          </div>
+        ) : (
+          <NoteCategoryModal
+            onClose={() => setModalOpen(false)}
+            characterId={character.ID}
           />
-        </div>
-      ) : (
-        <NoteCategoryModal
-          onClose={() => setModalOpen(false)}
-          characterId={character.ID}
-        />
-      )}
+        ))}
     </>
   );
 };

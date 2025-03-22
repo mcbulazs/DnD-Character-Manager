@@ -59,6 +59,7 @@ export interface Skills {
 
 export type CharacterData = {
   ID: number;
+  isOwner: boolean;
   name: string;
   class: string;
   race: string;

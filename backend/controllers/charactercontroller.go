@@ -173,7 +173,7 @@ func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 	character, err := service.FindCharacterByID(characterID, userId)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Character not found"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "Character not found"})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

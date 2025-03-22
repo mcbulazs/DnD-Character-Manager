@@ -15,11 +15,13 @@ const SavingThrowsComp: React.FC<{
   abilityScores: AbilityScores;
   proficiencyBonus: number;
   characterID: number;
+  canEdit: boolean;
 }> = ({
   savingThrows: _savingThrows,
   abilityScores,
   proficiencyBonus,
   characterID,
+  canEdit,
 }) => {
     const [savingThrows, setSavingThrows] = useState<SavingThrows>(_savingThrows);
     const [modifyCharacterSavingThrowsMutation] =
@@ -70,6 +72,7 @@ const SavingThrowsComp: React.FC<{
         <table className="text-md xl:text-xl">
           <tbody>
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.strength}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {
@@ -86,6 +89,7 @@ const SavingThrowsComp: React.FC<{
               proficiencyBonus={proficiencyBonus}
             />
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.dexterity}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {
@@ -102,6 +106,7 @@ const SavingThrowsComp: React.FC<{
               proficiencyBonus={proficiencyBonus}
             />
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.constitution}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {
@@ -118,6 +123,7 @@ const SavingThrowsComp: React.FC<{
               proficiencyBonus={proficiencyBonus}
             />
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.intelligence}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {
@@ -134,6 +140,7 @@ const SavingThrowsComp: React.FC<{
               proficiencyBonus={proficiencyBonus}
             />
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.wisdom}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {
@@ -147,6 +154,7 @@ const SavingThrowsComp: React.FC<{
               proficiencyBonus={proficiencyBonus}
             />
             <SavingThrow
+              disabled={!canEdit}
               savingThrow={savingThrows.charisma}
               updateSavingThrow={(savingThrow) => {
                 setSavingThrows((prev) => {

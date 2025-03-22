@@ -9,7 +9,8 @@ const Initiative: React.FC<{
   value: number;
   characterId: number;
   dexterity: Attribute;
-}> = ({ value, characterId, dexterity }) => {
+  disabled?: boolean;
+}> = ({ value, characterId, dexterity, disabled = false }) => {
   const [setInitiative] = useSetCharacterAttributeMutation();
   const [trueModifier, setTrueModifier] = useState<number>(0);
 
@@ -40,6 +41,7 @@ const Initiative: React.FC<{
           {trueModifier}
         </span>
         <UnstyledNumberInput
+          disabled={disabled}
           defaultValue={value}
           onChange={(val) => {
             setTrueModifier(

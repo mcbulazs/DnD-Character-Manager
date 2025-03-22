@@ -7,7 +7,8 @@ import NoteCategoryModal from "./NoteCategoryModal";
 const NoteCategoryCard: React.FC<{
   characterId: number;
   category: NoteCategory;
-}> = ({ characterId, category }) => {
+  canEdit: boolean;
+}> = ({ characterId, category, canEdit }) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   return (
@@ -33,15 +34,17 @@ const NoteCategoryCard: React.FC<{
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          className="absolute bottom-0 right-0 text-orange-500"
-          onClick={() => {
-            setModalOpen(true);
-          }}
-        >
-          <EditIcon fontSize="large" />
-        </button>
+        {canEdit && (
+          <button
+            type="button"
+            className="absolute bottom-0 right-0 text-orange-500"
+            onClick={() => {
+              setModalOpen(true);
+            }}
+          >
+            <EditIcon fontSize="large" />
+          </button>
+        )}
       </div>
       {modalOpen && (
         <NoteCategoryModal

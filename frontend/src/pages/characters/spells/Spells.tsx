@@ -51,79 +51,90 @@ const Spells: React.FC<{ characterId?: number }> = ({
     <>
       <div className="w-full sm:w-11/12 grid gap-2">
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={0}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={1}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={2}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={3}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={4}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={5}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={6}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={7}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={8}
           characterId={characterId}
         />
         <SpellListPerLevel
+          canEdit={character.isOwner}
           spells={spells}
           trackers={trackers}
           level={9}
           characterId={characterId}
         />
       </div>
-      {isModalOpen ? (
-        <CreateSpellModal
-          onClose={() => setIsModalOpen(false)}
-          characterId={characterId}
-        />
-      ) : (
-        <div className="fixed bottom-0 right-0 m-5">
-          <CreateButton
-            text="Add feature"
-            onClick={() => setIsModalOpen(true)}
+      {character.isOwner &&
+        (isModalOpen ? (
+          <CreateSpellModal
+            onClose={() => setIsModalOpen(false)}
+            characterId={characterId}
           />
-        </div>
-      )}
+        ) : (
+          <div className="fixed bottom-0 right-0 m-5">
+            <CreateButton
+              text="Add feature"
+              onClick={() => setIsModalOpen(true)}
+            />
+          </div>
+        ))}
     </>
   );
 };

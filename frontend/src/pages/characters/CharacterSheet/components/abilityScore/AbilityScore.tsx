@@ -7,7 +7,8 @@ const AbilityScore: React.FC<{
   abilityScore: Attribute;
   name: string;
   updateAttribute: (attr: Attribute) => void;
-}> = ({ abilityScore, name, updateAttribute }) => {
+  canEdit: boolean;
+}> = ({ abilityScore, name, updateAttribute, canEdit }) => {
   const [score, setScore] = useState<{ value: number; modifier: number }>({
     value: abilityScore.value,
     modifier: abilityScore.modifier,
@@ -61,6 +62,7 @@ grow flex justify-center items-center"
                         border-2 border-shadow-black
                         rounded-md 
                         text-center"
+          disabled={!canEdit}
           onChange={(mod) => {
             setScore((prevScore) => {
               const updatedScore = { value: prevScore.value, modifier: mod };
@@ -75,6 +77,7 @@ grow flex justify-center items-center"
           className="border-2 font-bold border-shadow-black rounded-full 
                       flex items-center justify-center
                       w-1/2 aspect-[2/1]  bg-light-parchment-beige text-center"
+          disabled={!canEdit}
           onChange={(val) => {
             setScore((prevScore) => {
               const updatedScore = { value: val, modifier: prevScore.modifier };

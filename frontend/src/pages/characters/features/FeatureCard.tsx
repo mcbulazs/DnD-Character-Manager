@@ -8,10 +8,11 @@ import { useDeleteFeatureMutation } from "../../../store/api/characterApiSlice";
 import type { Feature } from "../../../types/feature";
 import CreateFeatureModal from "./CreateFeatureModal";
 
-const FeatureCard: React.FC<{ feature: Feature; characterId: number }> = ({
-  feature,
-  characterId,
-}) => {
+const FeatureCard: React.FC<{
+  feature: Feature;
+  characterId: number;
+  canEdit: boolean;
+}> = ({ feature, characterId, canEdit }) => {
   const [showFull, setShowFull] = useState(false);
   const [inEdit, setInEdit] = useState(false);
   const [deleteFeature] = useDeleteFeatureMutation();
@@ -69,23 +70,25 @@ const FeatureCard: React.FC<{ feature: Feature; characterId: number }> = ({
             <p className="my-5">Source: {feature.source}</p>
             {/*biome-ignore lint/security/noDangerouslySetInnerHtml format: Safe as content comes from CKEditor and is sanitized.*/}
             <div dangerouslySetInnerHTML={{ __html: feature.description }} />
-            <div className="absolute top-0 right-0 m-5 flex gap-2">
-              <DeleteButton
-                text="Delete Feature"
-                onDelete={() => {
-                  handleDelete();
-                  setShowFull(false);
-                }}
-                dialogMessage="Are you sure you want to delete this feature?"
-              />
-              <EditButton
-                text="Edit Feature"
-                onClick={() => {
-                  setInEdit(true);
-                  setShowFull(false);
-                }}
-              />
-            </div>
+            {canEdit && (
+              <div className="absolute top-0 right-0 m-5 flex gap-2">
+                <DeleteButton
+                  text="Delete Feature"
+                  onDelete={() => {
+                    handleDelete();
+                    setShowFull(false);
+                  }}
+                  dialogMessage="Are you sure you want to delete this feature?"
+                />
+                <EditButton
+                  text="Edit Feature"
+                  onClick={() => {
+                    setInEdit(true);
+                    setShowFull(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
         </Modal>
       )}

@@ -4,10 +4,11 @@ import UnstyledNumberInput from "../../../../components/UnstyledNumberInput";
 import { useSetCharacterAttributeMutation } from "../../../../store/api/characterApiSlice";
 import debounce from "../../../../utility/debounce";
 
-const CharacterLevel: React.FC<{ level: number; characterID: number }> = ({
-  level,
-  characterID,
-}) => {
+const CharacterLevel: React.FC<{
+  level: number;
+  characterID: number;
+  disabled?: boolean;
+}> = ({ level, characterID, disabled }) => {
   const [setCharacterLevel] = useSetCharacterAttributeMutation();
 
   const debouncedSetCharacterLevel = useCallback(
@@ -25,6 +26,7 @@ const CharacterLevel: React.FC<{ level: number; characterID: number }> = ({
                     relative"
       >
         <UnstyledNumberInput
+          disabled={disabled}
           defaultValue={level}
           onChange={(val) => {
             debouncedSetCharacterLevel(val);
