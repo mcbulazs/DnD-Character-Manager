@@ -32,7 +32,6 @@ const Features: React.FC<{ characterId?: number }> = ({
   useEffect(() => {
     setFeatures(character?.features);
   }, [character]);
-  console.log("Features", features);
 
   useEffect(() => {
     setTitle(

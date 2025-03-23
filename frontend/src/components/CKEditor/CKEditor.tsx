@@ -42,7 +42,8 @@ const TextEditor: React.FC<{
   value: string;
   onChange: (data: string) => void;
   placeholder?: string;
-}> = ({ value, onChange, placeholder }) => {
+  disabled?: boolean;
+}> = ({ value, onChange, placeholder, disabled = false }) => {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -144,6 +145,7 @@ const TextEditor: React.FC<{
             <div ref={editorRef}>
               {isLayoutReady && (
                 <CKEditor
+                  disabled={disabled}
                   editor={ClassicEditor}
                   config={editorConfig}
                   data={value}

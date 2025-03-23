@@ -31,6 +31,7 @@ const NoteCategories: React.FC = () => {
       >
         {categories?.map((category) => (
           <NoteCategoryCard
+            canEdit={character.isOwner}
             key={category.id}
             category={category}
             characterId={character.ID}

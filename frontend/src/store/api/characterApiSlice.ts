@@ -209,7 +209,7 @@ export const characterApiSlice = createApi({
       invalidatesTags: [characterTag],
     }),
 
-    CreateNoteCategory: builder.mutation<
+    createNoteCategory: builder.mutation<
       void,
       { noteCategory: CreateNoteCategory; characterId: number }
     >({
@@ -220,7 +220,7 @@ export const characterApiSlice = createApi({
       }),
       invalidatesTags: [characterTag],
     }),
-    ModifyNoteCategory: builder.mutation<
+    modifyNoteCategory: builder.mutation<
       void,
       { noteCategory: NoteCategory; characterId: number }
     >({
@@ -261,7 +261,6 @@ export const characterApiSlice = createApi({
         method: "PUT",
         body: note,
       }),
-      invalidatesTags: [characterTag],
     }),
     deleteNote: builder.mutation<
       void,

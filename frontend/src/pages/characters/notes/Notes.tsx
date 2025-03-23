@@ -1,5 +1,12 @@
 import DelteIcon from "@mui/icons-material/Delete";
-import { Suspense, lazy, useCallback, useEffect, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import DeleteDialog from "../../../components/DeleteDialog";
 import Pager from "../../../components/Pager";
@@ -14,36 +21,64 @@ import debounce from "../../../utility/debounce";
 
 const TextEditor = lazy(() => import("../../../components/CKEditor/CKEditor"));
 
+// WARNING: Be aware of the hook nightmare
 const Notes: React.FC = () => {
   const { categoryId } = useParams();
+  const { characterId } = useParams();
   const { character, isLoading, error } = useCharacterContext();
   const [notes, setNotes] = useState<Note[]>([]);
-  const [currentText, SetCurrentText] = useState<string>("");
+  const [currentPageNumber, setCurrentPageNumber] = useState(0);
+  const pageNumber = useRef(0);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [currentNoteId, setCurrentNoteId] = useState(0);
   const [createNoteMutation] = useCreateNoteMutation();
   const [modifyNoteMutation] = useModifyNoteMutation();
   const [deleteNoteMutation] = useDeleteNoteMutation();
+  const isUserEditing = useRef(false);
+  useEffect(() => {
+    pageNumber.current = currentPageNumber;
+  }, [currentPageNumber]);
   useEffect(() => {
     if (character && categoryId) {
-      setNotes(
-        character.noteCategories.filter(
-          (category) => category.id === Number.parseInt(categoryId),
-        )[0].notes,
+      const category = character.noteCategories.find(
+        (category) => category.id === Number.parseInt(categoryId),
       );
+      const sortedNotes = category?.notes
+        ? [...category.notes].sort((a, b) => a.id - b.id)
+        : [];
+
+      setNotes(sortedNotes);
     }
   }, [character, categoryId]);
+
   useEffect(() => {
-    setCurrentNoteId(notes[0]?.id);
-    SetCurrentText(notes[0]?.note);
-  }, [notes]);
+    // Reset the user change flag after the initial render
+    isUserEditing.current = true;
+  }, []);
+
+  const updateNoteDebounce = useCallback(
+    debounce((val: string, id: number) => {
+      if (!categoryId || !characterId) {
+        return;
+      }
+      modifyNoteMutation({
+        categoryId: Number.parseInt(categoryId),
+        characterId: Number.parseInt(characterId),
+        note: {
+          id,
+          note: val,
+        },
+      });
+    }, 300),
+    [],
+  );
+
   const handleCreateNote = () => {
-    if (!categoryId || !character) {
+    if (!categoryId || !characterId) {
       return;
     }
     createNoteMutation({
       categoryId: Number.parseInt(categoryId),
-      characterId: character.ID,
+      characterId: Number.parseInt(characterId),
     });
   };
   const handleDeleteNote = () => {
@@ -53,26 +88,25 @@ const Notes: React.FC = () => {
     deleteNoteMutation({
       categoryId: Number.parseInt(categoryId),
       characterId: character.ID,
-      noteId: currentNoteId,
+      noteId: notes[currentPageNumber].id,
     });
   };
-  // biome-ignore lint/correctness/useExhaustiveDependencies: these are needed dependencies
-  const updateNoteDebounce = useCallback(
-    debounce((val: string) => {
-      if (!categoryId || !character) {
-        return;
-      }
-      modifyNoteMutation({
-        categoryId: Number.parseInt(categoryId),
-        characterId: character.ID,
-        note: {
-          id: currentNoteId,
-          note: val,
-        },
+  const handleEditorChange = (val: string) => {
+    if (!character || !character.isOwner) return;
+    // Only update if the change is initiated by the user
+    if (isUserEditing.current) {
+      updateNoteDebounce(val, notes[pageNumber.current].id);
+    }
+    setNotes((prev) => {
+      return prev.map((note, index) => {
+        if (index === pageNumber.current) {
+          return { ...note, note: val };
+        }
+        return note;
       });
-    }, 300),
-    [character, currentNoteId],
-  );
+    });
+  };
+
   if (isLoading) {
     return <div>Loading ... </div>;
   }
@@ -86,8 +120,10 @@ const Notes: React.FC = () => {
           <Pager
             count={notes?.length}
             onPageChange={(val) => {
-              SetCurrentText(notes[val].note);
-              setCurrentNoteId(notes[val].id);
+              isUserEditing.current = false;
+              setCurrentPageNumber(val);
+              // biome-ignore lint/suspicious/noAssignInExpressions: need it to run next cycle
+              setTimeout(() => (isUserEditing.current = true), 1);
             }}
           />
           <button
@@ -105,10 +141,10 @@ const Notes: React.FC = () => {
           <div className="relative">
             <Suspense fallback={<div> Loading editor...</div>}>
               <TextEditor
-                value={currentText}
+                value={notes[currentPageNumber].note}
+                disabled={!character.isOwner}
                 onChange={(val) => {
-                  updateNoteDebounce(val);
-                  SetCurrentText(val);
+                  handleEditorChange(val);
                 }}
               />
             </Suspense>
