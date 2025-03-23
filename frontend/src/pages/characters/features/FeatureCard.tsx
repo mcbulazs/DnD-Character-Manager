@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { stripHtml } from "string-strip-html";
 import Modal from "../../../components/Modal";
@@ -12,10 +12,14 @@ const FeatureCard: React.FC<{
   feature: Feature;
   characterId: number;
   canEdit: boolean;
-}> = ({ feature, characterId, canEdit }) => {
+}> = ({ feature: _feature, characterId, canEdit }) => {
   const [showFull, setShowFull] = useState(false);
   const [inEdit, setInEdit] = useState(false);
+  const [feature, setFeature] = useState(_feature);
   const [deleteFeature] = useDeleteFeatureMutation();
+  useEffect(() => {
+    setFeature(_feature);
+  }, [_feature]);
 
   const handleDelete = async () => {
     try {

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useGetCharacterByIdQuery } from "../../store/api/characterApiSlice";
 import type { ApiError } from "../../types/apiError";
 import type { CharacterData } from "../../types/characterData";
+import characterWebsocket from "../../websocket/chacterWebsocket";
 
 // Define the context shape
 interface CharacterContextType {
@@ -40,6 +41,7 @@ export const CharacterProvider: React.FC<{
   } = useGetCharacterByIdQuery(characterId);
   const [currentCharacter, setCurrentCharacter] =
     useState<CharacterData | null>(null);
+  characterWebsocket(character?.ID, character?.isOwner);
   useEffect(() => {
     if (character) {
       setCurrentCharacter(character);

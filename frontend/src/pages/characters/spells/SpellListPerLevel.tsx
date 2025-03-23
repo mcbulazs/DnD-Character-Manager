@@ -1,5 +1,5 @@
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Accordion from "../../../components/Accordion";
 import UnstyledNumberInput from "../../../components/UnstyledNumberInput";
@@ -18,6 +18,10 @@ const AccordionHeader: React.FC<{
   const name = level === 0 ? "Cantrips" : `Spell level ${level}`;
   const [currentValue, setCurrentValue] = useState(tracker.currentValue);
   const [maxValue, setMaxValue] = useState(tracker.maxValue);
+  useEffect(() => {
+    setCurrentValue(tracker.currentValue);
+    setMaxValue(tracker.maxValue);
+  }, [tracker]);
 
   const [modifyTracker] = useModifyTrackerMutation();
   const updateTracker = useCallback(
@@ -144,7 +148,12 @@ const SpellListPerLevel: React.FC<{
     >
       <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 p-2">
         {spells.map((spell) => (
-          <SpellCard key={spell.id} spell={spell} characterId={characterId} />
+          <SpellCard
+            canEdit={canEdit}
+            key={spell.id}
+            spell={spell}
+            characterId={characterId}
+          />
         ))}
       </div>
     </Accordion>

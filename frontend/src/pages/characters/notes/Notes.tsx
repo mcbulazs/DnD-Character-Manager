@@ -62,7 +62,6 @@ const Notes: React.FC = () => {
       if (!categoryId || !character) {
         return;
       }
-      console.log(character);
       modifyNoteMutation({
         categoryId: Number.parseInt(categoryId),
         characterId: character.ID,

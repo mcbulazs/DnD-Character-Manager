@@ -26,6 +26,9 @@ const SkillsComp: React.FC<{
     const [imgWidth, setImgWidth] = useState(0);
 
     useEffect(() => {
+      setSkills(_skills);
+    }, [_skills]);
+    useEffect(() => {
       const img = new Image();
       img.src = SkillInfo;
       img.onload = () => {

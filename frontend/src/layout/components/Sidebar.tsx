@@ -189,6 +189,14 @@ const Menu: React.FC = () => {
                   Characters
                 </NavLink>
                 <FavoriteCharacters />
+                <NavLink
+                  to="friends"
+                  tabIndex={-1}
+                  onClick={() => setOpen(!open)}
+                  className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
+                >
+                  Friends
+                </NavLink>
               </>
             )}
             {/*<div className="w-11/12 self-center border-y-2 border-dragon-blood grow" />*/}
@@ -199,14 +207,6 @@ const Menu: React.FC = () => {
               className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
             >
               Dice Throw
-            </NavLink>
-            <NavLink
-              to="friends"
-              tabIndex={-1}
-              onClick={() => setOpen(!open)}
-              className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
-            >
-              Friends
             </NavLink>
             <NavLink
               to=""

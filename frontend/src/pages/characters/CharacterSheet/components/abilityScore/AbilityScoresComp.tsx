@@ -20,6 +20,10 @@ const AbilitScoresComp: React.FC<{
   const [imgWidth, setImgWidth] = useState(0);
 
   useEffect(() => {
+    setAbilityScores(_abilityScores);
+  }, [_abilityScores]);
+
+  useEffect(() => {
     const img = new Image();
     img.src = AbilityScoreInfo;
     img.onload = () => {
@@ -70,6 +74,7 @@ const AbilitScoresComp: React.FC<{
 				/>
 			)*/}
       <AbilityScore
+        canEdit={canEdit}
         abilityScore={abilityScores.strength}
         updateAttribute={(attr) => {
           setAbilityScores((prev) => {

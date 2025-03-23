@@ -1,5 +1,5 @@
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSetCharacterAttributeMutation } from "../../../../store/api/characterApiSlice";
 import debounce from "../../../../utility/debounce";
 
@@ -8,8 +8,10 @@ const CharacterName: React.FC<{
   characterID: number;
   disabled?: boolean;
 }> = ({ name, characterID, disabled = false }) => {
-  console.log(disabled);
   const [characterName, setCharacterName] = useState<string>(name);
+  useEffect(() => {
+    setCharacterName(name);
+  }, [name]);
   const [setName] = useSetCharacterAttributeMutation();
 
   const debouncedSetName = useCallback(

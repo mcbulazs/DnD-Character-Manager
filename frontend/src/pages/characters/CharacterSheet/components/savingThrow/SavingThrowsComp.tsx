@@ -30,6 +30,10 @@ const SavingThrowsComp: React.FC<{
     const [imgWidth, setImgWidth] = useState(0);
 
     useEffect(() => {
+      setSavingThrows(_savingThrows);
+    }, [_savingThrows]);
+
+    useEffect(() => {
       const img = new Image();
       img.src = SavingThrowInfo;
       img.onload = () => {

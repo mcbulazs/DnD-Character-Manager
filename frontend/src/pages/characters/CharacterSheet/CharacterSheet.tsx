@@ -25,6 +25,7 @@ import Speed from "./components/Speed";
 import AbilitScoresComp from "./components/abilityScore/AbilityScoresComp";
 import SavingThrowsComp from "./components/savingThrow/SavingThrowsComp";
 import SkillsComp from "./components/skill/SkillsComp";
+import characterWebsocket from "../../../websocket/chacterWebsocket";
 
 const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
   character,
@@ -140,6 +141,7 @@ const CharacterSheet: React.FC = () => {
     return <div>Error loading character</div>;
   }
   if (!character) return <div>Character not found</div>;
+
   //FIX: biome going insane on class formatting
   return (
     <div

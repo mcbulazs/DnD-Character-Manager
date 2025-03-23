@@ -19,6 +19,7 @@ const AbilityScore: React.FC<{
     setTrueModifier(
       Math.floor((abilityScore.value - 10) / 2) + abilityScore.modifier,
     );
+    setScore({ value: abilityScore.value, modifier: abilityScore.modifier });
   }, [abilityScore]);
 
   const onScoreUpdate = (updatedScore: { value: number; modifier: number }) => {

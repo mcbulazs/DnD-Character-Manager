@@ -11,11 +11,13 @@ import type { Tracker as TrackerObj } from "../../../types/tracker";
 import EditButton from "../../../components/buttons/EditButton";
 import CreateButton from "../../../components/buttons/CreateButton";
 import TrackerModal from "./TrackerModal";
+import { useUpdateTrackerOrderMutation } from "../../../store/api/characterApiSlice";
 
 const Trackers: React.FC = () => {
   const [trackerModalOpen, setTrackerModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [trackers, setTrackers] = useState<TrackerObj[]>([]);
+  const [useUpdateTrackerOrder] = useUpdateTrackerOrderMutation();
   const { character, error, isLoading } = useCharacterContext();
   useEffect(() => {
     if (character) {
@@ -32,6 +34,13 @@ const Trackers: React.FC = () => {
   if (error || !character) {
     return <div>Error loading trackers</div>;
   }
+  const handleStopEditing = () => {
+    setIsEditing(false);
+    useUpdateTrackerOrder({
+      characterId: character.ID,
+      trackerIds: trackers.map((tracker) => tracker.id),
+    });
+  };
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -102,7 +111,7 @@ const Trackers: React.FC = () => {
                                 w-48 h-12 
                                 rounded-full p-1 z-10 
                                 transition-all duration-300 ease-in-out overflow-hidden`}
-                onClick={() => setIsEditing(false)}
+                onClick={handleStopEditing}
                 type="button"
               >
                 <span className="text-white text-center whitespace-nowrap">

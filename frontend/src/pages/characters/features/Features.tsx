@@ -27,6 +27,12 @@ const Features: React.FC<{ characterId?: number }> = ({
 
   const { character, error, isLoading } = useCharacterContext();
   const { setTitle } = useHeaderContext();
+  const [features, setFeatures] = useState(character?.features);
+
+  useEffect(() => {
+    setFeatures(character?.features);
+  }, [character]);
+  console.log("Features", features);
 
   useEffect(() => {
     setTitle(
@@ -45,7 +51,6 @@ const Features: React.FC<{ characterId?: number }> = ({
   if (!character) {
     return <div>No character found</div>;
   }
-  const features = character.features;
 
   return (
     <>

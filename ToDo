@@ -1,8 +1,11 @@
 Fix UnstyledNumberInput empty
 Fix Spell Tracker change error
-Fix health on tracker
+Fix health on tracker // the hell does that mean
 Fix mobile sidebars
 Fix imageSizer on edit empty image
+fix note dont refetch data or some shit cs it messes up typing
+
+Fix frined --I guess its becuse of having no friends :(
 
 Set Up HeaderNaming correctly
 
@@ -10,8 +13,9 @@ add race to character creation
 after character creation go to character
 
 ---------------Notes
-fix ntoes
-fix trackers
+----fix ntoes
+----fix trackers
+
 
 Items, Weapons & Proficiencies
 
@@ -19,10 +23,11 @@ Hit Die Tracker defualt
 spell save dc
 
 
-Friendlist feature
-- site
-- websocket
-- permsissions
+-------Friendlist feature
+------- site
+------- websocket
+------- permsissions
+------- notes paging on websocket is weird
 
 ---------------dice rolling feature
 

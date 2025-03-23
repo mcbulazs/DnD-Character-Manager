@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -28,7 +26,6 @@ func (r *NoteRepository) IsCategoryBelongToCharacter(categoryID int, characterID
 
 func (r *NoteRepository) CreateNoteCategory(categoryModel *models.CharacterNoteCategoryModel) error {
 	tx := r.DB.Begin()
-	fmt.Println(categoryModel)
 	err := tx.Create(categoryModel).Error
 	if err != nil {
 		tx.Rollback()
@@ -100,7 +97,6 @@ func (r *NoteRepository) UpdateNote(noteModel *models.CharacterNoteModel, catego
 }
 
 func (r *NoteRepository) DeleteNote(noteID int, categoryID int) error {
-	fmt.Println(noteID, categoryID)
 	tx := r.DB.
 		Where("id = ? AND category_id = ?", noteID, categoryID).
 		Delete(&models.CharacterNoteModel{})

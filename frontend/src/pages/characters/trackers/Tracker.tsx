@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { CSS } from "@dnd-kit/utilities";
 import UnstyledNumberInput from "../../../components/UnstyledNumberInput";
 import type { Tracker as TrackerOBJ } from "../../../types/tracker";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TrackerModal from "./TrackerModal";
 import debounce from "../../../utility/debounce";
 import {
@@ -23,6 +23,11 @@ const Tracker: React.FC<{
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState(tracker.currentValue);
+  const [maxValue, setMaxValue] = useState(tracker.maxValue);
+  useEffect(() => {
+    setCurrentValue(tracker.currentValue);
+    setMaxValue(tracker.maxValue);
+  }, [tracker]);
   const {
     setNodeRef,
     listeners,
@@ -125,8 +130,10 @@ const Tracker: React.FC<{
               className={`text-2xl bg-light-parchment-beige text-center border-ancient-gold border-2
             ${!isDisabled ? "" : isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!isDisabled ? "" : "select-none"}`}
-              defaultValue={tracker.maxValue}
-              onChange={() => { }}
+              defaultValue={maxValue}
+              onChange={(val) => {
+                setMaxValue(val);
+              }}
             />
             {canEdit && (
               <>

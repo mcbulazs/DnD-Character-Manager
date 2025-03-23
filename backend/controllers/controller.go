@@ -6,13 +6,24 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/middleware"
+	"DnDCharacterSheet/websocket"
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
+	// websockets
+	characterClientManager := websocket.NewClientManager()
+
 	r.StaticFile("/robots.txt", "./files/robots.txt")
 
 	api := r.Group("/api")
 	initCors(api)
+
+	// websocket
+	ws := api.Group("/ws")
+
+	ws.GET("/characters/:Id", func(c *gin.Context) {
+		websocket.HandleWebSocket(c, characterClientManager)
+	})
 
 	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
@@ -80,6 +91,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
+		middleware.AfterRequestMiddleware(c, characterClientManager)
 	})
 
 	characters.DELETE("", func(c *gin.Context) {

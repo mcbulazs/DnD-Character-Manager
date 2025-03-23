@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -111,7 +110,6 @@ func (s *CharacterService) UpdateCharacterImage(image *dto.CharacterImageDTO, ch
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {
 	hasAccess := false
 	characterModel, err := s.Repo.FindByID(id)
-	fmt.Println(characterModel.SharedWith)
 	if characterModel == nil {
 		return nil, err
 	}

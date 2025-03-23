@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal";
 import DeleteButton from "../../../components/buttons/DeleteButton";
@@ -40,12 +40,17 @@ const SpellCard: React.FC<{
   spell: Spell;
   characterId: number;
   canEdit: boolean;
-}> = ({ spell, characterId, canEdit }) => {
-  const [active, setActive] = useState(spell.active);
+}> = ({ spell: _spell, characterId, canEdit }) => {
+  const [active, setActive] = useState(_spell.active);
+  const [spell, setSpell] = useState(_spell);
   const [showFull, setShowFull] = useState(false);
   const [inEdit, setInEdit] = useState(false);
   const [deleteSpell] = useDeleteSpellMutation();
   const [modifySpell] = useModifySpellMutation();
+  useEffect(() => {
+    setSpell(_spell);
+    setActive(_spell.active);
+  }, [_spell]);
 
   const handleDelete = async () => {
     try {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import type { NoteCategory } from "../../../types/note";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import NoteCategoryModal from "./NoteCategoryModal";
 
@@ -8,9 +8,13 @@ const NoteCategoryCard: React.FC<{
   characterId: number;
   category: NoteCategory;
   canEdit: boolean;
-}> = ({ characterId, category, canEdit }) => {
+}> = ({ characterId, category: _category, canEdit }) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [category, setCategory] = useState<NoteCategory>(_category);
+  useEffect(() => {
+    setCategory(_category);
+  }, [_category]);
   return (
     <>
       <div className="relative">
