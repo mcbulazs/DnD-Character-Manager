@@ -1,7 +1,7 @@
 package dto
 
 type CharacterBaseDTO struct {
-	ID         uint              `json:"id"`
+	ID         uint              `json:"ID"`
 	Name       string            `json:"name"`
 	Class      string            `json:"class"`
 	IsFavorite bool              `json:"isFavorite"`

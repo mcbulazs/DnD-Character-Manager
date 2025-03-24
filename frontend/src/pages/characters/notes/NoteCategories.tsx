@@ -4,17 +4,20 @@ import type { NoteCategory } from "../../../types/note";
 import NoteCategoryCard from "./NoteCategoryCard";
 import NoteCategoryModal from "./NoteCategoryModal";
 import CreateButton from "../../../components/buttons/CreateButton";
+import { useHeaderContext } from "../../../layout/Contexts/HeaderContext";
 
 const NoteCategories: React.FC = () => {
   const [categories, setCategories] = useState<NoteCategory[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const { character, error, isLoading } = useCharacterContext();
+  const { setTitle } = useHeaderContext();
   useEffect(() => {
     if (!character) {
       return;
     }
+    setTitle(<h1>{character.name}'s Notes</h1>);
     setCategories(character.noteCategories);
-  }, [character]);
+  }, [character, setTitle]);
 
   if (isLoading) {
     return <div>Loading...</div>;

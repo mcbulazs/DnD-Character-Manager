@@ -1,10 +1,10 @@
-import type React from 'react';
-import { type ReactNode, createContext, useContext, useState } from 'react'
+import type React from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 // Define the shape of the context value
 interface HeaderContextType {
-  title: JSX.Element;
-  setTitle: React.Dispatch<React.SetStateAction<JSX.Element>>;
+  title: JSX.Element | null;
+  setTitle: React.Dispatch<React.SetStateAction<JSX.Element | null>>;
 }
 
 // Create the context with a default value
@@ -14,7 +14,7 @@ const HeaderContext = createContext<HeaderContextType | undefined>(undefined);
 export const useHeaderContext = () => {
   const context = useContext(HeaderContext);
   if (context === undefined) {
-    throw new Error('useHeaderContext must be used within a HeaderProvider');
+    throw new Error("useHeaderContext must be used within a HeaderProvider");
   }
   return context;
 };
@@ -26,7 +26,7 @@ interface HeaderProviderProps {
 
 // HeaderProvider component
 const HeaderProvider: React.FC<HeaderProviderProps> = ({ children }) => {
-  const [title, setTitle] = useState<JSX.Element>(<h1>Character Manager</h1>);
+  const [title, setTitle] = useState<JSX.Element | null>(null);
 
   return (
     <HeaderContext.Provider value={{ title, setTitle }}>

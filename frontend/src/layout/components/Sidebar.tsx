@@ -87,8 +87,8 @@ const Menu: React.FC = () => {
             .filter((character) => character.isFavorite)
             .map((character) => (
               <NavLink
-                key={character.id}
-                to={`/characters/${character.id}`}
+                key={character.ID}
+                to={`/characters/${character.ID}`}
                 onClick={() => setOpen(!open)}
                 className="p-4 hover:bg-gray-700 w-full flex gap-3"
               >

@@ -9,7 +9,7 @@ import { useSendFriendRequestMutation } from "../../store/api/friendApiSlice";
 import type { ApiError } from "../../types/apiError";
 import { toast } from "react-toastify";
 const FriendList: React.FC<{
-  friends: UserData[];
+  friends?: UserData[];
   onFriendSelect: (friend: UserData) => void;
 }> = ({ friends, onFriendSelect }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,7 +55,7 @@ const FriendList: React.FC<{
         <div className="flex-1 w-full">
           <Scrollbars className="w-full bg-gray-400 " universal>
             {friends
-              .filter((friend) => friend.email.includes(search))
+              ?.filter((friend) => friend.email.includes(search))
               .map((friend) => (
                 <div
                   key={friend.id}

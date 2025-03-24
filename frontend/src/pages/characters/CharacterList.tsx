@@ -21,7 +21,7 @@ const CharacterList: React.FC = () => {
       <div className="flex w-full lg:w-4/5 flex-wrap justify-evenly gap-4">
         {User?.characters?.map((character) => (
           <CharacterListCard
-            key={character.id}
+            key={character.ID}
             character={character}
             isOwner={true}
           />

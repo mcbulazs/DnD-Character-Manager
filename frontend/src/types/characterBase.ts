@@ -1,14 +1,14 @@
 import type { BackgroundImageProps } from "./backgroundImageProps";
 
 export interface CharacterBase {
-	id: number;
-	image: BackgroundImageProps;
-	name: string;
-	class: string;
-	isFavorite: boolean;
+  ID: number;
+  image: BackgroundImageProps;
+  name: string;
+  class: string;
+  isFavorite: boolean;
 }
 export interface CreateCharacterBase {
-	image?: BackgroundImageProps;
-	name?: string;
-	class?: string;
+  image?: BackgroundImageProps;
+  name?: string;
+  class?: string;
 }

@@ -5,7 +5,7 @@ import {
   useAcceptFriendRequestMutation,
   useDeclineFriendRequestMutation,
 } from "../../store/api/friendApiSlice";
-const FriendRequests: React.FC<{ requests: FriendRequest[] }> = ({
+const FriendRequests: React.FC<{ requests?: FriendRequest[] }> = ({
   requests,
 }) => {
   const [acceptRequest] = useAcceptFriendRequestMutation();
@@ -16,6 +16,9 @@ const FriendRequests: React.FC<{ requests: FriendRequest[] }> = ({
   const handleDecline = (id: number) => {
     declineRequest({ friendRequestId: id });
   };
+  if (!requests || requests.length === 0) {
+    return null;
+  }
   return (
     <div className="justify-self-end bg-blue-200 border-t-4 border-shadow-black">
       {requests.map((request) => (

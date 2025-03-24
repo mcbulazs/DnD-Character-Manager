@@ -24,6 +24,10 @@ const UnstyledNumberInput: React.FC<{
     }, [defaultValue]);
 
     const handleCalculation = (val: string) => {
+      if (val === "") {
+        setValue("0");
+        return onChange(0);
+      }
       const newValue = val.replace(/[+-]$/g, "");
       const result: number = Number(new Function(`return ${newValue}`)());
 

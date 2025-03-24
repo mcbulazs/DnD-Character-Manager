@@ -118,7 +118,7 @@ const Tracker: React.FC<{
             ${!isDisabled ? "" : "select-none"}`}
               defaultValue={currentValue}
               maxValue={tracker.maxValue}
-              disabled={canEdit || isDisabled}
+              disabled={!canEdit || isDisabled}
               minValue={0}
               onChange={(val) => {
                 setCurrentValue(val);

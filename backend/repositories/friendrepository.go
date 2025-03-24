@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -39,17 +40,19 @@ func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint
 	Friend.ID = friendRequest.DestinationUserID
 	var User models.UserModel
 	User.ID = friendRequest.SourceUserID
-	err = tx.Model(&User).Association("Friends").Append(&Friend)
+	err = tx.Model(&models.FriendsModel{}).Create(&models.FriendsModel{User: User, Friend: Friend}).Error
 	if err != nil {
+		fmt.Println("Error", err)
 		tx.Rollback()
 		return err
 	}
-	err = tx.Model(&Friend).Association("Friends").Append(&User)
+	err = tx.Model(&models.FriendsModel{}).Create(&models.FriendsModel{User: Friend, Friend: User}).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 	tx.Commit()
+	fmt.Println("Friend request accepted")
 	return nil
 }
 

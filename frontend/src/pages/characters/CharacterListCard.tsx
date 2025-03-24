@@ -31,7 +31,7 @@ const CharacterListCard: React.FC<{
       try {
         setCharacterAttribute({
           data: { isFavorite },
-          id: character.id,
+          id: character.ID,
         }).unwrap();
       } catch (error) {
         toast("Error updating favorite", { type: "error" });
@@ -54,7 +54,7 @@ const CharacterListCard: React.FC<{
     }
     // If the target is not the favorite icon, navigate to the character's page
     if ((e.target as HTMLElement).closest(".favorite-icon") === null) {
-      navigate(`/characters/${character.id}`);
+      navigate(`/characters/${character.ID}`);
     }
   };
 

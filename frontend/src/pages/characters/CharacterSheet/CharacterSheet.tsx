@@ -25,7 +25,6 @@ import Speed from "./components/Speed";
 import AbilitScoresComp from "./components/abilityScore/AbilityScoresComp";
 import SavingThrowsComp from "./components/savingThrow/SavingThrowsComp";
 import SkillsComp from "./components/skill/SkillsComp";
-import characterWebsocket from "../../../websocket/chacterWebsocket";
 
 const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
   character,
@@ -67,10 +66,12 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
       console.error("Error deleting character", error);
     }
   };
-  if (character.isOwner) {
-    <div className="flex justify-center items-center gap-2">
-      <h1 className="text-3xl font-bold">{character.name}</h1>
-    </div>;
+  if (!character.isOwner) {
+    return (
+      <div className="flex justify-center items-center gap-2">
+        <h1 className="text-3xl font-bold">{character.name}</h1>
+      </div>
+    );
   }
   return (
     <div className="flex justify-center items-center gap-2">
@@ -130,7 +131,6 @@ const CharacterSheet: React.FC = () => {
 
   useEffect(() => {
     if (!character) return;
-
     setTitle(<CharacterSheetHeader character={character} />);
   }, [setTitle, character]);
 

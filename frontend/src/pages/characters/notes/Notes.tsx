@@ -18,6 +18,7 @@ import {
 } from "../../../store/api/characterApiSlice";
 import type { Note } from "../../../types/note";
 import debounce from "../../../utility/debounce";
+import { useHeaderContext } from "../../../layout/Contexts/HeaderContext";
 
 const TextEditor = lazy(() => import("../../../components/CKEditor/CKEditor"));
 
@@ -26,6 +27,7 @@ const Notes: React.FC = () => {
   const { categoryId } = useParams();
   const { characterId } = useParams();
   const { character, isLoading, error } = useCharacterContext();
+  const { setTitle } = useHeaderContext();
   const [notes, setNotes] = useState<Note[]>([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
   const pageNumber = useRef(0);
@@ -46,9 +48,11 @@ const Notes: React.FC = () => {
         ? [...category.notes].sort((a, b) => a.id - b.id)
         : [];
 
+      setTitle(<h1>{category?.name}</h1>);
+
       setNotes(sortedNotes);
     }
-  }, [character, categoryId]);
+  }, [character, categoryId, setTitle]);
 
   useEffect(() => {
     // Reset the user change flag after the initial render

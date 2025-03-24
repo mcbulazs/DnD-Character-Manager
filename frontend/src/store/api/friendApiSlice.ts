@@ -1,9 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQuery from "./baseQuery";
-import { userApiSlice } from "./userApiSlice";
-import type { Dispatch } from "@reduxjs/toolkit";
 import type { CharacterBase } from "../../types/characterBase";
 import { userTag } from "./tags";
+import invalidateApiTags from "./invalidateApiTags";
 
 export const friendApiSlice = createApi({
   reducerPath: "friendApi",
@@ -22,20 +21,21 @@ export const friendApiSlice = createApi({
         url: `friendRequest/${friendRequestId}/accept`,
         method: "PATCH",
       }),
-      invalidatesTags: [userTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
     declineFriendRequest: builder.mutation<void, { friendRequestId: number }>({
       query: ({ friendRequestId }) => ({
         url: `friendRequest/${friendRequestId}/decline`,
         method: "PATCH",
       }),
-      invalidatesTags: [userTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
     unfriend: builder.mutation<void, { friendId: number }>({
       query: ({ friendId }) => ({
         url: `friends/${friendId}`,
         method: "DELETE",
       }),
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
     shareCharacter: builder.mutation<
       void,

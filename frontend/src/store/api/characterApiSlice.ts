@@ -16,11 +16,12 @@ import type { CreateTracker, Tracker } from "../../types/tracker";
 import baseQuery from "./baseQuery";
 import type { CreateNoteCategory, NoteCategory, Note } from "../../types/note";
 import { userTag, characterTag } from "./tags";
+import invalidateApiTags from "./invalidateApiTags";
 
 export const characterApiSlice = createApi({
   reducerPath: "characterApi",
   baseQuery,
-  tagTypes: [characterTag, userTag],
+  tagTypes: [userTag, characterTag],
   endpoints: (builder) => ({
     createCharacter: builder.mutation<CharacterBase, CreateCharacterBase>({
       query: (characterData) => ({
@@ -28,14 +29,14 @@ export const characterApiSlice = createApi({
         method: "POST",
         body: characterData,
       }),
-      invalidatesTags: [userTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
     deleteCharacter: builder.mutation<void, number>({
       query: (id) => ({
         url: `characters/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [userTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
     getCharacterById: builder.query<CharacterData, number>({
       query: (id) => `characters/${id}`,
@@ -95,7 +96,8 @@ export const characterApiSlice = createApi({
         method: "PUT",
         body: image,
       }),
-      invalidatesTags: [characterTag, userTag],
+      invalidatesTags: [characterTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
 
     setCharacterAttribute: builder.mutation<
@@ -107,7 +109,8 @@ export const characterApiSlice = createApi({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: [characterTag, userTag],
+      invalidatesTags: [characterTag],
+      onQueryStarted: invalidateApiTags([userTag]),
     }),
 
     createFeature: builder.mutation<

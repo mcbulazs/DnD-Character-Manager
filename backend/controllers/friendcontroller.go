@@ -46,7 +46,7 @@ func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
 	err = friendService.AcceptFriendRequest(userId, friendRequestId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request accepted"})

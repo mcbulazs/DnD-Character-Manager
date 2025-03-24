@@ -1,9 +1,10 @@
 import type React from "react";
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "../../store/api/userApiSlice";
 import type { ApiError } from "../../types/apiError";
+import { useHeaderContext } from "../../layout/Contexts/HeaderContext";
 
 interface UserCredentials {
   email: string;
@@ -16,7 +17,12 @@ const Login: React.FC = () => {
     password: "",
   });
   const [loginMutate, { isLoading, error }] = useLoginMutation();
+  const { setTitle } = useHeaderContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setTitle(null);
+  }, [setTitle]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,7 +47,6 @@ const Login: React.FC = () => {
       }
     }
   };
-  console.log("Login.tsx");
 
   return (
     <div className="w-full max-w-xs mx-auto mt-10 p-4">
