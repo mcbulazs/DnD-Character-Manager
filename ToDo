@@ -1,8 +1,6 @@
 ---- Fix UnstyledNumberInput empty
-Fix Spell Tracker change error // wtf it means
-Fix health on tracker // the hell does that mean
 Fix mobile sidebars
-Fix imageSizer on edit empty image
+------ Fix imageSizer on edit empty image
 ------ fix note dont refetch data or some shit bcs it messes up typing (done but cost me my sanity)
 
 ------ Fix frined --I guess its becuse of having no friends :(
@@ -10,7 +8,7 @@ Fix imageSizer on edit empty image
 ------ Set Up HeaderNaming correctly
 
 add race to character creation
-after character creation go to character
+------- after character creation go to character
 
 ---------------Notes
 ----fix ntoes

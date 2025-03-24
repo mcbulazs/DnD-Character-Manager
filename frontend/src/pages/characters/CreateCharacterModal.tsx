@@ -13,7 +13,7 @@ const CreateCharacterModal: React.FC<{
   const [className, setClassName] = useState("");
   const [image, setImage] = useState<BackgroundImageProps>({
     backgroundSize: "cover",
-    backgroundPosition: "top",
+    backgroundPosition: "center",
     backgroundImage: "",
   });
   const [imageUrl, setImageUrl] = useState("");
