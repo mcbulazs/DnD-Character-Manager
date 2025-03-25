@@ -23,3 +23,7 @@ func GetStoreHash() string {
 func GetFrontendURL() string {
 	return "http://dnd_react:3000"
 }
+
+func AllowedOrigins() []string {
+	return []string{"https://dnd.bulazs.com"}
+}

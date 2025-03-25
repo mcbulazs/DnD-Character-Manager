@@ -24,7 +24,7 @@ const FriendCharacters: React.FC<{ friendId: number }> = ({ friendId }) => {
       <div className="w-full flex flex-wrap justify-evenly gap-4">
         {characters?.map((character) => (
           <CharacterListCard
-            key={character.id}
+            key={character.ID}
             character={character}
             isOwner={false}
           />

@@ -1,5 +1,5 @@
 ---- Fix UnstyledNumberInput empty
-Fix mobile sidebars
+------ Fix mobile sidebars
 ------ Fix imageSizer on edit empty image
 ------ fix note dont refetch data or some shit bcs it messes up typing (done but cost me my sanity)
 

@@ -6,7 +6,6 @@ import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
 import { useUserContext } from "../Contexts/UserContext";
 import { useTouchLockContext } from "../Contexts/TouchLockContext";
 
-// FIX: make nav elements unreachable when sidebar is closed
 const Menu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [startX, setStartX] = useState(0);

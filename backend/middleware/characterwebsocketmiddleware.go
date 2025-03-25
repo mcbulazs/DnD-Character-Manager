@@ -9,7 +9,7 @@ import (
 	"DnDCharacterSheet/websocket"
 )
 
-func AfterRequestMiddleware(c *gin.Context, cm *websocket.ClientManager) {
+func CharacterWebsocketMiddleware(c *gin.Context) {
 	// Run the main handler first
 	c.Next()
 
@@ -21,6 +21,7 @@ func AfterRequestMiddleware(c *gin.Context, cm *websocket.ClientManager) {
 		// Broadcast a message to all WebSocket clients
 		characterId := c.MustGet("character_id").(int)
 		Id := strconv.Itoa(characterId)
-		cm.Broadcast(Id, "")
+		objectID := "/characters/" + Id
+		websocket.Broadcast(nil, objectID)
 	}
 }

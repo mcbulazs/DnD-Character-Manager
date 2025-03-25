@@ -5,27 +5,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
+	"DnDCharacterSheet/env"
 	"DnDCharacterSheet/middleware"
 	"DnDCharacterSheet/websocket"
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
-	// websockets
-	characterClientManager := websocket.NewClientManager()
-
 	r.StaticFile("/robots.txt", "./files/robots.txt")
 	r.StaticFile("/favicon.ico", "./files/favicon.ico")
 	r.StaticFile("/sitemap.xml", "./files/sitemap.xml")
 
 	api := r.Group("/api")
 	initCors(api)
-
-	// websocket
-	ws := api.Group("/ws")
-
-	ws.GET("/characters/:Id", func(c *gin.Context) {
-		websocket.HandleWebSocket(c, characterClientManager)
-	})
 
 	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
@@ -42,6 +33,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		GetUserDataHandler(c, db)
 	})
 	auth.POST("/logout", LogoutHandler)
+
+	// websocket
+	auth.GET("/ws/*Id", websocket.HandleWebSocket)
 
 	friendRequests := auth.Group("/friendRequest")
 	friendRequests.POST("", func(c *gin.Context) {
@@ -93,7 +87,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
 		middleware.CharacterMiddleware(c, db)
-		middleware.AfterRequestMiddleware(c, characterClientManager)
+		middleware.CharacterWebsocketMiddleware(c)
 	})
 
 	characters.DELETE("", func(c *gin.Context) {
@@ -183,7 +177,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 func initCors(r *gin.RouterGroup) {
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://192.168.0.92:5173", "http://192.168.0.92:8080", "https://dnd.bulazs.com"}, // Allow your dev origin
+		AllowOrigins:     env.AllowedOrigins(),
 		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,

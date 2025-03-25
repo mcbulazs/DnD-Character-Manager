@@ -21,3 +21,8 @@ func GetStoreHash() string {
 func GetFrontendURL() string {
 	return "http://localhost:3000"
 }
+
+func AllowedOrigins() []string {
+	// return []string{"http://localhost:5173", "http://localhost:8080"}
+	return []string{"http://localhost:5173", "http://192.168.0.92:5173", "http://192.168.0.92:8080", "https://dnd.bulazs.com"} // Allow your dev origin
+}
