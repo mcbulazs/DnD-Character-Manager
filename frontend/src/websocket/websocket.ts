@@ -3,7 +3,7 @@ import { websocketUrl } from "../env";
 
 const useWebSocket = (
   url: string,
-  onMessage: (message: string) => void,
+  onMessage: (message: MessageEvent) => void,
   onError: (error: Event) => void,
   onClose: () => void,
   ignore: boolean,
@@ -20,7 +20,7 @@ const useWebSocket = (
 
     // Event handlers
     const handleMessage = (event: MessageEvent) => {
-      onMessage?.(event.data);
+      onMessage?.(event);
     };
 
     const handleError = (error: Event) => {

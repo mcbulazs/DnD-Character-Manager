@@ -33,6 +33,7 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 			return
 		}
 	}
+	c.Set("friend_id", Friend.ID)
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request sent"})
 }
 

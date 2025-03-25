@@ -11,6 +11,7 @@ import {
   useGetUserDataQuery,
   useIsAuthenticatedQuery,
 } from "../../store/api/userApiSlice";
+import friendRequestWebsocket from "../../websocket/friendRequestWebsocket";
 
 // Define the shape of the context value
 interface UserContextType {
@@ -36,6 +37,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { data: userData } = useGetUserDataQuery(undefined, {
     skip: !isLoggedIn,
   });
+  friendRequestWebsocket(userData?.id);
   const [user, setUser] = useState<UserData | null>(null);
   useEffect(() => {
     if (userData) {

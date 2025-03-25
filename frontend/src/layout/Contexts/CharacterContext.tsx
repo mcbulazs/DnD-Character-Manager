@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useGetCharacterByIdQuery } from "../../store/api/characterApiSlice";
 import type { ApiError } from "../../types/apiError";
 import type { CharacterData } from "../../types/characterData";
-import characterWebsocket from "../../websocket/chacterWebsocket";
+import characterWebsocket from "../../websocket/characterWebsocket";
 
 // Define the context shape
 interface CharacterContextType {

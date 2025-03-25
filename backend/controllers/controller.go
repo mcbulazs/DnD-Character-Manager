@@ -40,7 +40,7 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	friendRequests := auth.Group("/friendRequest")
 	friendRequests.POST("", func(c *gin.Context) {
 		SendFriendRequestHandler(c, db)
-	})
+	}, middleware.FriendRequestWebsocketMiddleware)
 	friendRequests.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
 		AcceptFriendRequestHandler(c, db)
 	})
