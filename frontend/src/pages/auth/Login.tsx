@@ -19,6 +19,9 @@ const Login: React.FC = () => {
   const [loginMutate, { isLoading, error }] = useLoginMutation();
   const { setTitle } = useHeaderContext();
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
 
   useEffect(() => {
     setTitle(null);

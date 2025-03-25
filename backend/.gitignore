@@ -22,7 +22,7 @@ go.work.sum
 .env
 
 # air tmp files
-/tmp/*
+/tmp/
 
 #log files
 *.log

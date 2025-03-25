@@ -1,0 +1,22 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dnd.bulazs.com/</loc>
+    <lastmod>2025-03-25T16:41:12+00:00</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://dnd.bulazs.com/login</loc>
+    <lastmod>2025-03-25T16:41:12+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://dnd.bulazs.com/register</loc>
+    <lastmod>2025-03-25T16:41:12+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://dnd.bulazs.com/dicethrow</loc>
+    <lastmod>2025-03-25T16:41:12+00:00</lastmod>
+    <priority>0.60</priority>
+  </url>
+</urlset>

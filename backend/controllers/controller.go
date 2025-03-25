@@ -14,6 +14,8 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characterClientManager := websocket.NewClientManager()
 
 	r.StaticFile("/robots.txt", "./files/robots.txt")
+	r.StaticFile("/favicon.ico", "./files/favicon.ico")
+	r.StaticFile("/sitemap.xml", "./files/sitemap.xml")
 
 	api := r.Group("/api")
 	initCors(api)
