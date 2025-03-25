@@ -4,19 +4,21 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import { NavLink } from "react-router-dom";
 import { useIsAuthenticatedQuery } from "../../store/api/userApiSlice";
 import { useUserContext } from "../Contexts/UserContext";
+import { useTouchLockContext } from "../Contexts/TouchLockContext";
 
-// FIX: dont active the menu when closing the other sidebar
 // FIX: make nav elements unreachable when sidebar is closed
 const Menu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [startX, setStartX] = useState(0);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const { isLocked, acquireLock, releaseLock } = useTouchLockContext();
 
   const { data } = useIsAuthenticatedQuery();
   const isLoggedIn = data?.authenticated;
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
+      if (open && !acquireLock("sidebar")) return;
       setStartX(e.touches[0].clientX);
     };
 
@@ -24,6 +26,7 @@ const Menu: React.FC = () => {
       if (sidebarRef.current) {
         const currentX = e.touches[0].clientX;
         if (!open && currentX - startX > 150) {
+          if (isLocked("sidebar")) return;
           setOpen(true);
         } else if (open && startX - currentX > 150) {
           setOpen(false);
@@ -31,14 +34,20 @@ const Menu: React.FC = () => {
       }
     };
 
+    const handleTouchEnd = () => {
+      releaseLock("sidebar");
+    };
+
     window.addEventListener("touchstart", handleTouchStart);
     window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [startX, open]);
+  }, [startX, open, isLocked, releaseLock, acquireLock]);
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
@@ -87,6 +96,7 @@ const Menu: React.FC = () => {
             .filter((character) => character.isFavorite)
             .map((character) => (
               <NavLink
+                tabIndex={open ? 0 : -1}
                 key={character.ID}
                 to={`/characters/${character.ID}`}
                 onClick={() => setOpen(!open)}
@@ -115,6 +125,7 @@ const Menu: React.FC = () => {
         onClick={() => setOpen(!open)}
         type="button"
         title="Navigation Button"
+        tabIndex={open ? -1 : 0}
       >
         <MenuIcon fontSize="large" />
       </button>
@@ -136,6 +147,7 @@ const Menu: React.FC = () => {
           className="text-forest-green min-h-16 w-16 self-start"
           onClick={() => setOpen(!open)}
           type="button"
+          tabIndex={open ? 0 : -1}
         >
           <MenuIcon fontSize="large" />
         </button>
@@ -145,6 +157,7 @@ const Menu: React.FC = () => {
           <nav className="w-full flex flex-grow flex-col  ">
             <NavLink
               to="/"
+              tabIndex={open ? 0 : -1}
               onClick={() => setOpen(!open)}
               className="p-4 hover:bg-gray-700 w-full"
             >
@@ -154,7 +167,7 @@ const Menu: React.FC = () => {
               <>
                 <NavLink
                   to="/login"
-                  tabIndex={-1}
+                  tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -162,7 +175,7 @@ const Menu: React.FC = () => {
                 </NavLink>
                 <NavLink
                   to="/register"
-                  tabIndex={-1}
+                  tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -173,7 +186,7 @@ const Menu: React.FC = () => {
               <>
                 <NavLink
                   to="/logout"
-                  tabIndex={-1}
+                  tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -182,7 +195,7 @@ const Menu: React.FC = () => {
                 <div className="w-11/12 self-center border-b-2 border-dragon-blood" />
                 <NavLink
                   to="/characters"
-                  tabIndex={-1}
+                  tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 w-full"
                 >
@@ -191,7 +204,7 @@ const Menu: React.FC = () => {
                 <FavoriteCharacters />
                 <NavLink
                   to="friends"
-                  tabIndex={-1}
+                  tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(!open)}
                   className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
                 >
@@ -202,7 +215,7 @@ const Menu: React.FC = () => {
             {/*<div className="w-11/12 self-center border-y-2 border-dragon-blood grow" />*/}
             <NavLink
               to="dicethrow"
-              tabIndex={-1}
+              tabIndex={open ? 0 : -1}
               onClick={() => setOpen(!open)}
               className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
             >
@@ -210,7 +223,7 @@ const Menu: React.FC = () => {
             </NavLink>
             <NavLink
               to=""
-              tabIndex={-1}
+              tabIndex={open ? 0 : -1}
               onClick={() => setOpen(!open)}
               className="p-4 hover:bg-gray-700 flex items-center gap-1 justify-self-end mt-0 w-full"
             >

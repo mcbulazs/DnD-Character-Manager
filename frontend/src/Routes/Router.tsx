@@ -15,6 +15,7 @@ import Spells from "../pages/characters/spells/Spells";
 import NoteCategories from "../pages/characters/notes/NoteCategories";
 import Notes from "../pages/characters/notes/Notes";
 import UserProvider from "../layout/Contexts/UserContext";
+import { TouchLockProvider } from "../layout/Contexts/TouchLockContext";
 
 const Router = () => {
   return (
@@ -23,7 +24,9 @@ const Router = () => {
         path="/"
         element={
           <UserProvider>
-            <DesktopLayout />
+            <TouchLockProvider>
+              <DesktopLayout />
+            </TouchLockProvider>
           </UserProvider>
         }
       >

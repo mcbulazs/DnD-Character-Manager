@@ -13,12 +13,17 @@ import CreateButton from "../../../components/buttons/CreateButton";
 import TrackerModal from "./TrackerModal";
 import { useUpdateTrackerOrderMutation } from "../../../store/api/characterApiSlice";
 
-const Trackers: React.FC = () => {
+const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   const [trackerModalOpen, setTrackerModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [trackers, setTrackers] = useState<TrackerObj[]>([]);
   const [useUpdateTrackerOrder] = useUpdateTrackerOrderMutation();
   const { character, error, isLoading } = useCharacterContext();
+  useEffect(() => {
+    if (!isVisible) {
+      setIsEditing(false);
+    }
+  }, [isVisible]);
   useEffect(() => {
     if (character) {
       setTrackers(
@@ -75,6 +80,7 @@ const Trackers: React.FC = () => {
             }
             isEditing={isEditing}
             characterId={character.ID}
+            disabled={!isVisible}
           />
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext
@@ -84,6 +90,7 @@ const Trackers: React.FC = () => {
             >
               {trackers.map((tracker) => (
                 <Tracker
+                  disabled={!isVisible}
                   canEdit={character.isOwner}
                   key={tracker.id}
                   tracker={tracker}
@@ -100,6 +107,7 @@ const Trackers: React.FC = () => {
           <div className="w-full flex items-center justify-center p-2">
             {!isEditing ? (
               <EditButton
+                disabled={!isVisible}
                 text="Edit trackers"
                 onClick={() => {
                   setIsEditing(true);
@@ -107,6 +115,7 @@ const Trackers: React.FC = () => {
               />
             ) : (
               <button
+                disabled={!isVisible}
                 className={`bg-orange-500 hover:bg-orange-700 text-white font-bold
                                 w-48 h-12 
                                 rounded-full p-1 z-10 
@@ -122,6 +131,7 @@ const Trackers: React.FC = () => {
           </div>
           <div className="w-full flex items-center justify-center p-2">
             <CreateButton
+              disabled={!isVisible}
               text="Create tracker"
               onClick={() => setTrackerModalOpen(true)}
             />
