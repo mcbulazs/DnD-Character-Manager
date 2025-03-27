@@ -52,6 +52,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	friends.DELETE("", func(c *gin.Context) {
 		UnfriendHandler(c, db)
 	})
+	friends.PATCH("/name", func(c *gin.Context) {
+		UpdateFriendNameHandler(c, db)
+	})
 	friendsCharacter := friends.Group("/share",
 		func(c *gin.Context) {
 			middleware.FriendMiddleware(c, db)

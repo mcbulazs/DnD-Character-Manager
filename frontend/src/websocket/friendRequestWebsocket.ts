@@ -8,6 +8,9 @@ const friendRequestWebsocket = (userId?: number) => {
   const url = `friendRequest/${userId}`;
   const dispatch = useDispatch();
   const handleMessage = (data: MessageEvent) => {
+    if (!data.data) {
+      return;
+    }
     console.log("WebSocket message received");
     dispatch(userApiSlice.util.invalidateTags([userTag]));
     toast(`You have a new friend request from ${data.data}`, { type: "info" });
@@ -24,7 +27,13 @@ const friendRequestWebsocket = (userId?: number) => {
   };
 
   // Create a new WebSocket
-  useWebSocket(url, handleMessage, handleError, handleClose, userId === null);
+  useWebSocket(
+    url,
+    handleMessage,
+    handleError,
+    handleClose,
+    userId === undefined,
+  );
 };
 
 export default friendRequestWebsocket;

@@ -29,9 +29,14 @@ func (s *UserService) GetUserByID(id int) (*dto.UserDataDTO, error) {
 	if err != nil {
 		return nil, err
 	}
-	var friends []dto.UserDataDTO
+	var friends []dto.FriendDTO
 	for _, friend := range user.Friends {
-		friends = append(friends, *convertToUserDataDTO(&friend.Friend))
+		friendDto := dto.FriendDTO{
+			Friend: *convertToUserDataDTO(&friend.Friend),
+			Name:   friend.Name,
+			Note:   friend.Note,
+		}
+		friends = append(friends, friendDto)
 	}
 	var friendRequests []dto.FriendRequestDTO
 	for _, friendRequest := range user.FriendRequestsBy {
@@ -55,7 +60,7 @@ func (s *UserService) CreateUser(user *dto.AuthUserDTO) (*models.UserModel, erro
 	user.Password = hashedPassword
 
 	// Create the user in the database
-	userModel := convertToUser(user)
+	userModel := convertToAuthUserModel(user)
 	err = s.repo.Create(userModel)
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key value") {
@@ -84,7 +89,7 @@ func (s *UserService) AuthenticateUser(user *dto.AuthUserDTO) (int, error) {
 	return int(userModel.ID), nil
 }
 
-func convertToUser(userDTO *dto.AuthUserDTO) *models.UserModel {
+func convertToAuthUserModel(userDTO *dto.AuthUserDTO) *models.UserModel {
 	return &models.UserModel{
 		Email:    userDTO.Email,
 		Password: userDTO.Password,
@@ -97,4 +102,12 @@ func convertToUserDataDTO(userModel *models.UserModel) *dto.UserDataDTO {
 		Email:      userModel.Email,
 		Characters: convertToCharacterBaseDTOs(userModel.Characters),
 	}
+}
+
+func convertToUserModel(userDTO *dto.UserDataDTO) *models.UserModel {
+	model := &models.UserModel{
+		Email: userDTO.Email,
+	}
+	model.ID = uint(userDTO.ID)
+	return model
 }

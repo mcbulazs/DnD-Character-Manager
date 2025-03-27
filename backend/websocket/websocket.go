@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	"net/http"
 	"slices"
 	"strings"
@@ -57,6 +58,7 @@ func HandleWebSocket(c *gin.Context) {
 	}
 
 	objectID := c.Param("Id")
+	fmt.Println(objectID)
 	if objectID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No object ID provided"})
 		return

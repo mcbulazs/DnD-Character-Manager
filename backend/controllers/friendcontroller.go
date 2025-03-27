@@ -22,7 +22,7 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 
 	userId := c.MustGet("user_id").(int)
 	FriendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = FriendService.SendFriendRequest(userId, Friend.Email)
+	err = FriendService.SendFriendRequest(userId, &Friend)
 	if err != nil {
 		if err == repositories.ErrUserNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
@@ -83,6 +83,27 @@ func UnfriendHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Friend removed"})
+}
+
+func UpdateFriendNameHandler(c *gin.Context, db *gorm.DB) {
+	var friend dto.FriendDTO
+	if err := c.BindJSON(&friend); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	friendId, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	userId := c.MustGet("user_id").(int)
+	friendService := services.NewFriendService(db) // Initialize UserService with DB
+	err = friendService.UpdateName(userId, friendId, friend.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Friend name updated"})
 }
 
 func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {

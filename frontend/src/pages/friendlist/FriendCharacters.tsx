@@ -13,16 +13,19 @@ const FriendCharacters: React.FC<{ friendId: number }> = ({ friendId }) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error || !characters) {
+  if (error) {
     toast("Error loading characters", { type: "error" });
     console.error("Error loading characters", error);
     return <div>Error loading characters</div>;
+  }
+  if (!characters) {
+    return <div>No characters found</div>;
   }
 
   return (
     <Scrollbars className="w-full h-full" universal>
       <div className="w-full flex flex-wrap justify-evenly gap-4">
-        {characters?.map((character) => (
+        {characters.map((character) => (
           <CharacterListCard
             key={character.ID}
             character={character}

@@ -1,25 +1,33 @@
 import { useState } from "react";
-import type { UserData } from "../../types/user";
+import type { Friends } from "../../types/user";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
 import Scrollbars from "react-custom-scrollbars-2";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Modal from "../../components/Modal";
-import { useSendFriendRequestMutation } from "../../store/api/friendApiSlice";
+import {
+  useSendFriendRequestMutation,
+  useUpdateFriendNameMutation,
+} from "../../store/api/friendApiSlice";
 import type { ApiError } from "../../types/apiError";
 import { toast } from "react-toastify";
 const FriendList: React.FC<{
-  friends?: UserData[];
-  onFriendSelect: (friend: UserData) => void;
+  friends?: Friends[];
+  onFriendSelect: (friend: Friends) => void;
 }> = ({ friends, onFriendSelect }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [email, setEmail] = useState("");
+  const [editFriendId, setEditFriendId] = useState<number | null>(null);
+  const [editFriendValue, setEditFriendValue] = useState("");
+  const [defaultFriendValue, setDefaultFriendValue] = useState("");
   const [sendFriendRequestMutation] = useSendFriendRequestMutation();
+  const [updateFriendNameMutation] = useUpdateFriendNameMutation();
   const handleSendFriendRequest = async () => {
     try {
-      const asd = await sendFriendRequestMutation({ email });
-      if (asd.error) throw asd.error;
+      const result = await sendFriendRequestMutation({ email });
+      if (result.error) throw result.error;
 
       toast("Friend request sent", { type: "success" });
       setModalOpen(false);
@@ -33,6 +41,16 @@ const FriendList: React.FC<{
         toast("User not found", { type: "error" });
       }
     }
+  };
+
+  const handleRenameing = () => {
+    setEditFriendId(null);
+    setEditFriendValue("");
+    if (editFriendValue === "" || editFriendValue == defaultFriendValue) return;
+    updateFriendNameMutation({
+      friendId: editFriendId as number,
+      name: editFriendValue,
+    });
   };
   return (
     <>
@@ -55,26 +73,61 @@ const FriendList: React.FC<{
         <div className="flex-1 w-full">
           <Scrollbars className="w-full bg-gray-400 " universal>
             {friends
-              ?.filter((friend) => friend.email.includes(search))
-              .map((friend) => (
-                <div
-                  key={friend.id}
-                  className="hover:bg-gray-500 ease-in-out duration-300 p-1 flex w-full cursor-pointer"
-                >
-                  <span
-                    className="w-full"
-                    onMouseUp={() => onFriendSelect(friend)}
+              ?.filter((friend) => friend.friend.email.includes(search))
+              .map((friend) =>
+                editFriendId === friend.friend.id ? (
+                  <div
+                    key={friend.friend.id}
+                    className="w-full bg-gray-800 text-white flex justify-between p-1"
                   >
-                    {friend.email}
-                  </span>
-                  <button
-                    type="button"
-                    className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+                    <input
+                      autoFocus
+                      className="bg-gray-800 text-white w-full outline-none"
+                      type="text"
+                      value={editFriendValue}
+                      onChange={(val) => setEditFriendValue(val.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key == "Enter") handleRenameing();
+                      }}
+                      onBlur={handleRenameing}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRenameing}
+                      className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+                    >
+                      <CheckIcon />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    key={friend.friend.id}
+                    className="hover:bg-gray-500 ease-in-out duration-300 p-1 flex w-full cursor-pointer"
                   >
-                    <EditIcon />
-                  </button>
-                </div>
-              ))}
+                    <span
+                      className="w-full"
+                      onMouseUp={() => onFriendSelect(friend)}
+                    >
+                      {friend.name != "" ? friend.name : friend.friend.email}
+                    </span>
+                    <button
+                      type="button"
+                      className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+                      onClick={() => {
+                        setEditFriendId(friend.friend.id);
+                        setEditFriendValue(
+                          friend.name != "" ? friend.name : friend.friend.email,
+                        );
+                        setDefaultFriendValue(
+                          friend.name != "" ? friend.name : friend.friend.email,
+                        );
+                      }}
+                    >
+                      <EditIcon />
+                    </button>
+                  </div>
+                ),
+              )}
           </Scrollbars>
         </div>
       </div>

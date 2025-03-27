@@ -80,6 +80,14 @@ func (r *FriendRepository) Unfriend(userId uint, friendId uint) error {
 	return nil
 }
 
+func (r *FriendRepository) UpdateName(userId int, friendId int, name string) error {
+	tx := r.DB.Model(&models.FriendsModel{}).Where("user_id = ? AND friend_id = ?", userId, friendId).Update("name", name)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 func (r *FriendRepository) ShareCharacter(characterId uint, friendId uint) error {
 	tx := r.DB.Create(&models.FriendShareModel{CharacterID: characterId, FriendID: friendId})
 	if tx.Error != nil {

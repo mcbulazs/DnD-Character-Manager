@@ -37,6 +37,17 @@ export const friendApiSlice = createApi({
       }),
       onQueryStarted: invalidateApiTags([userTag]),
     }),
+    updateFriendName: builder.mutation<
+      void,
+      { friendId: number; name: string }
+    >({
+      query: ({ friendId, name }) => ({
+        url: `friends/${friendId}/name`,
+        method: "PATCH",
+        body: { name },
+      }),
+      onQueryStarted: invalidateApiTags([userTag]),
+    }),
     shareCharacter: builder.mutation<
       void,
       { friendId: number; characterId: number }
@@ -70,6 +81,8 @@ export const {
   useUnshareCharacterMutation,
   useGetSharedCharactersQuery,
 } = friendApiSlice;
+
+export const { useUpdateFriendNameMutation } = friendApiSlice;
 
 export const {
   useSendFriendRequestMutation,

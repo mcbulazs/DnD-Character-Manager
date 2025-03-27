@@ -16,5 +16,5 @@ func FriendRequestWebsocketMiddleware(c *gin.Context) {
 	friendId := c.MustGet("friend_id").(uint)
 	Id := strconv.FormatUint(uint64(friendId), 10)
 	objectID := "/friendRequest/" + Id
-	websocket.Broadcast(nil, objectID)
+	websocket.Broadcast([]byte("friendRequest"), objectID)
 }

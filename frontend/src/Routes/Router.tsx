@@ -57,7 +57,7 @@ const Router = () => {
 
 const AuthRequired = () => {
   return (
-    <AuthGuard loggedInRequired={true}>
+    <AuthGuard>
       <Outlet />
     </AuthGuard>
   );

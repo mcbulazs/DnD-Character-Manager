@@ -7,15 +7,25 @@
 
 ------ Set Up HeaderNaming correctly
 
-websocket + toast on receiving friend request
+------ websocket + toast on receiving friend request
 
-add race to character creation
 ------- after character creation go to character
 
 ---------------Notes
 ----fix ntoes
 ----fix trackers
 
+add description to friend
+
+character options
+  list/share/unshare
+  isCaster (need spell tab)
+  favorite
+  think about it
+
+roll option on characterpage
+
+add race to character creation
 
 Items, Weapons & Proficiencies
 

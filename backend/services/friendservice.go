@@ -23,15 +23,16 @@ func (s *FriendService) IsUserFriend(userID int, friendID int) bool {
 	return s.Repo.IsUserFriend(uint(userID), uint(friendID))
 }
 
-func (s *FriendService) SendFriendRequest(userID int, friendEmail string) error {
-	friend, err := s.UserRepo.FindByEmail(friendEmail)
+func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) error {
+	friendModel, err := s.UserRepo.FindByEmail(friend.Email)
 	if err != nil {
 		return err
 	}
-	if s.IsUserFriend(userID, int(friend.ID)) {
+	if s.IsUserFriend(userID, int(friendModel.ID)) {
 		return gorm.ErrCheckConstraintViolated
 	}
-	return s.Repo.SendFriendRequest(uint(userID), friend.ID)
+	*friend = *convertToUserDataDTO(friendModel)
+	return s.Repo.SendFriendRequest(uint(userID), friendModel.ID)
 }
 
 func (s *FriendService) AcceptFriendRequest(userID int, friendRequestID int) error {
@@ -44,6 +45,10 @@ func (s *FriendService) DeclineFriendRequest(userID int, friendRequestID int) er
 
 func (s *FriendService) Unfriend(userID int, friendID int) error {
 	return s.Repo.Unfriend(uint(userID), uint(friendID))
+}
+
+func (s *FriendService) UpdateName(userID int, friendID int, name string) error {
+	return s.Repo.UpdateName(userID, friendID, name)
 }
 
 func (s *FriendService) ShareCharacter(friendID int, characterID int) error {

@@ -18,6 +18,15 @@ export function render(url: string) {
 
   const GetHeader = () => {
     switch (url) {
+      case "/":
+        return (
+          <>
+            <title>DnD Character Manager</title>
+            <link rel="canonical" href="https://dnd.bulazs.com/" />
+            <meta name="description" content="Manage your DnD characters" />
+            <meta name="og:description" content="Manage your DnD characters" />
+          </>
+        );
       case "/login":
         return (
           <>
@@ -43,13 +52,7 @@ export function render(url: string) {
           </>
         );
       default:
-        return (
-          <>
-            <title>DnD Character Manager</title>
-            <meta name="description" content="Manage your DnD characters" />
-            <meta name="og:description" content="Manage your DnD characters" />
-          </>
-        );
+        return <></>;
     }
   };
   const head = ReactDOMServer.renderToString(GetHeader());

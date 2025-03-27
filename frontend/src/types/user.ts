@@ -8,7 +8,7 @@ export default interface AuthUser {
 export type UserData = {
   id: number;
   email: string;
-  friends: UserData[];
+  friends: Friends[];
   friendRequests: FriendRequest[];
   characters: CharacterBase[];
 };
@@ -16,4 +16,10 @@ export type UserData = {
 export type FriendRequest = {
   id: number;
   sender: UserData;
+};
+
+export type Friends = {
+  friend: UserData;
+  name: string;
+  note: string;
 };

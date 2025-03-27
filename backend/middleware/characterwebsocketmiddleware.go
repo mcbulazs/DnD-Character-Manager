@@ -22,6 +22,6 @@ func CharacterWebsocketMiddleware(c *gin.Context) {
 		characterId := c.MustGet("character_id").(int)
 		Id := strconv.Itoa(characterId)
 		objectID := "/characters/" + Id
-		websocket.Broadcast(nil, objectID)
+		websocket.Broadcast([]byte("character"), objectID)
 	}
 }

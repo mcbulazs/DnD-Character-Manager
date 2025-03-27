@@ -10,7 +10,10 @@ const characterWebsocket = (characterId?: number, skip?: boolean) => {
   }
   const url = `characters/${characterId}`;
   const dispatch = useDispatch();
-  const handleMessage = (_data: MessageEvent) => {
+  const handleMessage = (data: MessageEvent) => {
+    if (!data.data) {
+      return;
+    }
     console.log("WebSocket message received");
     dispatch(characterApiSlice.util.invalidateTags([characterTag]));
   };

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../../layout/Contexts/UserContext";
 import FriendList from "./FirendList";
-import type { UserData } from "../../types/user";
+import type { Friends } from "../../types/user";
 import FriendRequests from "./FriendRequests";
 import FriendCharacters from "./FriendCharacters";
 import { useHeaderContext } from "../../layout/Contexts/HeaderContext";
 
 const Friends: React.FC = () => {
   const { User } = useUserContext();
-  const [selectedFriend, setSelectedFriend] = useState<UserData | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<Friends | null>(null);
   const { setTitle } = useHeaderContext();
   useEffect(() => {
     setTitle(<h1>Friends</h1>);
@@ -24,7 +24,9 @@ const Friends: React.FC = () => {
           <FriendRequests requests={User.friendRequests} />
         )}
       </div>
-      {selectedFriend && <FriendCharacters friendId={selectedFriend.id} />}
+      {selectedFriend && (
+        <FriendCharacters friendId={selectedFriend.friend.id} />
+      )}
     </div>
   );
 };
