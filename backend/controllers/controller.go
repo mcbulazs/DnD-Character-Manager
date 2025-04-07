@@ -111,6 +111,9 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characters.PATCH("/attributes", func(c *gin.Context) {
 		UpdateCharacterAttribute(c, db)
 	})
+	characters.PUT("/options", func(c *gin.Context) {
+		UpdateCharacterOptionsHandler(c, db)
+	})
 
 	features := characters.Group("/features")
 	features.POST("", func(c *gin.Context) {

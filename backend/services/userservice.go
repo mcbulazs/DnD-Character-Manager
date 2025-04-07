@@ -104,7 +104,15 @@ func convertToUserDataDTO(userModel *models.UserModel) *dto.UserDataDTO {
 	}
 }
 
-func convertToUserModel(userDTO *dto.UserDataDTO) *models.UserModel {
+func convertToUserDataDTOs(userModels []models.UserModel) []dto.UserDataDTO {
+	var userDTOs []dto.UserDataDTO
+	for _, userModel := range userModels {
+		userDTOs = append(userDTOs, *convertToUserDataDTO(&userModel))
+	}
+	return userDTOs
+}
+
+func convertToUserDataModel(userDTO *dto.UserDataDTO) *models.UserModel {
 	model := &models.UserModel{
 		Email: userDTO.Email,
 	}

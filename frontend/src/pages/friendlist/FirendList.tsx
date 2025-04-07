@@ -15,7 +15,9 @@ import { toast } from "react-toastify";
 const FriendList: React.FC<{
   friends?: Friends[];
   onFriendSelect: (friend: Friends) => void;
-}> = ({ friends, onFriendSelect }) => {
+  buttonsActive?: boolean;
+}> = ({ friends, onFriendSelect, buttonsActive }) => {
+  const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [email, setEmail] = useState("");
@@ -55,20 +57,22 @@ const FriendList: React.FC<{
   return (
     <>
       <div className="h-full w-full flex flex-col">
-        <div className="flex bg-gray-600 text-gray-100 p-1 items-center gap-1">
+        <div className="flex bg-gray-800 text-gray-100 p-1 items-center gap-1">
           <SearchIcon />
           <input
             onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
             placeholder="Search"
             className=" w-full bg-transparent outline-none"
           />
-          <button
-            onClick={() => setModalOpen(true)}
-            type="button"
-            className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
-          >
-            <PersonAddIcon />
-          </button>
+          {buttonsActive && (
+            <button
+              onClick={() => setModalOpen(true)}
+              type="button"
+              className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+            >
+              <PersonAddIcon />
+            </button>
+          )}
         </div>
         <div className="flex-1 w-full">
           <Scrollbars className="w-full bg-gray-400 " universal>
@@ -102,29 +106,39 @@ const FriendList: React.FC<{
                 ) : (
                   <div
                     key={friend.friend.id}
-                    className="hover:bg-gray-500 ease-in-out duration-300 p-1 flex w-full cursor-pointer"
+                    className={`${selectedFriendId == friend.friend.id ? "bg-gray-600 hover:bg-gray-700" : "hover:bg-gray-500"} 
+                      ease-in-out duration-300 p-1 flex w-full cursor-pointer`}
                   >
                     <span
                       className="w-full"
-                      onMouseUp={() => onFriendSelect(friend)}
+                      onMouseUp={() => {
+                        setSelectedFriendId(friend.friend.id);
+                        onFriendSelect(friend);
+                      }}
                     >
                       {friend.name != "" ? friend.name : friend.friend.email}
                     </span>
-                    <button
-                      type="button"
-                      className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
-                      onClick={() => {
-                        setEditFriendId(friend.friend.id);
-                        setEditFriendValue(
-                          friend.name != "" ? friend.name : friend.friend.email,
-                        );
-                        setDefaultFriendValue(
-                          friend.name != "" ? friend.name : friend.friend.email,
-                        );
-                      }}
-                    >
-                      <EditIcon />
-                    </button>
+                    {buttonsActive && (
+                      <button
+                        type="button"
+                        className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+                        onClick={() => {
+                          setEditFriendId(friend.friend.id);
+                          setEditFriendValue(
+                            friend.name != ""
+                              ? friend.name
+                              : friend.friend.email,
+                          );
+                          setDefaultFriendValue(
+                            friend.name != ""
+                              ? friend.name
+                              : friend.friend.email,
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </button>
+                    )}
                   </div>
                 ),
               )}

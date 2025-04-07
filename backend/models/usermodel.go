@@ -13,7 +13,6 @@ type UserModel struct {
 	FriendedBy       []*FriendsModel       `gorm:"foreignKey:FriendID"`
 	FriendRequests   []*FriendRequestModel `gorm:"foreignKey:SourceUserID"`
 	FriendRequestsBy []*FriendRequestModel `gorm:"foreignKey:DestinationUserID"`
-	SharedCharacters []*CharacterModel     `gorm:"many2many:friend_shares;joinForeignKey:FriendID;joinReferences:CharacterID"`
 }
 
 func (u *UserModel) TableName() string {

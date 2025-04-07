@@ -3,6 +3,7 @@ import type { Feature } from "./feature";
 import type { NoteCategory } from "./note";
 import type { Spell } from "./spell";
 import type { Tracker } from "./tracker";
+import { Friends } from "./user";
 
 export interface Attribute {
   value: number;
@@ -57,6 +58,13 @@ export interface Skills {
   survival: ExpertiseAttribute;
 }
 
+export type CharacterOptions = {
+  isDead: boolean;
+  isCaster: boolean;
+  rollOption: boolean;
+  isXP: boolean;
+};
+
 export type CharacterData = {
   ID: number;
   isOwner: boolean;
@@ -70,6 +78,7 @@ export type CharacterData = {
   speed: number;
   passivePerception: number;
   proficiencyBonus: number;
+  options: CharacterOptions;
   abilityScores: AbilityScores;
   savingThrows: SavingThrows;
   skills: Skills;
@@ -78,4 +87,5 @@ export type CharacterData = {
   spells: Spell[];
   trackers: Tracker[];
   noteCategories: NoteCategory[];
+  sharedWith: Friends[];
 };

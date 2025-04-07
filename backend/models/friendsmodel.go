@@ -31,26 +31,28 @@ func (f *FriendRequestModel) TableName() string {
 
 type FriendsModel struct {
 	gorm.Model
-	UserID   uint      `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-	User     UserModel `gorm:"foreignKey:UserID"`
-	FriendID uint      `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-	Friend   UserModel `gorm:"foreignKey:FriendID"`
-	Note     string
-	Name     string
+	UserID           uint              `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	User             UserModel         `gorm:"foreignKey:UserID"`
+	FriendID         uint              `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	Friend           UserModel         `gorm:"foreignKey:FriendID"`
+	SharedCharacters []*CharacterModel `gorm:"many2many:friend_shares;joinForeignKey:FriendID;joinReferences:CharacterID"`
+	Note             string
+	Name             string
 }
 
 func (f *FriendsModel) TableName() string {
 	return "friends"
 }
 
+/*
 type FriendShareModel struct {
 	gorm.Model
 	Character   CharacterModel `gorm:"foreignKey:CharacterID"`
 	CharacterID uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-	Friend      UserModel      `gorm:"foreignKey:FriendID"`
+	Friend      FriendsModel   `gorm:"foreignKey:FriendID"`
 	FriendID    uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
 }
 
 func (f *FriendShareModel) TableName() string {
 	return "friend_shares"
-}
+}*/

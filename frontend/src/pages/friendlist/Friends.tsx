@@ -19,7 +19,11 @@ const Friends: React.FC = () => {
   return (
     <div className="flex w-full lg:w-4/5 justify-between">
       <div className="h-full w-44 flex flex-col bg-light-parchment-beige border-4 border-shadow-black rounded-md">
-        <FriendList friends={User.friends} onFriendSelect={setSelectedFriend} />
+        <FriendList
+          friends={User.friends}
+          onFriendSelect={setSelectedFriend}
+          buttonsActive
+        />
         {User.friendRequests?.length > 0 && (
           <FriendRequests requests={User.friendRequests} />
         )}

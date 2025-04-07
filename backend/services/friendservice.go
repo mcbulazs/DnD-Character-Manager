@@ -20,7 +20,11 @@ func NewFriendService(DB *gorm.DB) *FriendService {
 }
 
 func (s *FriendService) IsUserFriend(userID int, friendID int) bool {
-	return s.Repo.IsUserFriend(uint(userID), uint(friendID))
+	Friend, err := s.Repo.GetUserFriend(uint(userID), uint(friendID))
+	if err != nil || Friend == nil {
+		return false
+	}
+	return true
 }
 
 func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) error {
@@ -51,12 +55,20 @@ func (s *FriendService) UpdateName(userID int, friendID int, name string) error 
 	return s.Repo.UpdateName(userID, friendID, name)
 }
 
-func (s *FriendService) ShareCharacter(friendID int, characterID int) error {
-	return s.Repo.ShareCharacter(uint(characterID), uint(friendID))
+func (s *FriendService) ShareCharacter(userID int, friendID int, characterID int) error {
+	Friend, err := s.Repo.GetUserFriend(uint(userID), uint(friendID))
+	if err != nil {
+		return err
+	}
+	return s.Repo.ShareCharacter(uint(characterID), Friend.ID)
 }
 
-func (s *FriendService) UnshareCharacter(friendID int, characterID int) error {
-	return s.Repo.UnshareCharacter(uint(characterID), uint(friendID))
+func (s *FriendService) UnshareCharacter(userID int, friendID int, characterID int) error {
+	FriendModel, err := s.Repo.GetUserFriend(uint(userID), uint(friendID))
+	if err != nil {
+		return err
+	}
+	return s.Repo.UnshareCharacter(uint(characterID), uint(FriendModel.ID))
 }
 
 func (s *FriendService) FindByUserIDAndFriendID(userID uint, friendID uint) ([]dto.CharacterBaseDTO, error) {
@@ -64,9 +76,5 @@ func (s *FriendService) FindByUserIDAndFriendID(userID uint, friendID uint) ([]d
 	if err != nil {
 		return nil, err
 	}
-	var characters []dto.CharacterBaseDTO
-	for _, share := range characterShares {
-		characters = append(characters, *convertToCharacterBaseDTO(&share.Character))
-	}
-	return characters, nil
+	return convertToCharacterBaseDTOs(characterShares), nil
 }

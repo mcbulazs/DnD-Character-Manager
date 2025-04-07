@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQuery from "./baseQuery";
 import type { CharacterBase } from "../../types/characterBase";
-import { userTag } from "./tags";
+import { characterTag, userTag } from "./tags";
 import invalidateApiTags from "./invalidateApiTags";
 
 export const friendApiSlice = createApi({
@@ -56,6 +56,7 @@ export const friendApiSlice = createApi({
         url: `friends/${friendId}/share/${characterId}`,
         method: "POST",
       }),
+      onQueryStarted: invalidateApiTags([characterTag]),
     }),
     unshareCharacter: builder.mutation<
       void,
@@ -65,6 +66,7 @@ export const friendApiSlice = createApi({
         url: `friends/${friendId}/share/${characterId}`,
         method: "DELETE",
       }),
+      onQueryStarted: invalidateApiTags([characterTag]),
     }),
     getSharedCharacters: builder.query<CharacterBase[], number>({
       query: (friendId) => ({

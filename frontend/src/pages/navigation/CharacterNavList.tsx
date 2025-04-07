@@ -8,9 +8,13 @@ import { NavLink, Outlet } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import Trackers from "../characters/trackers/Trackers";
 import { useTouchLockContext } from "../../layout/Contexts/TouchLockContext";
+import CharacterOptions from "./CharacterOptions";
+import { useCharacterContext } from "../../layout/Contexts/CharacterContext";
 
 const CharacterNavList: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const { character } = useCharacterContext();
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [startX, setStartX] = useState(0);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const { isLocked, acquireLock, releaseLock } = useTouchLockContext();
@@ -94,31 +98,44 @@ const CharacterNavList: React.FC = () => {
         ref={sidebarRef}
       >
         <Scrollbars className="w-full h-full pb-16 relative" universal>
-          <nav className="w-full">
-            <ul className="w-full h-full text-2xl text-ancient-gold p-6">
-              <li>
-                <NavLink tabIndex={isOpen ? 0 : -1} to="">
-                  Basic Info
-                </NavLink>
-              </li>
-              <li>
-                <NavLink tabIndex={isOpen ? 0 : -1} to="features">
-                  Features
-                </NavLink>
-              </li>
-              <li className="min-h-dwh h-full">
-                <NavLink tabIndex={isOpen ? 0 : -1} to="spells">
-                  Spells
-                </NavLink>
-              </li>
-              <li>
-                <NavLink tabIndex={isOpen ? 0 : -1} to="notes">
-                  Notes
-                </NavLink>
-              </li>
-            </ul>
-          </nav>
-          <Trackers isVisible={isOpen} />
+          {!isOptionsOpen ? (
+            <>
+              <nav className="w-full">
+                <ul className="w-full h-full text-2xl text-ancient-gold p-6">
+                  <li>
+                    <NavLink tabIndex={isOpen ? 0 : -1} to="">
+                      Basic Info
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink tabIndex={isOpen ? 0 : -1} to="features">
+                      Features
+                    </NavLink>
+                  </li>
+                  {character?.options.isCaster && (
+                    <li className="min-h-dwh h-full">
+                      <NavLink tabIndex={isOpen ? 0 : -1} to="spells">
+                        Spells
+                      </NavLink>
+                    </li>
+                  )}
+                  <li>
+                    <NavLink tabIndex={isOpen ? 0 : -1} to="notes">
+                      Notes
+                    </NavLink>
+                  </li>
+                  <li>
+                    <button onClick={() => setIsOptionsOpen(true)}>
+                      Options
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+              <Trackers isVisible={isOpen} />
+            </>
+          ) : (
+            <CharacterOptions closeOptions={() => setIsOptionsOpen(false)} />
+          )}
         </Scrollbars>
       </div>
 

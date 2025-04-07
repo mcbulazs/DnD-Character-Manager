@@ -4,11 +4,12 @@ import type {
   CharacterBase,
   CreateCharacterBase,
 } from "../../types/characterBase";
-import type {
-  AbilityScores,
-  CharacterData,
-  SavingThrows,
-  Skills,
+import {
+  CharacterOptions,
+  type AbilityScores,
+  type CharacterData,
+  type SavingThrows,
+  type Skills,
 } from "../../types/characterData";
 import type { CreateFeature, Feature } from "../../types/feature";
 import type { CreateSpell, Spell } from "../../types/spell";
@@ -95,6 +96,18 @@ export const characterApiSlice = createApi({
         url: `characters/${characterID}/image`,
         method: "PUT",
         body: image,
+      }),
+      invalidatesTags: [characterTag],
+      onQueryStarted: invalidateApiTags([userTag]),
+    }),
+    modifyCharacterOptions: builder.mutation<
+      CharacterOptions,
+      { options: CharacterOptions; characterID: number }
+    >({
+      query: ({ options, characterID }) => ({
+        url: `characters/${characterID}/options`,
+        method: "PUT",
+        body: options,
       }),
       invalidatesTags: [characterTag],
       onQueryStarted: invalidateApiTags([userTag]),
@@ -290,6 +303,7 @@ export const {
   useModifyCharacterSkillsMutation,
   useModifyCharacterSavingThrowsMutation,
   useModifyCharacterImageMutation,
+  useModifyCharacterOptionsMutation,
   useSetCharacterAttributeMutation,
 } = characterApiSlice;
 

@@ -18,7 +18,9 @@ func NewCharacterRepository(db *gorm.DB) *CharacterRepository {
 func (r *CharacterRepository) FindByID(characterID int) (*models.CharacterModel, error) {
 	var character models.CharacterModel
 	tx := r.DB.Preload("Image").
+		Preload("Options").
 		Preload("SharedWith").
+		Preload("SharedWith.Friend").
 		Preload("AbilityScores").
 		Preload("SavingThrows").
 		Preload("Skills").
@@ -55,6 +57,12 @@ func (r *CharacterRepository) Create(character *models.CharacterModel) error {
 	// Create related models if needed
 	character.AbilityScores.CharacterID = character.ID
 	if err := tx.Create(&character.AbilityScores).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	character.Options.CharacterID = character.ID
+	if err := tx.Create(&character.Options).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -150,6 +158,19 @@ func (r *CharacterRepository) UpdateCharacterAttributes(attributes []string, cha
 	*character = *updatedCharacter
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func (r *CharacterRepository) UpdateCharacterOptions(options *models.CharacterOptionsModel) error {
+	tx := r.DB.Model(&options).
+		Clauses(clause.Returning{}).
+		Select("*").
+		Omit("id", "created_at", "updated_at", "delted_at", "character_id").
+		Where("character_id = ?", options.CharacterID).
+		Updates(&options)
+	if tx.Error != nil {
+		return tx.Error
 	}
 	return nil
 }

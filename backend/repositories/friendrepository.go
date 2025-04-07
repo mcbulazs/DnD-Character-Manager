@@ -1,9 +1,6 @@
 package repositories
 
 import (
-	"errors"
-	"fmt"
-
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -18,19 +15,22 @@ func NewFriendRepository(db *gorm.DB) *FriendRepository {
 	return &FriendRepository{DB: db}
 }
 
-func (r *FriendRepository) IsUserFriend(userId uint, friendId uint) bool {
-	var Frend models.FriendsModel
-	tx := r.DB.Model(&models.FriendsModel{}).First(&Frend, "user_id = ? AND friend_id = ?", userId, friendId)
-	if tx.Error != nil || errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-		return false
+func (r *FriendRepository) GetUserFriend(userId uint, friendId uint) (*models.FriendsModel, error) {
+	var Friend models.FriendsModel
+	tx := r.DB.Model(&models.FriendsModel{}).First(&Friend, "user_id = ? AND friend_id = ?", userId, friendId)
+	if tx.Error != nil {
+		return nil, tx.Error
 	}
-	return true
+	return &Friend, nil
 }
 
 func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) error {
 	tx := r.DB.Begin()
 	var friendRequest models.FriendRequestModel
-	err := tx.Model(&friendRequest).Clauses(clause.Returning{}).Where("id = ? AND destination_user_id = ?", friendRequestId, userId).Update("status", models.FriendRequestsStatusEnum.Accepted).Error
+	err := tx.Model(&friendRequest).
+		Clauses(clause.Returning{}).
+		Where("id = ? AND destination_user_id = ?", friendRequestId, userId).
+		Update("status", models.FriendRequestsStatusEnum.Accepted).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -40,19 +40,19 @@ func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint
 	Friend.ID = friendRequest.DestinationUserID
 	var User models.UserModel
 	User.ID = friendRequest.SourceUserID
-	err = tx.Model(&models.FriendsModel{}).Create(&models.FriendsModel{User: User, Friend: Friend}).Error
+	err = tx.Model(&models.FriendsModel{}).
+		Create(&models.FriendsModel{User: User, Friend: Friend}).Error
 	if err != nil {
-		fmt.Println("Error", err)
 		tx.Rollback()
 		return err
 	}
-	err = tx.Model(&models.FriendsModel{}).Create(&models.FriendsModel{User: Friend, Friend: User}).Error
+	err = tx.Model(&models.FriendsModel{}).
+		Create(&models.FriendsModel{User: Friend, Friend: User}).Error
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 	tx.Commit()
-	fmt.Println("Friend request accepted")
 	return nil
 }
 
@@ -89,31 +89,38 @@ func (r *FriendRepository) UpdateName(userId int, friendId int, name string) err
 }
 
 func (r *FriendRepository) ShareCharacter(characterId uint, friendId uint) error {
-	tx := r.DB.Create(&models.FriendShareModel{CharacterID: characterId, FriendID: friendId})
-	if tx.Error != nil {
-		return tx.Error
+	var friendModel models.FriendsModel
+	friendModel.ID = friendId
+	var character models.CharacterModel
+	character.ID = characterId
+	tx := r.DB.Model(&friendModel).Association("SharedCharacters").Append(&character)
+	if tx != nil {
+		return tx
 	}
 	return nil
 }
 
 func (r *FriendRepository) UnshareCharacter(characterId uint, friendId uint) error {
-	tx := r.DB.Where("character_id = ? AND friend_id = ?", characterId, friendId).Delete(&models.FriendShareModel{})
-	if tx.Error != nil {
-		return tx.Error
+	var friendModel models.FriendsModel
+	friendModel.ID = friendId
+	var character models.CharacterModel
+	character.ID = characterId
+
+	tx := r.DB.Model(&character).Association("SharedWith").Delete(&friendModel)
+	if tx != nil {
+		return tx
 	}
 	return nil
 }
 
-func (r *FriendRepository) FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.FriendShareModel, error) {
-	var characters []models.FriendShareModel
-	err := r.DB.
-		Joins("JOIN characters ON characters.id = friend_shares.character_id").
-		Joins("JOIN character_images ON character_images.character_id = characters.id").
-		Preload("Character").
-		Preload("Character.Image").
-		Where("friend_id = ? AND characters.user_id = ?", friendID, userID).
-		Find(&characters).
-		Error
+func (r *FriendRepository) FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.CharacterModel, error) {
+	FriendModel, err := r.GetUserFriend(friendID, userID)
+	var characters []models.CharacterModel
+	err = r.DB.
+		Model(&models.CharacterModel{}).
+		Joins("JOIN friend_shares ON friend_shares.character_id = characters.id").
+		Where("friend_shares.friend_id = ?", FriendModel.ID).
+		Find(&characters).Error
 	if err != nil {
 		return nil, err
 	}

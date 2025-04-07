@@ -107,30 +107,35 @@ func (s *CharacterService) UpdateCharacterImage(image *dto.CharacterImageDTO, ch
 	return nil
 }
 
+func (s *CharacterService) UpdateCharacterOptions(options *dto.CharacterOptionsDTO, characterID int) error {
+	optionsModel := convertToCharacterOptionsModel(options)
+	optionsModel.CharacterID = uint(characterID)
+	err := s.Repo.UpdateCharacterOptions(optionsModel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *CharacterService) FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error) {
-	hasAccess := false
 	characterModel, err := s.Repo.FindByID(id)
 	if characterModel == nil {
 		return nil, err
 	}
 
-	if characterModel.UserID == uint(userID) {
-		hasAccess = true
-	}
 	characterDTO := convertToCharacterDTO(characterModel)
-	for _, frined := range characterModel.SharedWith {
-		if frined.FriendID == uint(userID) {
-			characterDTO.IsOwner = false
-			hasAccess = true
-			break
+	if characterModel.UserID == uint(userID) {
+		return characterDTO, nil
+	} else {
+		for _, frined := range characterModel.SharedWith {
+			if frined.FriendID == uint(userID) {
+				characterDTO.IsOwner = false
+				characterDTO.SharedWith = nil
+				return characterDTO, nil
+			}
 		}
 	}
-
-	if !hasAccess {
-		return nil, gorm.ErrRecordNotFound
-	}
-
-	return characterDTO, nil
+	return nil, gorm.ErrRecordNotFound
 }
 
 func convertToCharacterImageDTO(image *models.CharacterImageModel) dto.CharacterImageDTO {
@@ -282,7 +287,7 @@ func convertToCharacterSkillModel(skills *dto.CharacterSkillDTO) models.Characte
 }
 
 func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
-	return &dto.CharacterDTO{
+	characterModel := dto.CharacterDTO{
 		ID:                character.ID,
 		IsOwner:           true,
 		Name:              character.Name,
@@ -296,6 +301,7 @@ func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 		PassivePerception: character.PassivePerception,
 		ProficiencyBonus:  character.ProficiencyBonus,
 		Image:             convertToCharacterImageDTO(&character.Image),
+		Options:           *convertToCharacterOptionsDTO(&character.Options),
 		AbilityScores:     convertToCharacterAbilityScoreDTO(&character.AbilityScores),
 		SavingThrows:      convertToCharacterSavingThrowDTO(&character.SavingThrows),
 		Skills:            convertToCharacterSkillDTO(&character.Skills),
@@ -304,6 +310,16 @@ func convertToCharacterDTO(character *models.CharacterModel) *dto.CharacterDTO {
 		Trackers:          convertToCharacterTrackerDTOs(character.Trackers),
 		NoteCategories:    convertToCharacterNoteCategoryDTOs(character.NoteCategories),
 	}
+	for _, friend := range character.SharedWith {
+		friendDTO := dto.FriendDTO{
+			Friend: *convertToUserDataDTO(&friend.Friend),
+			Name:   friend.Name,
+			Note:   friend.Note,
+		}
+		characterModel.SharedWith = append(characterModel.SharedWith, friendDTO)
+	}
+
+	return &characterModel
 }
 
 func convertToCharacterModel(character *dto.CharacterDTO) *models.CharacterModel {
@@ -321,4 +337,22 @@ func convertToCharacterModel(character *dto.CharacterDTO) *models.CharacterModel
 	}
 	char.ID = character.ID
 	return &char
+}
+
+func convertToCharacterOptionsModel(options *dto.CharacterOptionsDTO) *models.CharacterOptionsModel {
+	return &models.CharacterOptionsModel{
+		IsCaster:   options.IsCaster,
+		IsDead:     options.IsDead,
+		IsXp:       options.IsXP,
+		RollOption: options.RollOption,
+	}
+}
+
+func convertToCharacterOptionsDTO(options *models.CharacterOptionsModel) *dto.CharacterOptionsDTO {
+	return &dto.CharacterOptionsDTO{
+		IsCaster:   options.IsCaster,
+		IsDead:     options.IsDead,
+		IsXP:       options.IsXp,
+		RollOption: options.RollOption,
+	}
 }

@@ -23,6 +23,8 @@ func getAllowedMethods(route string) string {
 		return "GET, OPTIONS"
 	case "/api/logout":
 		return "POST, OPTIONS"
+	case "/api/user":
+		return "GET, OPTIONS"
 	case "/api/characters":
 		return "POST, GET, OPTIONS"
 	case "/api/characters/:characterId":
@@ -39,6 +41,8 @@ func getAllowedMethods(route string) string {
 		return "PATCH, OPTIONS"
 	case "/api/characters/characterId/features":
 		return "GET, POST, OPTIONS"
+	case "/api/characters/options":
+		return "PUT, OPTIONS"
 	case "/api/characters/characterId/features/:featureId":
 		return "PUT, DELTE, OPTIONS"
 	case "/api/characters/characterId/spells":

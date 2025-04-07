@@ -1,4 +1,4 @@
----- Fix UnstyledNumberInput empty
+------ Fix UnstyledNumberInput empty
 ------ Fix mobile sidebars
 ------ Fix imageSizer on edit empty image
 ------ fix note dont refetch data or some shit bcs it messes up typing (done but cost me my sanity)
@@ -17,13 +17,14 @@
 
 add description to friend
 
-character options
-  list/share/unshare
-  isCaster (need spell tab)
-  favorite
-  think about it
+websocket on character hshare / friend request accept
 
-roll option on characterpage
+------ character options (second tab on sidebar) and do something with them
+------ list/share/unshare
+------ isCaster (need spell tab)
+  isDead
+  isXp
+  roll option on characterpage
 
 add race to character creation
 
@@ -32,7 +33,13 @@ Items, Weapons & Proficiencies
 Hit Die Tracker defualt
 spell save dc
 
+Level Up
 
+ABOUT section
+
+Tesztek
+
+Theme selection for character
 -------Friendlist feature
 ------- site
 ------- websocket
@@ -41,14 +48,11 @@ spell save dc
 
 ---------------dice rolling feature
 
-cascading soft delete in gorm
-Level Up
-
-ABOUT section
+shared characters into chategories
 
 EMAIL service
 
-Tesztek
+cascading soft delete in gorm
 
 Pipeline
 

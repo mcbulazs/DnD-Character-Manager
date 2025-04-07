@@ -161,6 +161,23 @@ func UpdateCharacterImageHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, image)
 }
 
+func UpdateCharacterOptionsHandler(c *gin.Context, db *gorm.DB) {
+	var options dto.CharacterOptionsDTO
+	if err := c.ShouldBindJSON(&options); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	service := services.NewCharacterService(db)
+	characterID := c.MustGet("character_id").(int)
+
+	err := service.UpdateCharacterOptions(&options, characterID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, options)
+}
+
 func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 	service := services.NewCharacterService(db)
 

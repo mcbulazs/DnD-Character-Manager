@@ -113,9 +113,10 @@ func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	friendUserId := c.MustGet("friend_id").(int)
+	userId := c.MustGet("user_id").(int)
 
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = friendService.ShareCharacter(friendUserId, characterId)
+	err = friendService.ShareCharacter(userId, friendUserId, characterId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
@@ -129,9 +130,10 @@ func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
-	friendUserId := c.MustGet("user_id").(int)
+	friendId := c.MustGet("friend_id").(int)
+	userId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = friendService.UnshareCharacter(friendUserId, characterId)
+	err = friendService.UnshareCharacter(userId, friendId, characterId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return

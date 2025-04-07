@@ -17,6 +17,7 @@ type CharacterModel struct {
 	Speed             int
 	PassivePerception int
 	ProficiencyBonus  int
+	Options           CharacterOptionsModel        `gorm:"foreignKey:CharacterID"`
 	Image             CharacterImageModel          `gorm:"foreignKey:CharacterID"`
 	AbilityScores     CharacterAbilityScoreModel   `gorm:"foreignKey:CharacterID"`
 	SavingThrows      CharacterSavingThrowModel    `gorm:"foreignKey:CharacterID"`
@@ -25,11 +26,24 @@ type CharacterModel struct {
 	Spells            []CharacterSpellModel        `gorm:"foreignKey:CharacterID"`
 	Trackers          []CharacterTrackerModel      `gorm:"foreignKey:CharacterID"`
 	NoteCategories    []CharacterNoteCategoryModel `gorm:"foreignKey:CharacterID"`
-	SharedWith        []FriendShareModel           `gorm:"foreignKey:CharacterID"`
+	SharedWith        []*FriendsModel              `gorm:"many2many:friend_shares;joinForeignKey:CharacterID;joinReferences:FriendID"`
 }
 
 func (c *CharacterModel) TableName() string {
 	return "characters"
+}
+
+type CharacterOptionsModel struct {
+	gorm.Model
+	CharacterID uint
+	IsCaster    bool
+	IsDead      bool
+	IsXp        bool
+	RollOption  bool
+}
+
+func (c *CharacterOptionsModel) TableName() string {
+	return "character_options"
 }
 
 type CharacterImageModel struct {

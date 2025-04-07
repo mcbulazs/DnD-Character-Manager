@@ -28,6 +28,8 @@ type CharacterDTO struct {
 	Speed             int                        `json:"speed"`
 	PassivePerception int                        `json:"passivePerception"`
 	ProficiencyBonus  int                        `json:"proficiencyBonus"`
+	Options           CharacterOptionsDTO        `json:"options"`
+	SharedWith        []FriendDTO                `json:"sharedWith"`
 	AbilityScores     CharacterAbilityScoreDTO   `json:"abilityScores"`
 	SavingThrows      CharacterSavingThrowDTO    `json:"savingThrows"`
 	Skills            CharacterSkillDTO          `json:"skills"`
@@ -35,6 +37,13 @@ type CharacterDTO struct {
 	Spells            []CharacterSpellDTO        `json:"spells"`
 	Trackers          []CharacterTrackerDTO      `json:"trackers"`
 	NoteCategories    []CharacterNoteCategoryDTO `json:"noteCategories"`
+}
+
+type CharacterOptionsDTO struct {
+	IsCaster   bool `json:"isCaster"`
+	IsDead     bool `json:"isDead"`
+	IsXP       bool `json:"isXP"`
+	RollOption bool `json:"rollOption"`
 }
 
 type CharacterImageDTO struct {
