@@ -11,6 +11,7 @@ type CharacterBaseDTO struct {
 type CreateCharacterDTO struct {
 	Name  string            `json:"name"`
 	Class string            `json:"class"`
+	Race  string            `json:"race"`
 	Image CharacterImageDTO `json:"image"`
 }
 

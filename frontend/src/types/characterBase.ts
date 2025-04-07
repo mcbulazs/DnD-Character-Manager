@@ -11,4 +11,5 @@ export interface CreateCharacterBase {
   image?: BackgroundImageProps;
   name?: string;
   class?: string;
+  race?: string;
 }

@@ -17,16 +17,16 @@
 
 add description to friend
 
-websocket on character hshare / friend request accept
+websocket on character share / friend request accept
 
 ------ character options (second tab on sidebar) and do something with them
 ------ list/share/unshare
 ------ isCaster (need spell tab)
-  isDead
-  isXp
+  isDead (cant edit, skull)
+  isXp (tracker)
   roll option on characterpage
 
-add race to character creation
+------ add race to character creation
 
 Items, Weapons & Proficiencies
 
@@ -40,6 +40,7 @@ ABOUT section
 Tesztek
 
 Theme selection for character
+
 -------Friendlist feature
 ------- site
 ------- websocket

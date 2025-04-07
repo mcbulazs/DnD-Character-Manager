@@ -29,6 +29,7 @@ func (s *CharacterService) CreateCharacter(character *dto.CreateCharacterDTO, us
 	characterModel := models.CharacterModel{
 		Name:  character.Name,
 		Class: character.Class,
+		Race:  character.Race,
 		Image: convertToCharacterImageModel(&character.Image),
 	}
 	characterModel.UserID = uint(userID)

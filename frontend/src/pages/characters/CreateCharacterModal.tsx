@@ -11,6 +11,7 @@ const CreateCharacterModal: React.FC<{
 }> = ({ onClose }) => {
   const [name, setName] = useState("");
   const [className, setClassName] = useState("");
+  const [race, setRace] = useState("");
   const [image, setImage] = useState<BackgroundImageProps>({
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -30,9 +31,14 @@ const CreateCharacterModal: React.FC<{
         toast("Class is required", { type: "warning" });
         return;
       }
+      if (race.trim().length < 1) {
+        toast("Race is required", { type: "warning" });
+        return;
+      }
       const data = await createCharacterMutation({
         name,
         class: className,
+        race,
         image,
       }).unwrap();
       navigate(`/characters/${data.ID}`);
@@ -72,6 +78,18 @@ const CreateCharacterModal: React.FC<{
             type="text"
             value={className}
             onChange={(e) => setClassName(e.target.value)}
+            className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Race:
+          </label>
+          <input
+            type="text"
+            value={race}
+            onChange={(e) => setRace(e.target.value)}
             className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
             required
           />
