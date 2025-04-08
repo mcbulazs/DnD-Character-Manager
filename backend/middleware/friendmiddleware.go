@@ -18,7 +18,7 @@ func FriendMiddleware(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.Set("friend_id", friendID)
+	c.Set("friend_id", uint(friendID))
 	userId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db)
 	isFriend := friendService.IsUserFriend(userId, friendID)

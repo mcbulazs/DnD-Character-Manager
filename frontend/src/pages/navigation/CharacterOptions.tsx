@@ -64,6 +64,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
       console.error("Error sharing character", error);
       toast("Error sharing character", { type: "error" });
     }
+    setSelectedFriendId(null);
   };
   const unshareCharacter = async (friendId: number) => {
     try {

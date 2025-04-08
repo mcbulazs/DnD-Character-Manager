@@ -1,10 +1,7 @@
 package repositories
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"DnDCharacterSheet/models"
 )
@@ -19,7 +16,9 @@ func NewFriendRepository(db *gorm.DB) *FriendRepository {
 
 func (r *FriendRepository) GetUserFriend(userId uint, friendId uint) (*models.FriendsModel, error) {
 	var Friend models.FriendsModel
-	tx := r.DB.Model(&models.FriendsModel{}).First(&Friend, "user_id = ? AND friend_id = ?", userId, friendId)
+	tx := r.DB.Model(&models.FriendsModel{}).
+		Preload("Friend").
+		First(&Friend, "user_id = ? AND friend_id = ?", userId, friendId)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -39,7 +38,6 @@ func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint
 		tx.Rollback()
 		return err, nil
 	}
-	fmt.Println("friendRequest", friendRequest)
 
 	err = tx.Model(&models.FriendsModel{}).
 		Create(&models.FriendsModel{
@@ -90,10 +88,21 @@ func (r *FriendRepository) SendFriendRequest(sourceUserId uint, destinationUserI
 }
 
 func (r *FriendRepository) Unfriend(userId uint, friendId uint) error {
-	tx := r.DB.Where("user_id = ? AND friend_id = ?", userId, friendId).Delete(&models.FriendsModel{})
+	tx := r.DB.Begin()
 	if tx.Error != nil {
 		return tx.Error
 	}
+	err := tx.Where("user_id = ? AND friend_id = ?", userId, friendId).Delete(&models.FriendsModel{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = tx.Where("user_id = ? AND friend_id = ?", friendId, userId).Delete(&models.FriendsModel{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
 	return nil
 }
 

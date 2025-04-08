@@ -30,6 +30,12 @@ func (s *FriendService) IsUserFriend(userID int, friendID int) bool {
 
 func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) (error, *models.UserModel) {
 	friendModel, err := s.UserRepo.FindByEmail(friend.Email)
+	if err != nil {
+		return err, nil
+	}
+	if friendModel.ID == uint(userID) {
+		return gorm.ErrCheckConstraintViolated, nil
+	}
 	userModel, err := s.UserRepo.FindByID(userID)
 	if err != nil {
 		return err, nil
@@ -49,28 +55,38 @@ func (s *FriendService) DeclineFriendRequest(userID int, friendRequestID int) (e
 	return s.Repo.DeclineFriendRequest(uint(friendRequestID), uint(userID))
 }
 
-func (s *FriendService) Unfriend(userID int, friendID int) error {
-	return s.Repo.Unfriend(uint(userID), uint(friendID))
+func (s *FriendService) Unfriend(userID int, friendID int) (error, *models.FriendsModel) {
+	friendModel, err := s.Repo.GetUserFriend(uint(friendID), uint(userID))
+	if err != nil {
+		return err, nil
+	}
+	err = s.Repo.Unfriend(uint(userID), uint(friendID))
+	if err != nil {
+		return err, nil
+	}
+	return nil, friendModel
 }
 
 func (s *FriendService) UpdateName(userID int, friendID int, name string) error {
 	return s.Repo.UpdateName(userID, friendID, name)
 }
 
-func (s *FriendService) ShareCharacter(userID int, friendID int, characterID int) error {
+func (s *FriendService) ShareCharacter(userID int, friendID int, characterID int) (error, *models.FriendsModel) {
 	Friend, err := s.Repo.GetUserFriend(uint(userID), uint(friendID))
+	reverseFriendModel, err := s.Repo.GetUserFriend(uint(friendID), uint(userID))
 	if err != nil {
-		return err
+		return err, nil
 	}
-	return s.Repo.ShareCharacter(uint(characterID), Friend.ID)
+	return s.Repo.ShareCharacter(uint(characterID), Friend.ID), reverseFriendModel
 }
 
-func (s *FriendService) UnshareCharacter(userID int, friendID int, characterID int) error {
+func (s *FriendService) UnshareCharacter(userID int, friendID int, characterID int) (error, *models.FriendsModel) {
 	FriendModel, err := s.Repo.GetUserFriend(uint(userID), uint(friendID))
+	reverseFriendModel, err := s.Repo.GetUserFriend(uint(friendID), uint(userID))
 	if err != nil {
-		return err
+		return err, nil
 	}
-	return s.Repo.UnshareCharacter(uint(characterID), uint(FriendModel.ID))
+	return s.Repo.UnshareCharacter(uint(characterID), uint(FriendModel.ID)), reverseFriendModel
 }
 
 func (s *FriendService) FindByUserIDAndFriendID(userID uint, friendID uint) ([]dto.CharacterBaseDTO, error) {

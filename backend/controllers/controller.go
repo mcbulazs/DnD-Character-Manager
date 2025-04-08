@@ -46,7 +46,10 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	)
 
 	friends := auth.Group("/friends/:friendId")
-	friends.DELETE("", Handler(UnfriendHandler, db))
+	friends.DELETE("",
+		Handler(UnfriendHandler, db),
+		middleware.UserWebsocketMiddleware,
+	)
 	friends.PATCH("/name", Handler(UpdateFriendNameHandler, db))
 	friendsCharacter := friends.Group("/share",
 		Handler(middleware.FriendMiddleware, db),

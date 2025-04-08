@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Friends } from "../../types/user";
 import SearchIcon from "@mui/icons-material/Search";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import Scrollbars from "react-custom-scrollbars-2";
@@ -8,31 +9,39 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Modal from "../../components/Modal";
 import {
   useSendFriendRequestMutation,
+  useUnfriendMutation,
   useUpdateFriendNameMutation,
 } from "../../store/api/friendApiSlice";
 import type { ApiError } from "../../types/apiError";
 import { toast } from "react-toastify";
+import DeleteDialog from "../../components/DeleteDialog";
 const FriendList: React.FC<{
   friends?: Friends[];
   onFriendSelect: (friend: Friends) => void;
   buttonsActive?: boolean;
 }> = ({ friends, onFriendSelect, buttonsActive }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [email, setEmail] = useState("");
   const [editFriendId, setEditFriendId] = useState<number | null>(null);
+  const [deleteFriend, setDeleteFriend] = useState<Friends | null>(null);
   const [editFriendValue, setEditFriendValue] = useState("");
   const [defaultFriendValue, setDefaultFriendValue] = useState("");
   const [sendFriendRequestMutation] = useSendFriendRequestMutation();
+  const [unfriendMutation] = useUnfriendMutation();
   const [updateFriendNameMutation] = useUpdateFriendNameMutation();
+
+  const getFriendName = (friend: Friends) => {
+    return friend.name != "" ? friend.name : friend.friend.email;
+  };
   const handleSendFriendRequest = async () => {
     try {
       const result = await sendFriendRequestMutation({ email });
       if (result.error) throw result.error;
 
       toast("Friend request sent", { type: "success" });
-      setModalOpen(false);
+      setAddModalOpen(false);
       setEmail("");
     } catch (error) {
       const err = error as ApiError;
@@ -41,6 +50,30 @@ const FriendList: React.FC<{
       }
       if (err.status === 409) {
         toast("User not found", { type: "error" });
+      } else {
+        toast(`Error sending friend request`, { type: "error" });
+      }
+    }
+  };
+
+  const handleUnFriend = async () => {
+    try {
+      if (!deleteFriend) return;
+      const result = await unfriendMutation({
+        friendId: deleteFriend!.friend.id,
+      });
+      if (result.error) throw result.error;
+
+      toast(`${getFriendName(deleteFriend)} unfriended`, { type: "success" });
+      setDeleteFriend(null);
+    } catch (error) {
+      const err = error as ApiError;
+      if (err.status === 404) {
+        toast("User not found", { type: "error" });
+      } else if (err.status === 409) {
+        toast("User not found", { type: "error" });
+      } else {
+        toast(`Error unfriending user`, { type: "error" });
       }
     }
   };
@@ -66,7 +99,7 @@ const FriendList: React.FC<{
           />
           {buttonsActive && (
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => setAddModalOpen(true)}
               type="button"
               className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
             >
@@ -75,7 +108,7 @@ const FriendList: React.FC<{
           )}
         </div>
         <div className="flex-1 w-full">
-          <Scrollbars className="w-full bg-gray-400 " universal>
+          <Scrollbars className="w-full bg-gray-400" universal>
             {friends
               ?.filter((friend) => friend.friend.email.includes(search))
               .map((friend) =>
@@ -93,7 +126,6 @@ const FriendList: React.FC<{
                       onKeyDown={(e) => {
                         if (e.key == "Enter") handleRenameing();
                       }}
-                      onBlur={handleRenameing}
                     />
                     <button
                       type="button"
@@ -101,6 +133,13 @@ const FriendList: React.FC<{
                       className="hover:text-amber-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
                     >
                       <CheckIcon />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteFriend(friend)}
+                      className="hover:text-red-500 hover:bg-gray-600 duration-300 ease-in-out rounded-md"
+                    >
+                      <DeleteIcon />
                     </button>
                   </div>
                 ) : (
@@ -145,8 +184,8 @@ const FriendList: React.FC<{
           </Scrollbars>
         </div>
       </div>
-      {modalOpen && (
-        <Modal onClose={() => setModalOpen(false)}>
+      {addModalOpen && (
+        <Modal onClose={() => setAddModalOpen(false)}>
           <div className="w-full flex flex-col">
             <h1 className="text-2xl mb-5">Send Friend Request</h1>
             <label>Email:</label>
@@ -166,6 +205,13 @@ const FriendList: React.FC<{
             </button>
           </div>
         </Modal>
+      )}
+      {deleteFriend && (
+        <DeleteDialog
+          message={`Are you sure you want to delete friend: ${deleteFriend?.name == "" ? deleteFriend.friend.email : deleteFriend?.name}`}
+          onCancel={() => setDeleteFriend(null)}
+          onConfirm={handleUnFriend}
+        />
       )}
     </>
   );
