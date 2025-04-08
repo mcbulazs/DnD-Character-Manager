@@ -26,9 +26,14 @@ const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   }, [isVisible]);
   useEffect(() => {
     if (character) {
+      console.log("Trackers", character.trackers);
       setTrackers(
         character.trackers
-          .filter((tracker) => tracker.type === "Custom")
+          .filter((tracker) =>
+            ["Custom", "HitDie", character.options.isXP ? "XP" : []].includes(
+              tracker.type,
+            ),
+          )
           .sort((a, b) => a.order - b.order),
       );
     }

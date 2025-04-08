@@ -86,6 +86,20 @@ func getDefaultTrackers(characterID uint) []models.CharacterTrackerModel {
 			CharacterID:  characterID,
 		},
 		{
+			Name:         "XP",
+			MaxValue:     10,
+			CurrentValue: 10,
+			Type:         models.TrackerEnum.XP,
+			CharacterID:  characterID,
+		},
+		{
+			Name:         "Hit Die",
+			MaxValue:     4,
+			CurrentValue: 4,
+			Type:         models.TrackerEnum.HitDie,
+			CharacterID:  characterID,
+		},
+		{
 			Name:         "Cantrip",
 			MaxValue:     1,
 			CurrentValue: 1,

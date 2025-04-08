@@ -8,6 +8,8 @@ type TrackerType string
 
 type TrackerEnumStruct struct {
 	Health      TrackerType
+	XP          TrackerType
+	HitDie      TrackerType
 	Cantrip     TrackerType
 	SpellSlot_1 TrackerType
 	SpellSlot_2 TrackerType
@@ -24,6 +26,8 @@ type TrackerEnumStruct struct {
 // Initialize the enum with values
 var TrackerEnum = TrackerEnumStruct{
 	Health:      "Health",
+	XP:          "XP",
+	HitDie:      "HitDie",
 	Cantrip:     "SpellSlot_0",
 	SpellSlot_1: "SpellSlot_1",
 	SpellSlot_2: "SpellSlot_2",
