@@ -20,165 +20,100 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
-	api.POST("/register", func(c *gin.Context) {
-		RegisterHandler(c, db)
-	})
-	api.POST("/login", func(c *gin.Context) {
-		LoginHandler(c, db)
-	})
+	api.POST("/register", Handler(RegisterHandler, db))
+	api.POST("/login", Handler(LoginHandler, db))
 	api.GET("/auth", AuthHandler)
 
 	auth := api.Group("/", middleware.AuthMiddleware())
-	auth.GET("/user", func(c *gin.Context) {
-		GetUserDataHandler(c, db)
-	})
+	auth.GET("/user", Handler(GetUserDataHandler, db))
 	auth.POST("/logout", LogoutHandler)
 
 	// websocket
 	auth.GET("/ws/*Id", websocket.HandleWebSocket)
 
 	friendRequests := auth.Group("/friendRequest")
-	friendRequests.POST("", func(c *gin.Context) {
-		SendFriendRequestHandler(c, db)
-	}, middleware.FriendRequestWebsocketMiddleware)
-	friendRequests.PATCH("/:friendRequestId/accept", func(c *gin.Context) {
-		AcceptFriendRequestHandler(c, db)
-	})
-	friendRequests.PATCH("/:friendRequestId/decline", func(c *gin.Context) {
-		DeclineFriendRequestHandler(c, db)
-	})
+	friendRequests.POST("",
+		Handler(SendFriendRequestHandler, db),
+		middleware.UserWebsocketMiddleware,
+	)
+	friendRequests.PATCH("/:friendRequestId/accept",
+		Handler(AcceptFriendRequestHandler, db),
+		middleware.UserWebsocketMiddleware,
+	)
+	friendRequests.PATCH("/:friendRequestId/decline",
+		Handler(DeclineFriendRequestHandler, db),
+		middleware.UserWebsocketMiddleware,
+	)
 
 	friends := auth.Group("/friends/:friendId")
-	friends.DELETE("", func(c *gin.Context) {
-		UnfriendHandler(c, db)
-	})
-	friends.PATCH("/name", func(c *gin.Context) {
-		UpdateFriendNameHandler(c, db)
-	})
+	friends.DELETE("", Handler(UnfriendHandler, db))
+	friends.PATCH("/name", Handler(UpdateFriendNameHandler, db))
 	friendsCharacter := friends.Group("/share",
-		func(c *gin.Context) {
-			middleware.FriendMiddleware(c, db)
-		},
+		Handler(middleware.FriendMiddleware, db),
+		middleware.UserWebsocketMiddleware,
 	)
 
 	// friend to share with
 	friendsCharacter.POST("/:characterId",
-		func(c *gin.Context) {
-			middleware.CharacterMiddleware(c, db)
-		},
-		func(c *gin.Context) {
-			ShareCharacterHandler(c, db)
-		})
+		Handler(middleware.CharacterMiddleware, db),
+		Handler(ShareCharacterHandler, db),
+	)
 	friendsCharacter.DELETE("/:characterId",
-		func(c *gin.Context) {
-			middleware.CharacterMiddleware(c, db)
-		},
-		func(c *gin.Context) {
-			UnshareCharacterHandler(c, db)
-		})
+		Handler(middleware.CharacterMiddleware, db),
+		Handler(UnshareCharacterHandler, db),
+	)
 	// friend who shared with me
-	friendsCharacter.GET("", func(c *gin.Context) {
-		GetSharedCharactersHandler(c, db)
-	})
+	friendsCharacter.GET("", Handler(GetSharedCharactersHandler, db))
 
-	auth.POST("/characters", func(c *gin.Context) {
-		CreateCharacterHandler(c, db)
-	})
-	auth.GET("/characters/:characterId", func(c *gin.Context) {
-		GetCharacterHandler(c, db)
-	})
+	auth.POST("/characters", Handler(CreateCharacterHandler, db))
+	auth.GET("/characters/:characterId", Handler(GetCharacterHandler, db))
 
-	characters := auth.Group("/characters/:characterId", func(c *gin.Context) {
-		middleware.CharacterMiddleware(c, db)
-		middleware.CharacterWebsocketMiddleware(c)
-	})
+	characters := auth.Group("/characters/:characterId",
+		Handler(middleware.CharacterMiddleware, db),
+		middleware.CharacterWebsocketMiddleware,
+	)
 
-	characters.DELETE("", func(c *gin.Context) {
-		DeleteCharacterHandler(c, db)
-	})
-	characters.PUT("/ability-scores", func(c *gin.Context) {
-		UpdateCharacterAbilityScoresHandler(c, db)
-	})
-	characters.PUT("/skills", func(c *gin.Context) {
-		UpdateCharacterSkillsHandler(c, db)
-	})
-	characters.PUT("/saving-throws", func(c *gin.Context) {
-		UpdateCharacterSavingThrowsHandler(c, db)
-	})
-	characters.PUT("/image", func(c *gin.Context) {
-		UpdateCharacterImageHandler(c, db)
-	})
-	characters.PATCH("/attributes", func(c *gin.Context) {
-		UpdateCharacterAttribute(c, db)
-	})
-	characters.PUT("/options", func(c *gin.Context) {
-		UpdateCharacterOptionsHandler(c, db)
-	})
+	characters.DELETE("", Handler(DeleteCharacterHandler, db))
+	characters.PUT("/ability-scores", Handler(UpdateCharacterAbilityScoresHandler, db))
+	characters.PUT("/skills", Handler(UpdateCharacterSkillsHandler, db))
+	characters.PUT("/saving-throws", Handler(UpdateCharacterSavingThrowsHandler, db))
+	characters.PUT("/image", Handler(UpdateCharacterImageHandler, db))
+	characters.PATCH("/attributes", Handler(UpdateCharacterAttribute, db))
+	characters.PUT("/options", Handler(UpdateCharacterOptionsHandler, db))
 
 	features := characters.Group("/features")
-	features.POST("", func(c *gin.Context) {
-		CreateFeatureHandler(c, db)
-	})
-	features.PUT("/:featureId", func(c *gin.Context) {
-		UpdateFeatureHandler(c, db)
-	})
-	features.DELETE("/:featureId", func(c *gin.Context) {
-		DeleteFeatureHandler(c, db)
-	})
+	features.POST("", Handler(CreateFeatureHandler, db))
+	features.PUT("/:featureId", Handler(UpdateFeatureHandler, db))
+	features.DELETE("/:featureId", Handler(DeleteFeatureHandler, db))
 
 	spells := characters.Group("/spells")
-	spells.POST("", func(c *gin.Context) {
-		CreateSpellHandler(c, db)
-	})
-	spells.PUT("/:spellId", func(c *gin.Context) {
-		UpdateSpellHandler(c, db)
-	})
-	spells.DELETE("/:spellId", func(c *gin.Context) {
-		DeleteSpellHandler(c, db)
-	})
+	spells.POST("", Handler(CreateSpellHandler, db))
+	spells.PUT("/:spellId", Handler(UpdateSpellHandler, db))
+	spells.DELETE("/:spellId", Handler(DeleteSpellHandler, db))
 
 	tracker := characters.Group("/trackers")
-	tracker.POST("", func(c *gin.Context) {
-		CreateTrackerHandler(c, db)
-	})
-	tracker.PUT("/:trackerId", func(c *gin.Context) {
-		UpdateTrackerHandler(c, db)
-	})
-	tracker.PATCH("/order", func(c *gin.Context) {
-		UpdateTrackerOrderHandler(c, db)
-	})
-	tracker.DELETE("/:trackerId", func(c *gin.Context) {
-		DeleteTrackerHandler(c, db)
-	})
+	tracker.POST("", Handler(CreateTrackerHandler, db))
+	tracker.PUT("/:trackerId", Handler(UpdateTrackerHandler, db))
+	tracker.PATCH("/order", Handler(UpdateTrackerOrderHandler, db))
+	tracker.DELETE("/:trackerId", Handler(DeleteTrackerHandler, db))
 
 	noteCategories := characters.Group("/notes")
-	noteCategories.POST("", func(c *gin.Context) {
-		CreateNoteCategoryHandler(c, db)
-	})
-	noteCategories.PUT("/:categoryId", func(c *gin.Context) {
-		UpdateNoteCategoryHandler(c, db)
-	})
-	noteCategories.DELETE("/:categoryId", func(c *gin.Context) {
-		DeleteNoteCategoryHandler(c, db)
-	})
+	noteCategories.POST("", Handler(CreateNoteCategoryHandler, db))
+	noteCategories.PUT("/:categoryId", Handler(UpdateNoteCategoryHandler, db))
+	noteCategories.DELETE("/:categoryId", Handler(DeleteNoteCategoryHandler, db))
 
-	note := noteCategories.Group("/:categoryId", func(c *gin.Context) {
-		middleware.NoteMiddleware(c, db)
-	})
-	note.POST("", func(c *gin.Context) {
-		CreateNoteHandler(c, db)
-	})
-	note.PUT("/:noteId", func(c *gin.Context) {
-		UpdateNoteHandler(c, db)
-	})
-	note.DELETE("/:noteId", func(c *gin.Context) {
-		DeleteNoteHandler(c, db)
-	})
-
-	api.GET("/test", func(c *gin.Context) {
-	})
+	note := noteCategories.Group("/:categoryId", Handler(middleware.NoteMiddleware, db))
+	note.POST("", Handler(CreateNoteHandler, db))
+	note.PUT("/:noteId", Handler(UpdateNoteHandler, db))
+	note.DELETE("/:noteId", Handler(DeleteNoteHandler, db))
 
 	InitProxy(r)
+}
+
+func Handler[T any](fn func(*gin.Context, T), arg T) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fn(c, arg)
+	}
 }
 
 func initCors(r *gin.RouterGroup) {

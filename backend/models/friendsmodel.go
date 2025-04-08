@@ -18,9 +18,9 @@ var FriendRequestsStatusEnum = FriendRequestStatusEnumStruct{
 
 type FriendRequestModel struct {
 	gorm.Model
-	SourceUserID      uint      `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	SourceUserID      uint      `gorm:"index:,unique,composite:uidx,where status = PENDING"`
 	SourceUser        UserModel `gorm:"foreignKey:SourceUserID"`
-	DestinationUserID uint      `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
+	DestinationUserID uint      `gorm:"index:,unique,composite:uidx,where status = PENDING"`
 	DestinationUser   UserModel `gorm:"foreignKey:DestinationUserID"`
 	Status            FriendRequestStatus
 }

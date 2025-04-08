@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -24,48 +26,63 @@ func (r *FriendRepository) GetUserFriend(userId uint, friendId uint) (*models.Fr
 	return &Friend, nil
 }
 
-func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) error {
+func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) (error, *models.FriendRequestModel) {
 	tx := r.DB.Begin()
 	var friendRequest models.FriendRequestModel
 	err := tx.Model(&friendRequest).
-		Clauses(clause.Returning{}).
+		Preload("SourceUser").
+		Preload("DestinationUser").
 		Where("id = ? AND destination_user_id = ?", friendRequestId, userId).
-		Update("status", models.FriendRequestsStatusEnum.Accepted).Error
+		Update("status", models.FriendRequestsStatusEnum.Accepted).
+		Find(&friendRequest).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return err, nil
 	}
+	fmt.Println("friendRequest", friendRequest)
 
-	var Friend models.UserModel
-	Friend.ID = friendRequest.DestinationUserID
-	var User models.UserModel
-	User.ID = friendRequest.SourceUserID
 	err = tx.Model(&models.FriendsModel{}).
-		Create(&models.FriendsModel{User: User, Friend: Friend}).Error
+		Create(&models.FriendsModel{
+			User:   friendRequest.SourceUser,
+			Friend: friendRequest.DestinationUser,
+		}).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return err, nil
 	}
 	err = tx.Model(&models.FriendsModel{}).
-		Create(&models.FriendsModel{User: Friend, Friend: User}).Error
+		Create(&models.FriendsModel{
+			User:   friendRequest.DestinationUser,
+			Friend: friendRequest.SourceUser,
+		}).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return err, nil
 	}
 	tx.Commit()
-	return nil
+	return nil, &friendRequest
 }
 
-func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uint) error {
-	tx := r.DB.Model(&models.FriendRequestModel{}).Where("id = ? AND destination_user_id = ?", friendRequestId, userId).Update("status", models.FriendRequestsStatusEnum.Declined)
+func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uint) (error, *models.FriendRequestModel) {
+	var request models.FriendRequestModel
+	tx := r.DB.Model(&request).
+		Preload("SourceUser").
+		Preload("DestinationUser").
+		Where("id = ? AND destination_user_id = ?", friendRequestId, userId).
+		Update("status", models.FriendRequestsStatusEnum.Declined).
+		Find(&request)
 	if tx.Error != nil {
-		return tx.Error
+		return tx.Error, nil
 	}
-	return nil
+	return nil, &request
 }
 
 func (r *FriendRepository) SendFriendRequest(sourceUserId uint, destinationUserId uint) error {
-	tx := r.DB.Create(&models.FriendRequestModel{SourceUserID: sourceUserId, DestinationUserID: destinationUserId, Status: models.FriendRequestsStatusEnum.Pending})
+	tx := r.DB.Create(&models.FriendRequestModel{
+		SourceUserID:      sourceUserId,
+		DestinationUserID: destinationUserId,
+		Status:            models.FriendRequestsStatusEnum.Pending,
+	})
 	if tx.Error != nil {
 		return tx.Error
 	}

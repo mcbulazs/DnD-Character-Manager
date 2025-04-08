@@ -5,15 +5,14 @@ import { userApiSlice } from "../store/api/userApiSlice";
 import { toast } from "react-toastify";
 
 const friendRequestWebsocket = (userId?: number) => {
-  const url = `friendRequest/${userId}`;
+  const url = `users/${userId}`;
   const dispatch = useDispatch();
   const handleMessage = (data: MessageEvent) => {
     if (!data.data) {
       return;
     }
-    console.log("WebSocket message received");
     dispatch(userApiSlice.util.invalidateTags([userTag]));
-    toast(`You have a new friend request from ${data.data}`, { type: "info" });
+    toast(data.data, { type: "info" });
   };
 
   // Handle errors
@@ -22,9 +21,7 @@ const friendRequestWebsocket = (userId?: number) => {
   };
 
   // Handle connection close
-  const handleClose = () => {
-    console.log("WebSocket connection closed");
-  };
+  const handleClose = () => { };
 
   // Create a new WebSocket
   useWebSocket(

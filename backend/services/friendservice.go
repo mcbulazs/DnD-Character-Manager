@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/models"
 	"DnDCharacterSheet/repositories"
 )
 
@@ -27,23 +28,24 @@ func (s *FriendService) IsUserFriend(userID int, friendID int) bool {
 	return true
 }
 
-func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) error {
+func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) (error, *models.UserModel) {
 	friendModel, err := s.UserRepo.FindByEmail(friend.Email)
+	userModel, err := s.UserRepo.FindByID(userID)
 	if err != nil {
-		return err
+		return err, nil
 	}
 	if s.IsUserFriend(userID, int(friendModel.ID)) {
-		return gorm.ErrCheckConstraintViolated
+		return gorm.ErrCheckConstraintViolated, nil
 	}
 	*friend = *convertToUserDataDTO(friendModel)
-	return s.Repo.SendFriendRequest(uint(userID), friendModel.ID)
+	return s.Repo.SendFriendRequest(uint(userID), friendModel.ID), userModel
 }
 
-func (s *FriendService) AcceptFriendRequest(userID int, friendRequestID int) error {
+func (s *FriendService) AcceptFriendRequest(userID int, friendRequestID int) (error, *models.FriendRequestModel) {
 	return s.Repo.AcceptFriendRequest(uint(friendRequestID), uint(userID))
 }
 
-func (s *FriendService) DeclineFriendRequest(userID int, friendRequestID int) error {
+func (s *FriendService) DeclineFriendRequest(userID int, friendRequestID int) (error, *models.FriendRequestModel) {
 	return s.Repo.DeclineFriendRequest(uint(friendRequestID), uint(userID))
 }
 

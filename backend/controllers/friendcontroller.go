@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -17,23 +18,28 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	err := c.BindJSON(&Friend)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Abort()
 		return
 	}
 
 	userId := c.MustGet("user_id").(int)
 	FriendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = FriendService.SendFriendRequest(userId, &Friend)
+	err, user := FriendService.SendFriendRequest(userId, &Friend)
 	if err != nil {
 		if err == repositories.ErrUserNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+			c.Abort()
 			return
 		}
 		if err == gorm.ErrCheckConstraintViolated {
 			c.JSON(http.StatusConflict, gin.H{"error": "Friend request already exists"})
+			c.Abort()
 			return
 		}
 	}
 	c.Set("friend_id", Friend.ID)
+	websocketMessage := fmt.Sprintf("You have got a friend request from %s", user.Email)
+	c.Set("websocket_message", websocketMessage)
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request sent"})
 }
 
@@ -41,15 +47,20 @@ func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		c.Abort()
 		return
 	}
 	userId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = friendService.AcceptFriendRequest(userId, friendRequestId)
+	err, request := friendService.AcceptFriendRequest(userId, friendRequestId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.Abort()
 		return
 	}
+	c.Set("friend_id", request.SourceUserID)
+	websocketMessage := fmt.Sprintf("%s accepted your friend request", request.SourceUser.Email)
+	c.Set("websocket_message", websocketMessage)
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request accepted"})
 }
 
@@ -57,15 +68,20 @@ func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		c.Abort()
 		return
 	}
 	userId := c.MustGet("user_id").(int)
 	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = friendService.DeclineFriendRequest(userId, friendRequestId)
+	err, request := friendService.DeclineFriendRequest(userId, friendRequestId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		c.Abort()
 		return
 	}
+	c.Set("friend_id", request.SourceUserID)
+	websocketMessage := fmt.Sprintf("%s declined your friend request", request.SourceUser.Email)
+	c.Set("websocket_message", websocketMessage)
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request declined"})
 }
 
@@ -73,6 +89,7 @@ func UnfriendHandler(c *gin.Context, db *gorm.DB) {
 	friendId, err := strconv.Atoi(c.Param("friendId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		c.Abort()
 		return
 	}
 	userId := c.MustGet("user_id").(int)
@@ -80,6 +97,7 @@ func UnfriendHandler(c *gin.Context, db *gorm.DB) {
 	err = friendService.Unfriend(userId, friendId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		c.Abort()
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Friend removed"})
