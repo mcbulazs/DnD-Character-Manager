@@ -7,13 +7,15 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
 	"DnDCharacterSheet/utility"
 )
 
 func GetUserDataHandler(c *gin.Context, db *gorm.DB) {
 	userID := c.MustGet("user_id").(int)
-	userService := services.NewUserService(db)
+	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
+	userService := services.NewUserService(userRepo) // Initialize UserService with DB
 	user, err := userService.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -30,10 +32,11 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	// Create the user using the service
-	userService := services.NewUserService(db) // Initialize UserService with DB
+	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
+	userService := services.NewUserService(userRepo) // Initialize UserService with DB
 	userModel, err := userService.CreateUser(&user)
 	if err != nil {
-		if err == services.ErrUserExists {
+		if err == gorm.ErrDuplicatedKey {
 			c.JSON(http.StatusConflict, gin.H{"error": "Email already in use"})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -55,7 +58,8 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	userService := services.NewUserService(db) // Initialize UserService with DB
+	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
+	userService := services.NewUserService(userRepo) // Initialize UserService with DB
 	userID, err := userService.AuthenticateUser(&user)
 	if err != nil {
 		if err == services.ErrAuthenticationFailed {

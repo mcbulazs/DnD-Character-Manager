@@ -12,7 +12,6 @@ func MigrateModels(db *gorm.DB) {
 		&UserModel{},
 		&FriendRequestModel{},
 		&FriendsModel{},
-		//&FriendShareModel{},
 		&CharacterModel{},
 		&CharacterOptionsModel{},
 		&CharacterImageModel{},

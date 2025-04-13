@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"strings"
 
 	"gorm.io/gorm"
 
@@ -13,19 +12,17 @@ import (
 )
 
 type UserService struct {
-	repo *repositories.UserRepository
+	Repo repositories.UserRepositoryInterface
 }
 
-func NewUserService(db *gorm.DB) *UserService {
+func NewUserService(repo repositories.UserRepositoryInterface) *UserService {
 	return &UserService{
-		repo: repositories.NewUserRepository(db),
+		Repo: repo,
 	}
 }
 
-var ErrUserExists = errors.New("user already exists")
-
 func (s *UserService) GetUserByID(id int) (*dto.UserDataDTO, error) {
-	user, err := s.repo.FindByID(id)
+	user, err := s.Repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -57,15 +54,12 @@ func (s *UserService) CreateUser(user *dto.AuthUserDTO) (*models.UserModel, erro
 	if err != nil {
 		return nil, err
 	}
-	user.Password = hashedPassword
 
 	// Create the user in the database
 	userModel := convertToAuthUserModel(user)
-	err = s.repo.Create(userModel)
+	userModel.Password = hashedPassword
+	err = s.Repo.Create(userModel)
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate key value") {
-			return nil, ErrUserExists
-		}
 		return nil, err
 	}
 	return userModel, nil
@@ -75,9 +69,9 @@ func (s *UserService) CreateUser(user *dto.AuthUserDTO) (*models.UserModel, erro
 var ErrAuthenticationFailed = errors.New("authentication failed")
 
 func (s *UserService) AuthenticateUser(user *dto.AuthUserDTO) (int, error) {
-	userModel, err := s.repo.FindByEmail(user.Email)
+	userModel, err := s.Repo.FindByEmail(user.Email)
 	if err != nil {
-		if errors.Is(err, repositories.ErrUserNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// Do not disclose whether the user was not found or the password is incorrect
 			return 0, ErrAuthenticationFailed
 		}

@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"errors"
-
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/models"
@@ -12,11 +10,15 @@ type UserRepository struct {
 	DB *gorm.DB
 }
 
+type UserRepositoryInterface interface {
+	Create(user *models.UserModel) error
+	FindByID(id int) (*models.UserModel, error)
+	FindByEmail(email string) (*models.UserModel, error)
+}
+
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
-
-var ErrUserNotFound = errors.New("user not found")
 
 func (r *UserRepository) Create(user *models.UserModel) error {
 	tx := r.DB.Create(user)
@@ -36,9 +38,6 @@ func (r *UserRepository) FindByID(id int) (*models.UserModel, error) {
 		Preload("Characters").
 		Preload("Characters.Image").
 		First(&foundUser, id)
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-		return nil, ErrUserNotFound
-	}
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -48,9 +47,6 @@ func (r *UserRepository) FindByID(id int) (*models.UserModel, error) {
 func (r *UserRepository) FindByEmail(email string) (*models.UserModel, error) {
 	var foundUser models.UserModel
 	tx := r.DB.First(&foundUser, "email = ?", email)
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-		return nil, ErrUserNotFound
-	}
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

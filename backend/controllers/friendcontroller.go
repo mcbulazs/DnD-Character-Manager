@@ -9,7 +9,6 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
-	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
 )
 
@@ -26,7 +25,7 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	FriendService := services.NewFriendService(db) // Initialize UserService with DB
 	err, user := FriendService.SendFriendRequest(userId, &Friend)
 	if err != nil {
-		if err == repositories.ErrUserNotFound {
+		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 			c.Abort()
 			return
