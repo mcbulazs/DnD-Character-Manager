@@ -21,9 +21,9 @@ func GetStoreHash() string {
 }
 
 func GetFrontendURL() string {
-	return "http://dnd_react:3000"
+	return "http://dnd_react:3000" // FIX  Why isnt it handled by env
 }
 
 func AllowedOrigins() []string {
-	return []string{"https://dnd.bulazs.com"}
+	return []string{"https://dnd.bulazs.com"} // FIX  Why isnt it handled by env
 }

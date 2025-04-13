@@ -13,7 +13,7 @@ type SessionManager interface {
 	CreateSession(c *gin.Context, userID int) error
 	ClearSession(c *gin.Context)
 	GetUserIdBySession(c *gin.Context) int
-	SetUserAuthentication(c *gin.Context)
+	GetUserAuthentication(c *gin.Context)
 	AuthenticateSession(c *gin.Context)
 }
 

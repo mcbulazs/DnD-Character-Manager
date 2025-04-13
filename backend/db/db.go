@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -42,27 +41,4 @@ func ConnectToDB() *gorm.DB {
 
 	log.Fatal("Failed to connect to the database after multiple attempts:", err)
 	return nil
-}
-
-func BeginTransaction(db *gorm.DB) (*gorm.DB, func(*error), error) {
-	tx := db.Begin()
-	if tx.Error != nil {
-		return nil, nil, tx.Error
-	}
-
-	commitOrRollback := func(errPtr *error) {
-		if *errPtr != nil {
-			fmt.Println("Rolling back transaction due to error:", *errPtr)
-			if rollbackErr := tx.Rollback().Error; rollbackErr != nil {
-				fmt.Println("Error rolling back transaction:", rollbackErr)
-			}
-		} else {
-			if commitErr := tx.Commit().Error; commitErr != nil {
-				fmt.Println("Error committing transaction:", commitErr)
-				*errPtr = commitErr
-			}
-		}
-	}
-
-	return tx, commitOrRollback, nil
 }
