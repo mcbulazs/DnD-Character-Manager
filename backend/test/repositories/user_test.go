@@ -35,21 +35,25 @@ func TestUserRepository_Create(t *testing.T) {
 	db := setupTestDB(t)
 	repo := repositories.NewUserRepository(db)
 
-	user := &models.UserModel{
-		Email:    "test@example.com",
-		Password: "hashedPassword",
-	}
-	user2 := &models.UserModel{
-		Email:    "test@example.com",
-		Password: "hashedPassword",
-	}
+	t.Run("Create User Success", func(t *testing.T) {
+		user := &models.UserModel{
+			Email:    "test@example.com",
+			Password: "hashedPassword",
+		}
 
-	err := repo.Create(user)
-	assert.NoError(t, err)
-	assert.NotZero(t, user.ID)
-	err = repo.Create(user2)
-	assert.Error(t, err)
-	assert.True(t, errors.Is(err, gorm.ErrDuplicatedKey))
+		err := repo.Create(user)
+		assert.NoError(t, err)
+		assert.NotZero(t, user.ID)
+	})
+	t.Run("Create User Duplicate Email", func(t *testing.T) {
+		user2 := &models.UserModel{
+			Email:    "test@example.com",
+			Password: "hashedPassword",
+		}
+		err := repo.Create(user2)
+		assert.Error(t, err)
+		assert.True(t, errors.Is(err, gorm.ErrDuplicatedKey))
+	})
 }
 
 func TestUserRepository_FindByID(t *testing.T) {
@@ -64,15 +68,19 @@ func TestUserRepository_FindByID(t *testing.T) {
 	err := repo.Create(user)
 	assert.NoError(t, err)
 
-	foundUser, err := repo.FindByID(int(user.ID))
-	assert.NoError(t, err)
-	assert.Equal(t, user.Email, foundUser.Email)
-	assert.Equal(t, user.Password, foundUser.Password)
+	t.Run("FindByID Success", func(t *testing.T) {
+		foundUser, err := repo.FindByID(int(user.ID))
+		assert.NoError(t, err)
+		assert.Equal(t, user.Email, foundUser.Email)
+		assert.Equal(t, user.Password, foundUser.Password)
+	})
 
-	foundUser2, err := repo.FindByID(2)
-	assert.Error(t, err)
-	assert.Equal(t, err, gorm.ErrRecordNotFound)
-	assert.Nil(t, foundUser2)
+	t.Run("FindByID Not Found", func(t *testing.T) {
+		foundUser2, err := repo.FindByID(2)
+		assert.Error(t, err)
+		assert.Equal(t, err, gorm.ErrRecordNotFound)
+		assert.Nil(t, foundUser2)
+	})
 }
 
 func TestUserRepository_FindByEmail(t *testing.T) {
@@ -87,13 +95,15 @@ func TestUserRepository_FindByEmail(t *testing.T) {
 
 	err := repo.Create(user)
 	assert.NoError(t, err)
-
-	foundUser, err := repo.FindByEmail("findme@example.com")
-	assert.NoError(t, err)
-	assert.Equal(t, user.ID, foundUser.ID)
-
-	foundUser2, err := repo.FindByEmail("nonexist@example.com")
-	assert.Error(t, err)
-	assert.Equal(t, err, gorm.ErrRecordNotFound)
-	assert.Nil(t, foundUser2)
+	t.Run("FindByEmail Success", func(t *testing.T) {
+		foundUser, err := repo.FindByEmail("findme@example.com")
+		assert.NoError(t, err)
+		assert.Equal(t, user.ID, foundUser.ID)
+	})
+	t.Run("FindByEmail Not Found", func(t *testing.T) {
+		foundUser2, err := repo.FindByEmail("nonexist@example.com")
+		assert.Error(t, err)
+		assert.Equal(t, err, gorm.ErrRecordNotFound)
+		assert.Nil(t, foundUser2)
+	})
 }

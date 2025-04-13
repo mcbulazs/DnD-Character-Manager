@@ -46,29 +46,29 @@ func TestUserService_CreateUser(t *testing.T) {
 		Email:    "test@example.com",
 		Password: "plaintextPassword",
 	}
-
 	callCount := 0
 	mockRepo.On("Create", mock.MatchedBy(func(user *models.UserModel) bool {
 		callCount++
 		return callCount == 1
 	})).Return(nil)
-
 	mockRepo.On("Create", mock.MatchedBy(func(user *models.UserModel) bool {
 		return callCount == 2
 	})).Return(gorm.ErrDuplicatedKey)
 
-	createdUser1, err := userService.CreateUser(inputDTO)
-	assert.NoError(t, err)
-	assert.NotNil(t, createdUser1)
-	assert.Equal(t, inputDTO.Email, createdUser1.Email)
-	assert.NotEqual(t, "plaintextPassword", createdUser1.Password)
+	t.Run("CreateUser Success", func(t *testing.T) {
+		createdUser1, err := userService.CreateUser(inputDTO)
+		assert.NoError(t, err)
+		assert.NotNil(t, createdUser1)
+		assert.Equal(t, inputDTO.Email, createdUser1.Email)
+		assert.NotEqual(t, "plaintextPassword", createdUser1.Password)
+	})
 
-	// duplicateKey
-	createdUser2, err := userService.CreateUser(inputDTO)
-	assert.Error(t, err)
-	assert.Nil(t, createdUser2)
-	assert.Equal(t, err, gorm.ErrDuplicatedKey)
-
+	t.Run("CreateUser Duplicate Email", func(t *testing.T) {
+		createdUser2, err := userService.CreateUser(inputDTO)
+		assert.Error(t, err)
+		assert.Nil(t, createdUser2)
+		assert.Equal(t, err, gorm.ErrDuplicatedKey)
+	})
 	mockRepo.AssertExpectations(t)
 }
 
@@ -83,15 +83,18 @@ func TestUserService_FindByID(t *testing.T) {
 	}, nil).
 		On("FindByID", 2).Return(nil, gorm.ErrRecordNotFound)
 
-	user, err := userService.GetUserByID(1)
-	assert.NoError(t, err)
-	assert.NotNil(t, user)
-	assert.Equal(t, user.Email, "test@example.com")
+	t.Run("FindByID Success", func(t *testing.T) {
+		user, err := userService.GetUserByID(1)
+		assert.NoError(t, err)
+		assert.NotNil(t, user)
+		assert.Equal(t, user.Email, "test@example.com")
+	})
 
-	user2, err := userService.GetUserByID(2)
-	assert.Error(t, err)
-	assert.Nil(t, user2)
-
+	t.Run("FindByID Not Found", func(t *testing.T) {
+		user2, err := userService.GetUserByID(2)
+		assert.Error(t, err)
+		assert.Nil(t, user2)
+	})
 	mockRepo.AssertExpectations(t)
 }
 
@@ -112,35 +115,37 @@ func TestUserService_AuthenticateUser(t *testing.T) {
 		On("FindByEmail", "nonexistent@example.com").Return(nil, gorm.ErrRecordNotFound)
 
 	// Correct credentials test
+	t.Run("AuthenticateUser Success", func(t *testing.T) {
+		inputDTO1 := &dto.AuthUserDTO{
+			Email:    "test@example.com",
+			Password: "plaintextPassword",
+		}
+		id1, err := userService.AuthenticateUser(inputDTO1)
+		assert.NoError(t, err)
+		assert.Equal(t, id1, 1)
+	})
 
-	inputDTO1 := &dto.AuthUserDTO{
-		Email:    "test@example.com",
-		Password: "plaintextPassword",
-	}
-	id1, err := userService.AuthenticateUser(inputDTO1)
-	assert.NoError(t, err)
-	assert.Equal(t, id1, 1)
+	t.Run("AuthenticateUser Incorrect Password", func(t *testing.T) {
+		inputDTO2 := &dto.AuthUserDTO{
+			Email:    "test@example.com",
+			Password: "wrongPassword",
+		}
+		id2, err := userService.AuthenticateUser(inputDTO2)
+		assert.Error(t, err)
+		assert.Equal(t, err, services.ErrAuthenticationFailed)
+		assert.Zero(t, id2)
+	})
 
-	// Incorrect password test
-	inputDTO2 := &dto.AuthUserDTO{
-		Email:    "test@example.com",
-		Password: "wrongPassword",
-	}
-	id2, err := userService.AuthenticateUser(inputDTO2)
-	assert.Error(t, err)
-	assert.Equal(t, err, services.ErrAuthenticationFailed)
-	assert.Zero(t, id2)
-
-	// Nonexistent user test
-	inputDTO3 := &dto.AuthUserDTO{
-		Email:    "nonexistent@example.com",
-		Password: "wrongPassword",
-	}
-	id3, err := userService.AuthenticateUser(inputDTO3)
-	assert.Error(t, err)
-	assert.Equal(t, err, services.ErrAuthenticationFailed)
-	assert.Zero(t, id3)
-
+	t.Run("AuthenticateUser Nonexistent User", func(t *testing.T) {
+		inputDTO3 := &dto.AuthUserDTO{
+			Email:    "nonexistent@example.com",
+			Password: "wrongPassword",
+		}
+		id3, err := userService.AuthenticateUser(inputDTO3)
+		assert.Error(t, err)
+		assert.Equal(t, err, services.ErrAuthenticationFailed)
+		assert.Zero(t, id3)
+	})
 	// Assert expectations for the mock calls
 	mockRepo.AssertExpectations(t)
 }
