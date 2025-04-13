@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/models"
@@ -23,6 +25,9 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 func (r *UserRepository) Create(user *models.UserModel) error {
 	tx := r.DB.Create(user)
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "UNIQUE constraint failed") {
+			return gorm.ErrDuplicatedKey
+		}
 		return tx.Error
 	}
 	return nil

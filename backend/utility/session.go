@@ -9,12 +9,27 @@ import (
 	"DnDCharacterSheet/env"
 )
 
-var store = sessions.NewCookieStore([]byte(env.GetStoreHash()))
+type SessionManager interface {
+	CreateSession(c *gin.Context, userID int) error
+	ClearSession(c *gin.Context)
+	GetUserIdBySession(c *gin.Context) int
+	SetUserAuthentication(c *gin.Context)
+	AuthenticateSession(c *gin.Context)
+}
 
-// CreateSession creates a new session
-func CreateSession(c *gin.Context, user_id int) error {
-	session := sessions.NewSession(store, "session")
-	session.Values["user_id"] = user_id
+type GorillaSessionManager struct {
+	store *sessions.CookieStore
+}
+
+func NewGorillaSessionManager() *GorillaSessionManager {
+	return &GorillaSessionManager{
+		store: sessions.NewCookieStore([]byte(env.GetStoreHash())),
+	}
+}
+
+func (r *GorillaSessionManager) CreateSession(c *gin.Context, userID int) error {
+	session := sessions.NewSession(r.store, "session")
+	session.Values["user_id"] = userID
 	session.Options = &sessions.Options{
 		Path:     "/",
 		HttpOnly: true,
@@ -28,9 +43,8 @@ func CreateSession(c *gin.Context, user_id int) error {
 	return nil
 }
 
-// ClearSession clears the session
-func ClearSession(c *gin.Context) {
-	session, err := store.Get(c.Request, "session")
+func (r *GorillaSessionManager) ClearSession(c *gin.Context) {
+	session, err := r.store.Get(c.Request, "session")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})
 		return
@@ -43,21 +57,21 @@ func ClearSession(c *gin.Context) {
 	}
 }
 
-// GetUserIdBySession returns the user ID stored in the session
-func GetUserIdBySession(c *gin.Context) (int, error) {
+func (r *GorillaSessionManager) GetUserIdBySession(c *gin.Context) int {
 	session := c.MustGet("session").(*sessions.Session)
 	userId := session.Values["user_id"]
 	if userId == nil {
-		return 0, nil
+		return -1
 	}
-	return userId.(int), nil
+	return userId.(int)
 }
 
-func SetUserAuthentication(c *gin.Context) {
-	session, err := store.Get(c.Request, "session")
+func (r *GorillaSessionManager) SetUserAuthentication(c *gin.Context) {
+	session, err := r.store.Get(c.Request, "session")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})
 		c.Abort()
+		return
 	}
 	user_id, ok := session.Values["user_id"].(int)
 	if ok && user_id != 0 {
@@ -67,9 +81,8 @@ func SetUserAuthentication(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"authenticated": false})
 }
 
-// AuthenticateSession checks if the user is authenticated
-func AuthenticateSession(c *gin.Context) {
-	session, err := store.Get(c.Request, "session")
+func (r *GorillaSessionManager) AuthenticateSession(c *gin.Context) {
+	session, err := r.store.Get(c.Request, "session")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})
 		c.Abort()

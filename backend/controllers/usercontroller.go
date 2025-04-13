@@ -12,11 +12,23 @@ import (
 	"DnDCharacterSheet/utility"
 )
 
-func GetUserDataHandler(c *gin.Context, db *gorm.DB) {
-	userID := c.MustGet("user_id").(int)
-	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
-	userService := services.NewUserService(userRepo) // Initialize UserService with DB
-	user, err := userService.GetUserByID(userID)
+type UserController struct {
+	Service        services.UserServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewUserController(db *gorm.DB, session utility.SessionManager) *UserController {
+	repo := repositories.NewUserRepository(db)
+	service := services.NewUserService(repo)
+	return &UserController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (u *UserController) GetUserDataHandler(c *gin.Context) {
+	userID := u.SessionManager.GetUserIdBySession(c)
+	user, err := u.Service.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
@@ -24,7 +36,7 @@ func GetUserDataHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, user)
 }
 
-func RegisterHandler(c *gin.Context, db *gorm.DB) {
+func (u *UserController) RegisterHandler(c *gin.Context) {
 	var user dto.AuthUserDTO
 	err := c.BindJSON(&user)
 	if err != nil {
@@ -32,9 +44,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	// Create the user using the service
-	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
-	userService := services.NewUserService(userRepo) // Initialize UserService with DB
-	userModel, err := userService.CreateUser(&user)
+	userModel, err := u.Service.CreateUser(&user)
 	if err != nil {
 		if err == gorm.ErrDuplicatedKey {
 			c.JSON(http.StatusConflict, gin.H{"error": "Email already in use"})
@@ -43,7 +53,7 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 		}
 		return
 	}
-	err = utility.CreateSession(c, int(userModel.ID))
+	err = u.SessionManager.CreateSession(c, int(userModel.ID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
 		return
@@ -51,16 +61,14 @@ func RegisterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User created"})
 }
 
-func LoginHandler(c *gin.Context, db *gorm.DB) {
+func (u *UserController) LoginHandler(c *gin.Context) {
 	var user dto.AuthUserDTO
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
 
-	userRepo := repositories.NewUserRepository(db)   // Initialize UserRepository with DB
-	userService := services.NewUserService(userRepo) // Initialize UserService with DB
-	userID, err := userService.AuthenticateUser(&user)
+	userID, err := u.Service.AuthenticateUser(&user)
 	if err != nil {
 		if err == services.ErrAuthenticationFailed {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
@@ -70,7 +78,7 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	err = utility.CreateSession(c, userID)
+	err = u.SessionManager.CreateSession(c, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
 		return
@@ -78,10 +86,10 @@ func LoginHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "User authenticated"})
 }
 
-func AuthHandler(c *gin.Context) {
-	utility.SetUserAuthentication(c)
+func (u *UserController) AuthHandler(c *gin.Context) {
+	u.SessionManager.SetUserAuthentication(c)
 }
 
-func LogoutHandler(c *gin.Context) {
-	utility.ClearSession(c)
+func (u *UserController) LogoutHandler(c *gin.Context) {
+	u.SessionManager.ClearSession(c)
 }

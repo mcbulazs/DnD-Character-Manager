@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"DnDCharacterSheet/utility"
-
 	"github.com/gin-gonic/gin"
+
+	"DnDCharacterSheet/utility"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
-	return utility.AuthenticateSession
+func AuthMiddleware(s utility.SessionManager) gin.HandlerFunc {
+	return s.AuthenticateSession
 }

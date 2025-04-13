@@ -7,10 +7,14 @@ import (
 
 	"DnDCharacterSheet/env"
 	"DnDCharacterSheet/middleware"
+	"DnDCharacterSheet/utility"
 	"DnDCharacterSheet/websocket"
 )
 
 func InitControllers(r *gin.Engine, db *gorm.DB) {
+	session := utility.NewGorillaSessionManager()
+	userController := NewUserController(db, session)
+
 	r.StaticFile("/robots.txt", "./files/robots.txt")
 	r.StaticFile("/favicon.ico", "./files/favicon.ico")
 	r.StaticFile("/sitemap.xml", "./files/sitemap.xml")
@@ -20,13 +24,13 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	api.OPTIONS("/*path", middleware.OptionsMidddleware)
 
-	api.POST("/register", Handler(RegisterHandler, db))
-	api.POST("/login", Handler(LoginHandler, db))
-	api.GET("/auth", AuthHandler)
+	api.POST("/register", userController.RegisterHandler)
+	api.POST("/login", userController.LoginHandler)
+	api.GET("/auth", userController.AuthHandler)
 
-	auth := api.Group("/", middleware.AuthMiddleware())
-	auth.GET("/user", Handler(GetUserDataHandler, db))
-	auth.POST("/logout", LogoutHandler)
+	auth := api.Group("/", middleware.AuthMiddleware(session))
+	auth.GET("/user", userController.GetUserDataHandler)
+	auth.POST("/logout", userController.LogoutHandler)
 
 	// websocket
 	auth.GET("/ws/*Id", websocket.HandleWebSocket)

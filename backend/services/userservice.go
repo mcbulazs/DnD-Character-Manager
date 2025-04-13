@@ -15,6 +15,12 @@ type UserService struct {
 	Repo repositories.UserRepositoryInterface
 }
 
+type UserServiceInterface interface {
+	GetUserByID(id int) (*dto.UserDataDTO, error)
+	AuthenticateUser(user *dto.AuthUserDTO) (int, error)
+	CreateUser(user *dto.AuthUserDTO) (*models.UserModel, error)
+}
+
 func NewUserService(repo repositories.UserRepositoryInterface) *UserService {
 	return &UserService{
 		Repo: repo,
