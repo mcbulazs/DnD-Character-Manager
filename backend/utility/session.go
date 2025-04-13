@@ -66,7 +66,7 @@ func (r *GorillaSessionManager) GetUserIdBySession(c *gin.Context) int {
 	return userId.(int)
 }
 
-func (r *GorillaSessionManager) SetUserAuthentication(c *gin.Context) {
+func (r *GorillaSessionManager) GetUserAuthentication(c *gin.Context) {
 	session, err := r.store.Get(c.Request, "session")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get session"})

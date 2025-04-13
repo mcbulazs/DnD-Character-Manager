@@ -87,7 +87,7 @@ func (u *UserController) LoginHandler(c *gin.Context) {
 }
 
 func (u *UserController) AuthHandler(c *gin.Context) {
-	u.SessionManager.SetUserAuthentication(c)
+	u.SessionManager.GetUserAuthentication(c)
 }
 
 func (u *UserController) LogoutHandler(c *gin.Context) {
