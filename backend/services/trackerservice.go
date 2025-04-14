@@ -1,26 +1,25 @@
 package services
 
 import (
-	"gorm.io/gorm"
-
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
 type TrackerRepositoryInterface interface {
-	CreateDefaultTrackers(DB *gorm.DB, characterID uint) error
 	CreateTracker(trackable *models.CharacterTrackerModel) error
 	UpdateTracker(trackable *models.CharacterTrackerModel) error
+	UpdateTrackerOrder(characterID int, trackerOrder *[]int) error
 	DeleteTracker(characterID int, trackableID int) error
 }
 
 type TrackerService struct {
-	Repo repositories.TrackerRepository
+	Repo TrackerRepositoryInterface
 }
 
-func NewTrackerService(DB *gorm.DB) TrackerService {
-	return TrackerService{Repo: *repositories.NewTrackerRepository(DB)}
+func NewTrackerService(repo TrackerRepositoryInterface) *TrackerService {
+	return &TrackerService{
+		Repo: repo,
+	}
 }
 
 func (s *TrackerService) CreateTracker(characterID int, trackerDTO *dto.CreateCharacterTrackerDTO) (*dto.CharacterTrackerDTO, error) {

@@ -8,18 +8,39 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
-func CreateFeatureHandler(c *gin.Context, db *gorm.DB) {
+type FeatureServiceInterface interface {
+	CreateFeature(feature *dto.CharacterCreateFeatureDTO, characterID int) (*dto.CharacterFeatureDTO, error)
+	UpdateFeature(feature *dto.CharacterFeatureDTO, characterID int) error
+	DeleteFeature(featureID int, characterID int) error
+}
+
+type FeatureController struct {
+	Service        FeatureServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewFeatureController(db *gorm.DB, session utility.SessionManager) *FeatureController {
+	repo := repositories.NewFeatureRepository(db)
+	service := services.NewFeatureService(repo)
+	return &FeatureController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (co *FeatureController) CreateFeatureHandler(c *gin.Context) {
 	characterID := c.MustGet("character_id").(int)
 	var createFeatureDTO dto.CharacterCreateFeatureDTO
 	if err := c.ShouldBindJSON(&createFeatureDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	featureService := services.NewFeatureService(db)
-	featureDTO, err := featureService.CreateFeature(&createFeatureDTO, characterID)
+	featureDTO, err := co.Service.CreateFeature(&createFeatureDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -27,7 +48,7 @@ func CreateFeatureHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, featureDTO)
 }
 
-func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
+func (co *FeatureController) UpdateFeatureHandler(c *gin.Context) {
 	var featureDTO dto.CharacterFeatureDTO
 	if err := c.ShouldBindJSON(&featureDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -43,8 +64,7 @@ func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
 
 	characterID := c.MustGet("character_id").(int)
 
-	featureService := services.NewFeatureService(db)
-	err = featureService.UpdateFeature(&featureDTO, characterID)
+	err = co.Service.UpdateFeature(&featureDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -52,7 +72,7 @@ func UpdateFeatureHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Feature updated successfully"})
 }
 
-func DeleteFeatureHandler(c *gin.Context, db *gorm.DB) {
+func (co *FeatureController) DeleteFeatureHandler(c *gin.Context) {
 	featureID, err := strconv.Atoi(c.Param("featureId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid feature ID"})
@@ -60,8 +80,7 @@ func DeleteFeatureHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	characterID := c.MustGet("character_id").(int)
-	featureService := services.NewFeatureService(db)
-	err = featureService.DeleteFeature(featureID, characterID)
+	err = co.Service.DeleteFeature(featureID, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

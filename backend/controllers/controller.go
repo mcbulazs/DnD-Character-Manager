@@ -15,6 +15,11 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	session := utility.NewGorillaSessionManager()
 	userController := NewUserController(db, session)
 	characterController := NewCharacterController(db, session)
+	featureController := NewFeatureController(db, session)
+	noteController := NewNoteController(db, session)
+	spellController := NewSpellController(db, session)
+	trackerController := NewTrackerController(db, session)
+	friendController := NewFriendController(db, session)
 
 	r.StaticFile("/robots.txt", "./files/robots.txt")
 	r.StaticFile("/favicon.ico", "./files/favicon.ico")
@@ -38,40 +43,40 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	friendRequests := auth.Group("/friendRequest")
 	friendRequests.POST("",
-		Handler(SendFriendRequestHandler, db),
+		friendController.SendFriendRequestHandler,
 		middleware.UserWebsocketMiddleware,
 	)
 	friendRequests.PATCH("/:friendRequestId/accept",
-		Handler(AcceptFriendRequestHandler, db),
+		friendController.AcceptFriendRequestHandler,
 		middleware.UserWebsocketMiddleware,
 	)
 	friendRequests.PATCH("/:friendRequestId/decline",
-		Handler(DeclineFriendRequestHandler, db),
+		friendController.DeclineFriendRequestHandler,
 		middleware.UserWebsocketMiddleware,
 	)
 
 	friends := auth.Group("/friends/:friendId")
 	friends.DELETE("",
-		Handler(UnfriendHandler, db),
+		friendController.UnfriendHandler,
 		middleware.UserWebsocketMiddleware,
 	)
-	friends.PATCH("/name", Handler(UpdateFriendNameHandler, db))
+	friends.PATCH("/name", friendController.UpdateFriendNameHandler)
 	friendsCharacter := friends.Group("/share",
-		Handler(middleware.FriendMiddleware, db),
+		friendController.FriendMiddleware,
 		middleware.UserWebsocketMiddleware,
 	)
 
 	// friend to share with
 	friendsCharacter.POST("/:characterId",
 		characterController.CharacterMiddleware,
-		Handler(ShareCharacterHandler, db),
+		friendController.ShareCharacterHandler,
 	)
 	friendsCharacter.DELETE("/:characterId",
 		characterController.CharacterMiddleware,
-		Handler(UnshareCharacterHandler, db),
+		friendController.UnshareCharacterHandler,
 	)
 	// friend who shared with me
-	friendsCharacter.GET("", Handler(GetSharedCharactersHandler, db))
+	friendsCharacter.GET("", friendController.GetSharedCharactersHandler)
 
 	auth.POST("/characters", characterController.CreateCharacterHandler)
 	auth.GET("/characters/:characterId", characterController.GetCharacterHandler)
@@ -90,38 +95,32 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 	characters.PUT("/options", characterController.UpdateCharacterOptionsHandler)
 
 	features := characters.Group("/features")
-	features.POST("", Handler(CreateFeatureHandler, db))
-	features.PUT("/:featureId", Handler(UpdateFeatureHandler, db))
-	features.DELETE("/:featureId", Handler(DeleteFeatureHandler, db))
+	features.POST("", featureController.CreateFeatureHandler)
+	features.PUT("/:featureId", featureController.UpdateFeatureHandler)
+	features.DELETE("/:featureId", featureController.DeleteFeatureHandler)
 
 	spells := characters.Group("/spells")
-	spells.POST("", Handler(CreateSpellHandler, db))
-	spells.PUT("/:spellId", Handler(UpdateSpellHandler, db))
-	spells.DELETE("/:spellId", Handler(DeleteSpellHandler, db))
+	spells.POST("", spellController.CreateSpellHandler)
+	spells.PUT("/:spellId", spellController.UpdateSpellHandler)
+	spells.DELETE("/:spellId", spellController.DeleteSpellHandler)
 
 	tracker := characters.Group("/trackers")
-	tracker.POST("", Handler(CreateTrackerHandler, db))
-	tracker.PUT("/:trackerId", Handler(UpdateTrackerHandler, db))
-	tracker.PATCH("/order", Handler(UpdateTrackerOrderHandler, db))
-	tracker.DELETE("/:trackerId", Handler(DeleteTrackerHandler, db))
+	tracker.POST("", trackerController.CreateTrackerHandler)
+	tracker.PUT("/:trackerId", trackerController.UpdateTrackerHandler)
+	tracker.PATCH("/order", trackerController.UpdateTrackerOrderHandler)
+	tracker.DELETE("/:trackerId", trackerController.DeleteTrackerHandler)
 
 	noteCategories := characters.Group("/notes")
-	noteCategories.POST("", Handler(CreateNoteCategoryHandler, db))
-	noteCategories.PUT("/:categoryId", Handler(UpdateNoteCategoryHandler, db))
-	noteCategories.DELETE("/:categoryId", Handler(DeleteNoteCategoryHandler, db))
+	noteCategories.POST("", noteController.CreateNoteCategoryHandler)
+	noteCategories.PUT("/:categoryId", noteController.UpdateNoteCategoryHandler)
+	noteCategories.DELETE("/:categoryId", noteController.DeleteNoteCategoryHandler)
 
-	note := noteCategories.Group("/:categoryId", Handler(middleware.NoteMiddleware, db))
-	note.POST("", Handler(CreateNoteHandler, db))
-	note.PUT("/:noteId", Handler(UpdateNoteHandler, db))
-	note.DELETE("/:noteId", Handler(DeleteNoteHandler, db))
+	note := noteCategories.Group("/:categoryId", noteController.NoteMiddleware)
+	note.POST("", noteController.CreateNoteHandler)
+	note.PUT("/:noteId", noteController.UpdateNoteHandler)
+	note.DELETE("/:noteId", noteController.DeleteNoteHandler)
 
 	InitProxy(r)
-}
-
-func Handler[T any](fn func(*gin.Context, T), arg T) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		fn(c, arg)
-	}
 }
 
 func initCors(r *gin.RouterGroup) {

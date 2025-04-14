@@ -5,18 +5,29 @@ import (
 
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
-type FriendService struct {
-	Repo     *repositories.FriendRepository
-	UserRepo *repositories.UserRepository
+type FriendRepositoryInterface interface {
+	GetUserFriend(userId uint, friendId uint) (*models.FriendsModel, error)
+	AcceptFriendRequest(friendRequestId uint, userId uint) (error, *models.FriendRequestModel)
+	DeclineFriendRequest(friendRequestId uint, userId uint) (error, *models.FriendRequestModel)
+	SendFriendRequest(userId uint, friendId uint) error
+	Unfriend(userId uint, friendId uint) error
+	UpdateName(userId int, friendID int, name string) error
+	ShareCharacter(characterID uint, friendID uint) error
+	UnshareCharacter(characterID uint, friendID uint) error
+	FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.CharacterModel, error)
 }
 
-func NewFriendService(DB *gorm.DB) *FriendService {
+type FriendService struct {
+	Repo     FriendRepositoryInterface
+	UserRepo UserRepositoryInterface
+}
+
+func NewFriendService(repo FriendRepositoryInterface, userRepo UserRepositoryInterface) *FriendService {
 	return &FriendService{
-		Repo:     repositories.NewFriendRepository(DB),
-		UserRepo: repositories.NewUserRepository(DB),
+		Repo:     repo,
+		UserRepo: userRepo,
 	}
 }
 

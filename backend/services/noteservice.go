@@ -1,11 +1,8 @@
 package services
 
 import (
-	"gorm.io/gorm"
-
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
 type NoteRepositoryInterface interface {
@@ -19,12 +16,12 @@ type NoteRepositoryInterface interface {
 }
 
 type NoteService struct {
-	Repo *repositories.NoteRepository
+	Repo NoteRepositoryInterface
 }
 
-func NewNoteService(DB *gorm.DB) NoteService {
-	return NoteService{
-		Repo: repositories.NewNoteRepository(DB),
+func NewNoteService(repo NoteRepositoryInterface) *NoteService {
+	return &NoteService{
+		Repo: repo,
 	}
 }
 

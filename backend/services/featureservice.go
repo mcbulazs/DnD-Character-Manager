@@ -1,11 +1,8 @@
 package services
 
 import (
-	"gorm.io/gorm"
-
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
 type FeatureRepositoryInterface interface {
@@ -15,12 +12,12 @@ type FeatureRepositoryInterface interface {
 }
 
 type FeatureService struct {
-	Repo *repositories.FeatureRepository
+	Repo FeatureRepositoryInterface
 }
 
-func NewFeatureService(DB *gorm.DB) *FeatureService {
+func NewFeatureService(repo FeatureRepositoryInterface) *FeatureService {
 	return &FeatureService{
-		Repo: repositories.NewFeatureRepository(DB),
+		Repo: repo,
 	}
 }
 

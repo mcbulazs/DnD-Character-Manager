@@ -9,10 +9,39 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/models"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
-func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
+type FriendServiceInterface interface {
+	SendFriendRequest(userID int, friend *dto.UserDataDTO) (error, *models.UserModel)
+	AcceptFriendRequest(userID int, friendRequestId int) (error, *models.FriendRequestModel)
+	DeclineFriendRequest(userID int, friendRequestId int) (error, *models.FriendRequestModel)
+	Unfriend(userID int, friendId int) (error, *models.FriendsModel)
+	ShareCharacter(userID int, friendId int, characterId int) (error, *models.FriendsModel)
+	UnshareCharacter(userID int, friendId int, characterId int) (error, *models.FriendsModel)
+	UpdateName(userID int, friendId int, name string) error
+	IsUserFriend(userID int, friendId int) bool
+	FindByUserIDAndFriendID(userID uint, friendID uint) ([]dto.CharacterBaseDTO, error)
+}
+type FriendController struct {
+	Service        FriendServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewFriendController(db *gorm.DB, session utility.SessionManager) *FriendController {
+	repo := repositories.NewFriendRepository(db)
+	userRepo := repositories.NewUserRepository(db)
+	service := services.NewFriendService(repo, userRepo)
+	return &FriendController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (co *FriendController) SendFriendRequestHandler(c *gin.Context) {
 	var Friend dto.UserDataDTO
 	err := c.BindJSON(&Friend)
 	if err != nil {
@@ -22,8 +51,7 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	userId := c.MustGet("user_id").(int)
-	FriendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, user := FriendService.SendFriendRequest(userId, &Friend)
+	err, user := co.Service.SendFriendRequest(userId, &Friend)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
@@ -42,7 +70,7 @@ func SendFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request sent"})
 }
 
-func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) AcceptFriendRequestHandler(c *gin.Context) {
 	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -50,8 +78,7 @@ func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	userId := c.MustGet("user_id").(int)
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, request := friendService.AcceptFriendRequest(userId, friendRequestId)
+	err, request := co.Service.AcceptFriendRequest(userId, friendRequestId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		c.Abort()
@@ -63,7 +90,7 @@ func AcceptFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request accepted"})
 }
 
-func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) DeclineFriendRequestHandler(c *gin.Context) {
 	friendRequestId, err := strconv.Atoi(c.Param("friendRequestId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -71,8 +98,7 @@ func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	userId := c.MustGet("user_id").(int)
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, request := friendService.DeclineFriendRequest(userId, friendRequestId)
+	err, request := co.Service.DeclineFriendRequest(userId, friendRequestId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		c.Abort()
@@ -84,7 +110,7 @@ func DeclineFriendRequestHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Friend request declined"})
 }
 
-func UnfriendHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) UnfriendHandler(c *gin.Context) {
 	friendId, err := strconv.Atoi(c.Param("friendId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -92,8 +118,7 @@ func UnfriendHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	userId := c.MustGet("user_id").(int)
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, friend := friendService.Unfriend(userId, friendId)
+	err, friend := co.Service.Unfriend(userId, friendId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		c.Abort()
@@ -109,7 +134,7 @@ func UnfriendHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Friend removed"})
 }
 
-func UpdateFriendNameHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) UpdateFriendNameHandler(c *gin.Context) {
 	var friend dto.FriendDTO
 	if err := c.BindJSON(&friend); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -123,8 +148,7 @@ func UpdateFriendNameHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 	userId := c.MustGet("user_id").(int)
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err = friendService.UpdateName(userId, friendId, friend.Name)
+	err = co.Service.UpdateName(userId, friendId, friend.Name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		c.Abort()
@@ -133,7 +157,7 @@ func UpdateFriendNameHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Friend name updated"})
 }
 
-func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) ShareCharacterHandler(c *gin.Context) {
 	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -143,8 +167,7 @@ func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
 	friendUserId := c.MustGet("friend_id").(uint)
 	userId := c.MustGet("user_id").(int)
 
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, friend := friendService.ShareCharacter(userId, int(friendUserId), characterId)
+	err, friend := co.Service.ShareCharacter(userId, int(friendUserId), characterId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		c.Abort()
@@ -159,7 +182,7 @@ func ShareCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Character shared"})
 }
 
-func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) UnshareCharacterHandler(c *gin.Context) {
 	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -168,8 +191,7 @@ func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
 	}
 	friendId := c.MustGet("friend_id").(uint)
 	userId := c.MustGet("user_id").(int)
-	friendService := services.NewFriendService(db) // Initialize UserService with DB
-	err, friend := friendService.UnshareCharacter(userId, int(friendId), characterId)
+	err, friend := co.Service.UnshareCharacter(userId, int(friendId), characterId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		c.Abort()
@@ -184,18 +206,36 @@ func UnshareCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "Character unshared"})
 }
 
-func GetSharedCharactersHandler(c *gin.Context, db *gorm.DB) {
+func (co *FriendController) GetSharedCharactersHandler(c *gin.Context) {
 	friendID, err := strconv.Atoi(c.Param("friendId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid friend ID"})
 		return
 	}
 	userID := c.MustGet("user_id").(int)
-	service := services.NewFriendService(db)
-	characters, err := service.FindByUserIDAndFriendID(uint(friendID), uint(userID))
+	characters, err := co.Service.FindByUserIDAndFriendID(uint(friendID), uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, characters)
+}
+
+func (co *FriendController) FriendMiddleware(c *gin.Context) {
+	friendID, err := strconv.Atoi(c.Param("friendId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
+		c.Abort()
+		return
+	}
+
+	c.Set("friend_id", uint(friendID))
+	userId := c.MustGet("user_id").(int)
+	isFriend := co.Service.IsUserFriend(userId, friendID)
+	if !isFriend {
+		c.JSON(http.StatusForbidden, gin.H{"error": "User is not the owner of the character"})
+		c.Abort()
+		return
+	}
+	c.Next()
 }

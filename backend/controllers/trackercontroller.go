@@ -8,18 +8,40 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
-func CreateTrackerHandler(c *gin.Context, db *gorm.DB) {
+type TrackerServiceInterface interface {
+	CreateTracker(characterID int, trackerDTO *dto.CreateCharacterTrackerDTO) (*dto.CharacterTrackerDTO, error)
+	UpdateTracker(characterID int, trackerDTO *dto.CharacterTrackerDTO) error
+	UpdateTrackerOrder(characterID int, trackerOrderDTO *[]int) error
+	DeleteTracker(characterID int, trackerID int) error
+}
+
+type TrackerController struct {
+	Service        TrackerServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewTrackerController(db *gorm.DB, session utility.SessionManager) *TrackerController {
+	repo := repositories.NewTrackerRepository(db)
+	service := services.NewTrackerService(repo)
+	return &TrackerController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (co *TrackerController) CreateTrackerHandler(c *gin.Context) {
 	characterID := c.MustGet("character_id").(int)
 	var createTrackerDTO dto.CreateCharacterTrackerDTO
 	if err := c.ShouldBindJSON(&createTrackerDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	trackerService := services.NewTrackerService(db)
-	trackerDTO, err := trackerService.CreateTracker(characterID, &createTrackerDTO)
+	trackerDTO, err := co.Service.CreateTracker(characterID, &createTrackerDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -27,7 +49,7 @@ func CreateTrackerHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, trackerDTO)
 }
 
-func UpdateTrackerHandler(c *gin.Context, db *gorm.DB) {
+func (co *TrackerController) UpdateTrackerHandler(c *gin.Context) {
 	var trackerDTO dto.CharacterTrackerDTO
 	if err := c.ShouldBindJSON(&trackerDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -41,28 +63,26 @@ func UpdateTrackerHandler(c *gin.Context, db *gorm.DB) {
 	trackerDTO.ID = uint(trackerID)
 	characterID := c.MustGet("character_id").(int)
 
-	trackerService := services.NewTrackerService(db)
-	err = trackerService.UpdateTracker(characterID, &trackerDTO)
+	err = co.Service.UpdateTracker(characterID, &trackerDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 }
 
-func UpdateTrackerOrderHandler(c *gin.Context, db *gorm.DB) {
+func (co *TrackerController) UpdateTrackerOrderHandler(c *gin.Context) {
 	var trackerOrderDTO []int
 	if err := c.ShouldBindJSON(&trackerOrderDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	characterID := c.MustGet("character_id").(int)
-	trackerService := services.NewTrackerService(db)
-	err := trackerService.UpdateTrackerOrder(characterID, &trackerOrderDTO)
+	err := co.Service.UpdateTrackerOrder(characterID, &trackerOrderDTO)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 }
 
-func DeleteTrackerHandler(c *gin.Context, db *gorm.DB) {
+func (co *TrackerController) DeleteTrackerHandler(c *gin.Context) {
 	trackerID, err := strconv.Atoi(c.Param("trackerId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tracker ID"})
@@ -70,8 +90,7 @@ func DeleteTrackerHandler(c *gin.Context, db *gorm.DB) {
 	}
 	characterID := c.MustGet("character_id").(int)
 
-	trackerService := services.NewTrackerService(db)
-	err = trackerService.DeleteTracker(characterID, trackerID)
+	err = co.Service.DeleteTracker(characterID, trackerID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}

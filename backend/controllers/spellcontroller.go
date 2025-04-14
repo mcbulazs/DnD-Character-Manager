@@ -8,18 +8,39 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
-func CreateSpellHandler(c *gin.Context, db *gorm.DB) {
+type SpellServiceInterface interface {
+	CreateSpell(spell *dto.CharacterCreateSpellDTO, characterID int) (*dto.CharacterSpellDTO, error)
+	UpdateSpell(spell *dto.CharacterSpellDTO, characterID int) error
+	DeleteSpell(spellID int, characterID int) error
+}
+
+type SpellController struct {
+	Service        SpellServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewSpellController(db *gorm.DB, session utility.SessionManager) *SpellController {
+	repo := repositories.NewSpellRepository(db)
+	service := services.NewSpellService(repo)
+	return &SpellController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (co *SpellController) CreateSpellHandler(c *gin.Context) {
 	characterID := c.MustGet("character_id").(int)
 	var createSpellDTO dto.CharacterCreateSpellDTO
 	if err := c.ShouldBindJSON(&createSpellDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	spellService := services.NewSpellService(db)
-	spellDTO, err := spellService.CreateSpell(&createSpellDTO, characterID)
+	spellDTO, err := co.Service.CreateSpell(&createSpellDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -27,7 +48,7 @@ func CreateSpellHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, spellDTO)
 }
 
-func UpdateSpellHandler(c *gin.Context, db *gorm.DB) {
+func (co *SpellController) UpdateSpellHandler(c *gin.Context) {
 	var spellDTO dto.CharacterSpellDTO
 	if err := c.ShouldBindJSON(&spellDTO); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -43,14 +64,13 @@ func UpdateSpellHandler(c *gin.Context, db *gorm.DB) {
 
 	characterID := c.MustGet("character_id").(int)
 
-	spellService := services.NewSpellService(db)
-	err = spellService.UpdateSpell(&spellDTO, characterID)
+	err = co.Service.UpdateSpell(&spellDTO, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 }
 
-func DeleteSpellHandler(c *gin.Context, db *gorm.DB) {
+func (co *SpellController) DeleteSpellHandler(c *gin.Context) {
 	spellID, err := strconv.Atoi(c.Param("spellId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid spell ID"})
@@ -59,8 +79,7 @@ func DeleteSpellHandler(c *gin.Context, db *gorm.DB) {
 
 	characterID := c.MustGet("character_id").(int)
 
-	spellService := services.NewSpellService(db)
-	err = spellService.DeleteSpell(spellID, characterID)
+	err = co.Service.DeleteSpell(spellID, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}

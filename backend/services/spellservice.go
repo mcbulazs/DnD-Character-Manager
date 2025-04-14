@@ -1,11 +1,8 @@
 package services
 
 import (
-	"gorm.io/gorm"
-
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
 type SpellRepositoryInterface interface {
@@ -15,12 +12,12 @@ type SpellRepositoryInterface interface {
 }
 
 type SpellService struct {
-	Repo repositories.SpellRepository
+	Repo SpellRepositoryInterface
 }
 
-func NewSpellService(DB *gorm.DB) *SpellService {
+func NewSpellService(repo SpellRepositoryInterface) *SpellService {
 	return &SpellService{
-		Repo: *repositories.NewSpellRepository(DB),
+		Repo: repo,
 	}
 }
 
