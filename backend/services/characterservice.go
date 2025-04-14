@@ -11,13 +11,26 @@ import (
 	"DnDCharacterSheet/repositories"
 )
 
-type CharacterService struct {
-	Repo *repositories.CharacterRepository
+type CharacterServiceInterface interface {
+	IsUserCharacter(userID int, characterID int) bool
+	CreateCharacter(character *dto.CreateCharacterDTO, userID int) (*dto.CharacterDTO, error)
+	DeleteCharacter(characterID int, userID int) error
+	UpdateCharacterAbilityScores(abilityScores *dto.CharacterAbilityScoreDTO, characterID int) error
+	UpdateCharacterSkills(skills *dto.CharacterSkillDTO, characterID int) error
+	UpdateCharacterAttribute(attributesValue []string, character *dto.CharacterDTO, characterID int, userID int) error
+	UpdateCharacterSavingThrows(savingThrows *dto.CharacterSavingThrowDTO, characterID int) error
+	UpdateCharacterImage(image *dto.CharacterImageDTO, characterID int) error
+	UpdateCharacterOptions(options *dto.CharacterOptionsDTO, characterID int) error
+	FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error)
 }
 
-func NewCharacterService(DB *gorm.DB) *CharacterService {
+type CharacterService struct {
+	Repo repositories.CharacterRepositoryInterface
+}
+
+func NewCharacterService(repo repositories.CharacterRepositoryInterface) *CharacterService {
 	return &CharacterService{
-		Repo: repositories.NewCharacterRepository(DB),
+		Repo: repo,
 	}
 }
 

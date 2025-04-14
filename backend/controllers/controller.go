@@ -14,6 +14,7 @@ import (
 func InitControllers(r *gin.Engine, db *gorm.DB) {
 	session := utility.NewGorillaSessionManager()
 	userController := NewUserController(db, session)
+	characterController := NewCharacterController(db, session)
 
 	r.StaticFile("/robots.txt", "./files/robots.txt")
 	r.StaticFile("/favicon.ico", "./files/favicon.ico")
@@ -62,31 +63,31 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 
 	// friend to share with
 	friendsCharacter.POST("/:characterId",
-		Handler(middleware.CharacterMiddleware, db),
+		characterController.CharacterMiddleware,
 		Handler(ShareCharacterHandler, db),
 	)
 	friendsCharacter.DELETE("/:characterId",
-		Handler(middleware.CharacterMiddleware, db),
+		characterController.CharacterMiddleware,
 		Handler(UnshareCharacterHandler, db),
 	)
 	// friend who shared with me
 	friendsCharacter.GET("", Handler(GetSharedCharactersHandler, db))
 
-	auth.POST("/characters", Handler(CreateCharacterHandler, db))
-	auth.GET("/characters/:characterId", Handler(GetCharacterHandler, db))
+	auth.POST("/characters", characterController.CreateCharacterHandler)
+	auth.GET("/characters/:characterId", characterController.GetCharacterHandler)
 
 	characters := auth.Group("/characters/:characterId",
-		Handler(middleware.CharacterMiddleware, db),
+		characterController.CharacterMiddleware,
 		middleware.CharacterWebsocketMiddleware,
 	)
 
-	characters.DELETE("", Handler(DeleteCharacterHandler, db))
-	characters.PUT("/ability-scores", Handler(UpdateCharacterAbilityScoresHandler, db))
-	characters.PUT("/skills", Handler(UpdateCharacterSkillsHandler, db))
-	characters.PUT("/saving-throws", Handler(UpdateCharacterSavingThrowsHandler, db))
-	characters.PUT("/image", Handler(UpdateCharacterImageHandler, db))
-	characters.PATCH("/attributes", Handler(UpdateCharacterAttribute, db))
-	characters.PUT("/options", Handler(UpdateCharacterOptionsHandler, db))
+	characters.DELETE("", characterController.DeleteCharacterHandler)
+	characters.PUT("/ability-scores", characterController.UpdateCharacterAbilityScoresHandler)
+	characters.PUT("/skills", characterController.UpdateCharacterSkillsHandler)
+	characters.PUT("/saving-throws", characterController.UpdateCharacterSavingThrowsHandler)
+	characters.PUT("/image", characterController.UpdateCharacterImageHandler)
+	characters.PATCH("/attributes", characterController.UpdateCharacterAttribute)
+	characters.PUT("/options", characterController.UpdateCharacterOptionsHandler)
 
 	features := characters.Group("/features")
 	features.POST("", Handler(CreateFeatureHandler, db))

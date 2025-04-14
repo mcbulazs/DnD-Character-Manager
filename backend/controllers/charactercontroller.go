@@ -10,20 +10,35 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
+	"DnDCharacterSheet/utility"
 )
 
-func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
+type CharacterController struct {
+	Service        services.CharacterServiceInterface
+	SessionManager utility.SessionManager
+}
+
+func NewCharacterController(db *gorm.DB, session utility.SessionManager) *CharacterController {
+	repo := repositories.NewCharacterRepository(db)
+	service := services.NewCharacterService(repo)
+	return &CharacterController{
+		Service:        service,
+		SessionManager: session,
+	}
+}
+
+func (co *CharacterController) CreateCharacterHandler(c *gin.Context) {
 	var character dto.CreateCharacterDTO
 	if err := c.ShouldBindJSON(&character); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	service := services.NewCharacterService(db)
-	userID := c.MustGet("user_id").(int)
+	userID := co.SessionManager.GetUserIdBySession(c)
 
-	characterDTO, err := service.CreateCharacter(&character, userID)
+	characterDTO, err := co.Service.CreateCharacter(&character, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,16 +47,15 @@ func CreateCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, characterDTO)
 }
 
-func DeleteCharacterHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) DeleteCharacterHandler(c *gin.Context) {
 	characterID, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-	userID := c.MustGet("user_id").(int)
+	userID := co.SessionManager.GetUserIdBySession(c)
 
-	service := services.NewCharacterService(db)
-	err = service.DeleteCharacter(characterID, userID)
+	err = co.Service.DeleteCharacter(characterID, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -50,7 +64,7 @@ func DeleteCharacterHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterAttribute(c *gin.Context) {
 	// Read the request body into a byte slice
 	bodyBytes, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -76,11 +90,10 @@ func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
-	userID := c.MustGet("user_id").(int)
+	userID := co.SessionManager.GetUserIdBySession(c)
 
-	err = service.UpdateCharacterAttribute(attributes, &character, characterID, userID)
+	err = co.Service.UpdateCharacterAttribute(attributes, &character, characterID, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -89,17 +102,16 @@ func UpdateCharacterAttribute(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, character)
 }
 
-func UpdateCharacterAbilityScoresHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterAbilityScoresHandler(c *gin.Context) {
 	var abilityScores dto.CharacterAbilityScoreDTO
 	if err := c.ShouldBindJSON(&abilityScores); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
 
-	err := service.UpdateCharacterAbilityScores(&abilityScores, characterID)
+	err := co.Service.UpdateCharacterAbilityScores(&abilityScores, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -107,17 +119,16 @@ func UpdateCharacterAbilityScoresHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, abilityScores)
 }
 
-func UpdateCharacterSkillsHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterSkillsHandler(c *gin.Context) {
 	var skills dto.CharacterSkillDTO
 	if err := c.ShouldBindJSON(&skills); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
 
-	err := service.UpdateCharacterSkills(&skills, characterID)
+	err := co.Service.UpdateCharacterSkills(&skills, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -125,17 +136,16 @@ func UpdateCharacterSkillsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, skills)
 }
 
-func UpdateCharacterSavingThrowsHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterSavingThrowsHandler(c *gin.Context) {
 	var savingThrows dto.CharacterSavingThrowDTO
 	if err := c.ShouldBindJSON(&savingThrows); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
 
-	err := service.UpdateCharacterSavingThrows(&savingThrows, characterID)
+	err := co.Service.UpdateCharacterSavingThrows(&savingThrows, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -143,17 +153,16 @@ func UpdateCharacterSavingThrowsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, savingThrows)
 }
 
-func UpdateCharacterImageHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterImageHandler(c *gin.Context) {
 	var image dto.CharacterImageDTO
 	if err := c.ShouldBindJSON(&image); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
 
-	err := service.UpdateCharacterImage(&image, characterID)
+	err := co.Service.UpdateCharacterImage(&image, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -161,16 +170,15 @@ func UpdateCharacterImageHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, image)
 }
 
-func UpdateCharacterOptionsHandler(c *gin.Context, db *gorm.DB) {
+func (co *CharacterController) UpdateCharacterOptionsHandler(c *gin.Context) {
 	var options dto.CharacterOptionsDTO
 	if err := c.ShouldBindJSON(&options); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	service := services.NewCharacterService(db)
 	characterID := c.MustGet("character_id").(int)
 
-	err := service.UpdateCharacterOptions(&options, characterID)
+	err := co.Service.UpdateCharacterOptions(&options, characterID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -178,16 +186,14 @@ func UpdateCharacterOptionsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, options)
 }
 
-func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
-	service := services.NewCharacterService(db)
-
+func (co *CharacterController) GetCharacterHandler(c *gin.Context) {
 	characterID, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
 	}
-	userId := c.MustGet("user_id").(int)
-	character, err := service.FindCharacterByID(characterID, userId)
+	userId := co.SessionManager.GetUserIdBySession(c)
+	character, err := co.Service.FindCharacterByID(characterID, userId)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusForbidden, gin.H{"error": "Character not found"})
@@ -198,4 +204,23 @@ func GetCharacterHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	c.JSON(http.StatusOK, character)
+}
+
+func (co CharacterController) CharacterMiddleware(c *gin.Context) {
+	characterID, err := strconv.Atoi(c.Param("characterId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
+		c.Abort()
+		return
+	}
+
+	c.Set("character_id", characterID)
+	userId := co.SessionManager.GetUserIdBySession(c)
+	isOwner := co.Service.IsUserCharacter(userId, characterID)
+	if !isOwner {
+		c.JSON(http.StatusForbidden, gin.H{"error": "User is not the owner of the character"})
+		c.Abort()
+		return
+	}
+	c.Next()
 }
