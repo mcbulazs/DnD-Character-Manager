@@ -8,6 +8,16 @@ import (
 	"DnDCharacterSheet/repositories"
 )
 
+type NoteRepositoryInterface interface {
+	IsCategoryBelongToCharacter(categoryID int, characterID int) bool
+	CreateNoteCategory(categoryModel *models.CharacterNoteCategoryModel) error
+	UpdateNoteCategory(categoryModel *models.CharacterNoteCategoryModel) error
+	DeleteNoteCategory(categoryID int, characterID int) error
+	CreateNote(noteModel *models.CharacterNoteModel) error
+	UpdateNote(noteModel *models.CharacterNoteModel, categoryID int) error
+	DeleteNote(noteID int, categoryID int) error
+}
+
 type NoteService struct {
 	Repo *repositories.NoteRepository
 }

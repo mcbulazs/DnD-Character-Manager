@@ -8,6 +8,12 @@ import (
 	"DnDCharacterSheet/repositories"
 )
 
+type SpellRepositoryInterface interface {
+	CreateSpell(spell *models.CharacterSpellModel) error
+	UpdateSpell(spell *models.CharacterSpellModel) error
+	DeleteSpell(spellID int, characterID int) error
+}
+
 type SpellService struct {
 	Repo repositories.SpellRepository
 }

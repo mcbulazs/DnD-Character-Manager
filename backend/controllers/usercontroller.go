@@ -7,13 +7,20 @@ import (
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/dto"
+	"DnDCharacterSheet/models"
 	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/services"
 	"DnDCharacterSheet/utility"
 )
 
+type UserServiceInterface interface {
+	GetUserByID(id int) (*dto.UserDataDTO, error)
+	AuthenticateUser(user *dto.AuthUserDTO) (int, error)
+	CreateUser(user *dto.AuthUserDTO) (*models.UserModel, error)
+}
+
 type UserController struct {
-	Service        services.UserServiceInterface
+	Service        UserServiceInterface
 	SessionManager utility.SessionManager
 }
 

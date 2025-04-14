@@ -7,21 +7,20 @@ import (
 
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 	"DnDCharacterSheet/utility"
 )
 
-type UserServiceInterface interface {
-	GetUserByID(id int) (*dto.UserDataDTO, error)
-	AuthenticateUser(user *dto.AuthUserDTO) (int, error)
-	CreateUser(user *dto.AuthUserDTO) (*models.UserModel, error)
+type UserRepositoryInterface interface {
+	Create(user *models.UserModel) error
+	FindByID(id int) (*models.UserModel, error)
+	FindByEmail(email string) (*models.UserModel, error)
 }
 
 type UserService struct {
-	Repo repositories.UserRepositoryInterface
+	Repo UserRepositoryInterface
 }
 
-func NewUserService(repo repositories.UserRepositoryInterface) *UserService {
+func NewUserService(repo UserRepositoryInterface) *UserService {
 	return &UserService{
 		Repo: repo,
 	}

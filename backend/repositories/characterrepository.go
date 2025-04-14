@@ -7,18 +7,6 @@ import (
 	"DnDCharacterSheet/models"
 )
 
-type CharacterRepositoryInterface interface {
-	FindByID(characterID int) (*models.CharacterModel, error)
-	IsUserCharacter(userID int, characterID int) bool
-	Create(character *models.CharacterModel) error
-	Delete(characterID int, userID int) error
-	UpdateAbilityScores(abilityScores *models.CharacterAbilityScoreModel) error
-	UpdateSkills(skills *models.CharacterSkillModel) error
-	UpdateSavingThrows(savingThrows *models.CharacterSavingThrowModel) error
-	UpdateImage(image *models.CharacterImageModel) error
-	UpdateCharacterAttributes(attributes []string, character *models.CharacterModel) error
-	UpdateCharacterOptions(options *models.CharacterOptionsModel) error
-}
 
 type CharacterRepository struct {
 	DB *gorm.DB

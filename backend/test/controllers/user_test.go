@@ -39,7 +39,7 @@ func (m *MockSessionManager) GetUserIdBySession(c *gin.Context) int {
 	return m.UserID
 }
 
-func (m *MockSessionManager) SetUserAuthentication(c *gin.Context) {
+func (m *MockSessionManager) GetUserAuthentication(c *gin.Context) {
 	// Mock implementation, do nothing
 }
 

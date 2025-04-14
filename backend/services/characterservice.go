@@ -8,27 +8,26 @@ import (
 
 	"DnDCharacterSheet/dto"
 	"DnDCharacterSheet/models"
-	"DnDCharacterSheet/repositories"
 )
 
-type CharacterServiceInterface interface {
+type CharacterRepositoryInterface interface {
+	FindByID(characterID int) (*models.CharacterModel, error)
 	IsUserCharacter(userID int, characterID int) bool
-	CreateCharacter(character *dto.CreateCharacterDTO, userID int) (*dto.CharacterDTO, error)
-	DeleteCharacter(characterID int, userID int) error
-	UpdateCharacterAbilityScores(abilityScores *dto.CharacterAbilityScoreDTO, characterID int) error
-	UpdateCharacterSkills(skills *dto.CharacterSkillDTO, characterID int) error
-	UpdateCharacterAttribute(attributesValue []string, character *dto.CharacterDTO, characterID int, userID int) error
-	UpdateCharacterSavingThrows(savingThrows *dto.CharacterSavingThrowDTO, characterID int) error
-	UpdateCharacterImage(image *dto.CharacterImageDTO, characterID int) error
-	UpdateCharacterOptions(options *dto.CharacterOptionsDTO, characterID int) error
-	FindCharacterByID(id int, userID int) (*dto.CharacterDTO, error)
+	Create(character *models.CharacterModel) error
+	Delete(characterID int, userID int) error
+	UpdateAbilityScores(abilityScores *models.CharacterAbilityScoreModel) error
+	UpdateSkills(skills *models.CharacterSkillModel) error
+	UpdateSavingThrows(savingThrows *models.CharacterSavingThrowModel) error
+	UpdateImage(image *models.CharacterImageModel) error
+	UpdateCharacterAttributes(attributes []string, character *models.CharacterModel) error
+	UpdateCharacterOptions(options *models.CharacterOptionsModel) error
 }
 
 type CharacterService struct {
-	Repo repositories.CharacterRepositoryInterface
+	Repo CharacterRepositoryInterface
 }
 
-func NewCharacterService(repo repositories.CharacterRepositoryInterface) *CharacterService {
+func NewCharacterService(repo CharacterRepositoryInterface) *CharacterService {
 	return &CharacterService{
 		Repo: repo,
 	}

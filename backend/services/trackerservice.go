@@ -8,6 +8,13 @@ import (
 	"DnDCharacterSheet/repositories"
 )
 
+type TrackerRepositoryInterface interface {
+	CreateDefaultTrackers(DB *gorm.DB, characterID uint) error
+	CreateTracker(trackable *models.CharacterTrackerModel) error
+	UpdateTracker(trackable *models.CharacterTrackerModel) error
+	DeleteTracker(characterID int, trackableID int) error
+}
+
 type TrackerService struct {
 	Repo repositories.TrackerRepository
 }

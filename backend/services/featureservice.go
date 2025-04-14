@@ -8,6 +8,12 @@ import (
 	"DnDCharacterSheet/repositories"
 )
 
+type FeatureRepositoryInterface interface {
+	CreateFeature(feature *models.CharacterFeatureModel) error
+	UpdateFeature(feature *models.CharacterFeatureModel) error
+	DeleteFeature(featureID int, characterID int) error
+}
+
 type FeatureService struct {
 	Repo *repositories.FeatureRepository
 }

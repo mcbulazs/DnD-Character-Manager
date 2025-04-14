@@ -8,12 +8,6 @@ import (
 	"DnDCharacterSheet/models"
 )
 
-type UserRepositoryInterface interface {
-	Create(user *models.UserModel) error
-	FindByID(id int) (*models.UserModel, error)
-	FindByEmail(email string) (*models.UserModel, error)
-}
-
 type UserRepository struct {
 	DB *gorm.DB
 }
