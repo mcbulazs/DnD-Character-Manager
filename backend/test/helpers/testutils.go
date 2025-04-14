@@ -4,26 +4,26 @@ package helpers
 
 import (
 	"io"
+	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"gorm.io/driver/postgres"
+	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
+	"DnDCharacterSheet/models"
 )
 
-func CreateMockDB() (*gorm.DB, sqlmock.Sqlmock, error) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		return nil, nil, err
-	}
-	dialector := postgres.New(postgres.Config{
-		Conn:       db,
-		DriverName: "postgres",
+func SetupTestDB(t *testing.T) *gorm.DB {
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
 	})
-	gormDB, err := gorm.Open(dialector, &gorm.Config{})
-	if err != nil {
-		return nil, nil, err
-	}
-	return gormDB, mock, nil
+	assert.NoError(t, err)
+
+	db.Exec("PRAGMA foreign_keys = ON;") // 👈 THIS IS CRUCIAL
+
+	models.MigrateModels(db)
+	return db
 }
 
 func JsonBody(body string) *httptestBody {

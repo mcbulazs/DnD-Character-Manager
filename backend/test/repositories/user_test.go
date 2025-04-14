@@ -5,34 +5,15 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 
 	"DnDCharacterSheet/models"
 	"DnDCharacterSheet/repositories"
+	"DnDCharacterSheet/test/helpers"
 )
 
-func setupTestDB(t *testing.T) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
-	})
-	assert.NoError(t, err)
-
-	err = db.AutoMigrate(
-		&models.UserModel{},
-		&models.FriendsModel{},
-		&models.FriendRequestModel{},
-		&models.CharacterModel{},
-		&models.CharacterImageModel{},
-	)
-	assert.NoError(t, err)
-
-	return db
-}
-
 func TestUserRepository_Create(t *testing.T) {
-	db := setupTestDB(t)
+	db := helpers.SetupTestDB(t)
 	repo := repositories.NewUserRepository(db)
 
 	t.Run("Create User Success", func(t *testing.T) {
@@ -57,7 +38,7 @@ func TestUserRepository_Create(t *testing.T) {
 }
 
 func TestUserRepository_FindByID(t *testing.T) {
-	db := setupTestDB(t)
+	db := helpers.SetupTestDB(t)
 	repo := repositories.NewUserRepository(db)
 
 	// Create a user first
@@ -84,7 +65,7 @@ func TestUserRepository_FindByID(t *testing.T) {
 }
 
 func TestUserRepository_FindByEmail(t *testing.T) {
-	db := setupTestDB(t)
+	db := helpers.SetupTestDB(t)
 	repo := repositories.NewUserRepository(db)
 
 	// Create a user first

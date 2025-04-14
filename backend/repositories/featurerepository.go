@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -18,6 +20,9 @@ func NewFeatureRepository(db *gorm.DB) *FeatureRepository {
 func (r *FeatureRepository) CreateFeature(feature *models.CharacterFeatureModel) error {
 	tx := r.DB.Create(feature)
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "FOREIGN KEY constraint") {
+			return gorm.ErrForeignKeyViolated
+		}
 		return tx.Error
 	}
 	return nil
@@ -33,6 +38,9 @@ func (r *FeatureRepository) UpdateFeature(feature *models.CharacterFeatureModel)
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -40,6 +48,9 @@ func (r *FeatureRepository) DeleteFeature(featureID int, characterID int) error 
 	tx := r.DB.Where("id = ? AND character_id = ?", featureID, characterID).Delete(&models.CharacterFeatureModel{})
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }

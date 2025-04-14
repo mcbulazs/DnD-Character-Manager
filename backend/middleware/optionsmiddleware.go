@@ -13,6 +13,7 @@ func OptionsMidddleware(c *gin.Context) {
 	c.Next()
 }
 
+// TODO: connvert this to a map
 func getAllowedMethods(route string) string {
 	switch route {
 	case "/api/register":

@@ -1,12 +1,13 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"DnDCharacterSheet/models"
 )
-
 
 type CharacterRepository struct {
 	DB *gorm.DB
@@ -46,39 +47,44 @@ func (r *CharacterRepository) IsUserCharacter(userID int, characterID int) bool 
 	return character.UserID == uint(userID)
 }
 
-func (r *CharacterRepository) Create(character *models.CharacterModel) error {
+func (r *CharacterRepository) Create(character *models.CharacterModel) (err error) {
 	tx := r.DB.Begin()
+	defer func() {
+		if err != nil && strings.Contains(err.Error(), "FOREIGN KEY constraint") {
+			err = gorm.ErrForeignKeyViolated
+		}
+	}()
 
 	// Create the character
-	if err := tx.Create(&character).Error; err != nil {
+	if err = tx.Create(&character).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// Create related models if needed
 	character.AbilityScores.CharacterID = character.ID
-	if err := tx.Create(&character.AbilityScores).Error; err != nil {
+	if err = tx.Create(&character.AbilityScores).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	character.Options.CharacterID = character.ID
-	if err := tx.Create(&character.Options).Error; err != nil {
+	if err = tx.Create(&character.Options).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 	character.SavingThrows.CharacterID = character.ID
-	if err := tx.Create(&character.SavingThrows).Error; err != nil {
+	if err = tx.Create(&character.SavingThrows).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 	character.Skills.CharacterID = character.ID
-	if err := tx.Create(&character.Skills).Error; err != nil {
+	if err = tx.Create(&character.Skills).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := CreateDefaultTrackers(tx, character.ID); err != nil {
+	if err = CreateDefaultTrackers(tx, character.ID); err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -91,6 +97,9 @@ func (r *CharacterRepository) Delete(characterID int, userID int) error {
 	tx := r.DB.Where("id = ? AND user_id = ?", characterID, userID).Delete(&models.CharacterModel{})
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
@@ -105,6 +114,9 @@ func (r *CharacterRepository) UpdateAbilityScores(abilityScores *models.Characte
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -117,6 +129,9 @@ func (r *CharacterRepository) UpdateSkills(skills *models.CharacterSkillModel) e
 		Updates(&skills)
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
@@ -131,6 +146,9 @@ func (r *CharacterRepository) UpdateSavingThrows(savingThrows *models.CharacterS
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -144,6 +162,9 @@ func (r *CharacterRepository) UpdateImage(image *models.CharacterImageModel) err
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -154,6 +175,9 @@ func (r *CharacterRepository) UpdateCharacterAttributes(attributes []string, cha
 		Updates(&character)
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	updatedCharacter, err := r.FindByID(int(character.ID))
 	*character = *updatedCharacter
@@ -172,6 +196,9 @@ func (r *CharacterRepository) UpdateCharacterOptions(options *models.CharacterOp
 		Updates(&options)
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
