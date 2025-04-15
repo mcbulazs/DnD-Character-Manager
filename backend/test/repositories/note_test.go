@@ -427,3 +427,57 @@ func TestNoteRepository_DeleteNote(t *testing.T) {
 		assert.Equal(t, gorm.ErrRecordNotFound, err)
 	})
 }
+
+func TestNoteRepository_IsCategoryBelongToCharacter(t *testing.T) {
+	// Set up a test database
+	db := helpers.SetupTestDB(t) // You can replace this with your actual test DB setup
+	userRepo := repositories.NewUserRepository(db)
+	characterRepo := repositories.NewCharacterRepository(db)
+	repo := repositories.NewNoteRepository(db)
+
+	// Create a user for the test
+	user := &models.UserModel{
+		Email:    "test@example.com",
+		Password: "password123",
+	}
+	err := userRepo.Create(user)
+	assert.NoError(t, err)
+
+	// Create a character for the user
+	character := models.CharacterModel{
+		UserID: user.ID,
+		Name:   "Test Character",
+		Class:  "Warrior",
+		Race:   "Elf",
+	}
+	err = characterRepo.Create(&character)
+	assert.NoError(t, err)
+
+	// Create a note category associated with the character
+	noteCategory := &models.CharacterNoteCategoryModel{
+		CharacterID: character.ID,
+		Name:        "Test Category",
+		Description: "A category for notes",
+	}
+	err = repo.CreateNoteCategory(noteCategory)
+	assert.NoError(t, err)
+
+	t.Run("Category belongs to character", func(t *testing.T) {
+		// Test that the note category belongs to the correct character
+		result := repo.IsCategoryBelongToCharacter(int(noteCategory.ID), int(character.ID))
+		assert.True(t, result, "Category should belong to the given character")
+	})
+
+	t.Run("Category does not belong to character", func(t *testing.T) {
+		// Test that the note category does not belong to a different character
+		invalidCharacterID := character.ID + 1 // Using an invalid character ID
+		result := repo.IsCategoryBelongToCharacter(int(noteCategory.ID), int(invalidCharacterID))
+		assert.False(t, result, "Category should not belong to the given character")
+	})
+
+	t.Run("Category not found", func(t *testing.T) {
+		// Test that a non-existent category returns false
+		result := repo.IsCategoryBelongToCharacter(9999, int(character.ID)) // Using a non-existent category ID
+		assert.False(t, result, "Category should not be found")
+	})
+}
