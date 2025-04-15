@@ -259,7 +259,6 @@ func TestSpellRepository_Delete(t *testing.T) {
 		}
 		assert.NoError(t, characterRepo.Create(&character2))
 
-		// Create a feature under character 1
 		spell := &models.CharacterSpellModel{
 			CharacterID: character.ID,
 			Name:        "Unauthorized Delete",

@@ -32,6 +32,9 @@ func (r *TrackerRepository) CreateTracker(trackable *models.CharacterTrackerMode
 	trackable.Type = models.TrackerEnum.Custom
 	tx := r.DB.Create(&trackable)
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "FOREIGN KEY constraint") {
+			return gorm.ErrForeignKeyViolated
+		}
 		return tx.Error
 	}
 	return nil
@@ -54,16 +57,23 @@ func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerMode
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
 func (r *TrackerRepository) UpdateTrackerOrder(characterID int, trackerOrder *[]int) error {
 	stringOrder := strings.Join(strings.Split(strings.Trim(fmt.Sprint(*trackerOrder), "[]"), " "), ",") //[1,2,3,4] => "1,2,3,4"
+	fmt.Println(stringOrder)
 	tx := r.DB.Model(&models.CharacterTrackerModel{}).
 		Where("character_id = ? AND type = 'Custom'", characterID).
 		Updates(map[string]interface{}{"tracker_order": gorm.Expr("array_position(ARRAY[" + stringOrder + "]::int[], id)")}) // there should be any fear of sql injection
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
@@ -72,6 +82,9 @@ func (r *TrackerRepository) DeleteTracker(characterID int, trackableID int) erro
 	tx := r.DB.Where("id = ? AND character_id = ? AND type = 'Custom'", trackableID, characterID).Delete(&models.CharacterTrackerModel{})
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
