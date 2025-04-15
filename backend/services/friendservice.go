@@ -51,6 +51,11 @@ func (s *FriendService) SendFriendRequest(userID int, friend *dto.UserDataDTO) (
 	if err != nil {
 		return err, nil
 	}
+	for _, requests := range userModel.FriendRequests {
+		if requests.SourceUserID == friendModel.ID {
+			return gorm.ErrCheckConstraintViolated, nil
+		}
+	}
 	if s.IsUserFriend(userID, int(friendModel.ID)) {
 		return gorm.ErrCheckConstraintViolated, nil
 	}

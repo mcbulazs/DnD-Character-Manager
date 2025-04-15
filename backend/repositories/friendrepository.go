@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 
 	"DnDCharacterSheet/models"
@@ -28,18 +30,21 @@ func (r *FriendRepository) GetUserFriend(userId uint, friendId uint) (*models.Fr
 func (r *FriendRepository) AcceptFriendRequest(friendRequestId uint, userId uint) (error, *models.FriendRequestModel) {
 	tx := r.DB.Begin()
 	var friendRequest models.FriendRequestModel
-	err := tx.Model(&friendRequest).
+	rx := tx.Model(&friendRequest).
 		Preload("SourceUser").
 		Preload("DestinationUser").
 		Where("id = ? AND destination_user_id = ?", friendRequestId, userId).
 		Update("status", models.FriendRequestsStatusEnum.Accepted).
-		Find(&friendRequest).Error
-	if err != nil {
+		Find(&friendRequest)
+	if rx.Error != nil {
 		tx.Rollback()
-		return err, nil
+		return rx.Error, nil
+	}
+	if rx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound, nil
 	}
 
-	err = tx.Model(&models.FriendsModel{}).
+	err := tx.Model(&models.FriendsModel{}).
 		Create(&models.FriendsModel{
 			User:   friendRequest.SourceUser,
 			Friend: friendRequest.DestinationUser,
@@ -72,6 +77,9 @@ func (r *FriendRepository) DeclineFriendRequest(friendRequestId uint, userId uin
 	if tx.Error != nil {
 		return tx.Error, nil
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound, nil
+	}
 	return nil, &request
 }
 
@@ -82,6 +90,9 @@ func (r *FriendRepository) SendFriendRequest(sourceUserId uint, destinationUserI
 		Status:            models.FriendRequestsStatusEnum.Pending,
 	})
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "UNIQUE constraint failed") {
+			return gorm.ErrRecordNotFound
+		}
 		return tx.Error
 	}
 	return nil
@@ -92,15 +103,23 @@ func (r *FriendRepository) Unfriend(userId uint, friendId uint) error {
 	if tx.Error != nil {
 		return tx.Error
 	}
-	err := tx.Where("user_id = ? AND friend_id = ?", userId, friendId).Delete(&models.FriendsModel{}).Error
-	if err != nil {
+	rx := tx.Where("user_id = ? AND friend_id = ?", userId, friendId).Delete(&models.FriendsModel{})
+	if rx.Error != nil {
 		tx.Rollback()
-		return err
+		return rx.Error
 	}
-	err = tx.Where("user_id = ? AND friend_id = ?", friendId, userId).Delete(&models.FriendsModel{}).Error
-	if err != nil {
+	if rx.RowsAffected == 0 {
 		tx.Rollback()
-		return err
+		return gorm.ErrRecordNotFound
+	}
+	rx = tx.Where("user_id = ? AND friend_id = ?", friendId, userId).Delete(&models.FriendsModel{})
+	if rx.Error != nil {
+		tx.Rollback()
+		return rx.Error
+	}
+	if rx.RowsAffected == 0 {
+		tx.Rollback()
+		return gorm.ErrRecordNotFound
 	}
 	tx.Commit()
 	return nil
@@ -110,6 +129,9 @@ func (r *FriendRepository) UpdateName(userId int, friendId int, name string) err
 	tx := r.DB.Model(&models.FriendsModel{}).Where("user_id = ? AND friend_id = ?", userId, friendId).Update("name", name)
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
@@ -141,6 +163,9 @@ func (r *FriendRepository) UnshareCharacter(characterId uint, friendId uint) err
 
 func (r *FriendRepository) FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.CharacterModel, error) {
 	FriendModel, err := r.GetUserFriend(friendID, userID)
+	if err != nil {
+		return nil, err
+	}
 	var characters []models.CharacterModel
 	err = r.DB.
 		Model(&models.CharacterModel{}).

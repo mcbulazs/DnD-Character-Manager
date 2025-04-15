@@ -43,16 +43,3 @@ type FriendsModel struct {
 func (f *FriendsModel) TableName() string {
 	return "friends"
 }
-
-/*
-type FriendShareModel struct {
-	gorm.Model
-	Character   CharacterModel `gorm:"foreignKey:CharacterID"`
-	CharacterID uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-	Friend      FriendsModel   `gorm:"foreignKey:FriendID"`
-	FriendID    uint           `gorm:"index:,unique,composite:uidx,where delete_at IS NULL"`
-}
-
-func (f *FriendShareModel) TableName() string {
-	return "friend_shares"
-}*/
