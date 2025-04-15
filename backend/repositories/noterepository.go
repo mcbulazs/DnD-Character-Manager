@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -29,6 +31,9 @@ func (r *NoteRepository) CreateNoteCategory(categoryModel *models.CharacterNoteC
 	err := tx.Create(categoryModel).Error
 	if err != nil {
 		tx.Rollback()
+		if strings.Contains(err.Error(), "FOREIGN KEY constraint") {
+			return gorm.ErrForeignKeyViolated
+		}
 		return err
 	}
 	note := models.CharacterNoteModel{
@@ -53,6 +58,9 @@ func (r *NoteRepository) UpdateNoteCategory(categoryModel *models.CharacterNoteC
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -65,7 +73,7 @@ func (r *NoteRepository) DeleteNoteCategory(categoryID int, characterID int) err
 	}
 	if rx.RowsAffected == 0 {
 		tx.Rollback()
-		return nil
+		return gorm.ErrRecordNotFound
 	}
 	err := tx.Where("category_id = ?", categoryID).Delete(&models.CharacterNoteModel{}).Error
 	if err != nil {
@@ -79,6 +87,9 @@ func (r *NoteRepository) DeleteNoteCategory(categoryID int, characterID int) err
 func (r *NoteRepository) CreateNote(noteModel *models.CharacterNoteModel) error {
 	tx := r.DB.Create(noteModel)
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "FOREIGN KEY constraint") {
+			return gorm.ErrForeignKeyViolated
+		}
 		return tx.Error
 	}
 	return nil
@@ -93,6 +104,9 @@ func (r *NoteRepository) UpdateNote(noteModel *models.CharacterNoteModel, catego
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -102,6 +116,9 @@ func (r *NoteRepository) DeleteNote(noteID int, categoryID int) error {
 		Delete(&models.CharacterNoteModel{})
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }
