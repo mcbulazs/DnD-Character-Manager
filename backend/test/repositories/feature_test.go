@@ -45,8 +45,8 @@ func TestFeatureRepository_Create(t *testing.T) {
 		err = db.First(&savedFeature, feature.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, feature.Name, savedFeature.Name)
-		assert.Equal(t, feature.Description, savedFeature.Description)
+		assert.Equal(t, "New Feature", savedFeature.Name)
+		assert.Equal(t, "Test description", savedFeature.Description)
 	})
 
 	t.Run("Create Feature to non-existent character", func(t *testing.T) {
@@ -103,8 +103,8 @@ func TestFeatureRepository_Update(t *testing.T) {
 		err = db.First(&updatedFeature, feature.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, feature.Name, updatedFeature.Name)
-		assert.Equal(t, feature.Description, updatedFeature.Description)
+		assert.Equal(t, "Updated Feature", updatedFeature.Name)
+		assert.Equal(t, "Updated description", updatedFeature.Description)
 	})
 
 	t.Run("Update Feature with mismatched character", func(t *testing.T) {

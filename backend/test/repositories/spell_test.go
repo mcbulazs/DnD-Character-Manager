@@ -52,15 +52,15 @@ func TestSpellRepository_Create(t *testing.T) {
 		err = db.First(&savedSpell, spell.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, spell.Name, savedSpell.Name)
-		assert.Equal(t, spell.Description, savedSpell.Description)
-		assert.Equal(t, spell.Level, savedSpell.Level)
-		assert.Equal(t, spell.School, savedSpell.School)
-		assert.Equal(t, spell.CastingTime, savedSpell.CastingTime)
-		assert.Equal(t, spell.Range, savedSpell.Range)
-		assert.Equal(t, spell.Duration, savedSpell.Duration)
-		assert.Equal(t, spell.Active, savedSpell.Active)
-		assert.Equal(t, spell.Components, savedSpell.Components)
+		assert.Equal(t, "New Spell", savedSpell.Name)
+		assert.Equal(t, "Test description", savedSpell.Description)
+		assert.Equal(t, 0, savedSpell.Level)
+		assert.Equal(t, "Evocation", savedSpell.School)
+		assert.Equal(t, "1 action", savedSpell.CastingTime)
+		assert.Equal(t, "120", savedSpell.Range)
+		assert.Equal(t, "1 minute", savedSpell.Duration)
+		assert.Equal(t, true, savedSpell.Active)
+		assert.Equal(t, "V, S", savedSpell.Components)
 	})
 	t.Run("Create Spell to non-existent character", func(t *testing.T) {
 		spell := &models.CharacterSpellModel{
@@ -120,8 +120,15 @@ func TestSpellRepository_Update(t *testing.T) {
 		err = db.First(&updatedSpell, spell.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, spell.Name, updatedSpell.Name)
-		assert.Equal(t, spell.Description, updatedSpell.Description)
+		assert.Equal(t, "Updated Spell", updatedSpell.Name)
+		assert.Equal(t, "Updated description", updatedSpell.Description)
+		assert.Equal(t, 0, updatedSpell.Level)
+		assert.Equal(t, "Evocation", updatedSpell.School)
+		assert.Equal(t, "1 action", updatedSpell.CastingTime)
+		assert.Equal(t, "120", updatedSpell.Range)
+		assert.Equal(t, "1 minute", updatedSpell.Duration)
+		assert.Equal(t, true, updatedSpell.Active)
+		assert.Equal(t, "V, S", updatedSpell.Components)
 	})
 
 	t.Run("Update Spell with mismatched character", func(t *testing.T) {
@@ -191,6 +198,7 @@ func TestSpellRepository_Update(t *testing.T) {
 		}
 		err := repo.UpdateSpell(spell)
 		assert.Error(t, err)
+		assert.Equal(t, gorm.ErrRecordNotFound, err)
 	})
 }
 
