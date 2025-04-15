@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -20,6 +22,9 @@ func NewSpellRepository(DB *gorm.DB) *SpellRepository {
 func (r *SpellRepository) CreateSpell(spell *models.CharacterSpellModel) error {
 	tx := r.DB.Create(spell)
 	if tx.Error != nil {
+		if strings.Contains(tx.Error.Error(), "FOREIGN KEY constraint") {
+			return gorm.ErrForeignKeyViolated
+		}
 		return tx.Error
 	}
 	return nil
@@ -35,6 +40,9 @@ func (r *SpellRepository) UpdateSpell(spell *models.CharacterSpellModel) error {
 	if tx.Error != nil {
 		return tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return nil
 }
 
@@ -42,6 +50,9 @@ func (r *SpellRepository) DeleteSpell(spellID int, characterID int) error {
 	tx := r.DB.Where("id = ? AND character_id = ?", spellID, characterID).Delete(&models.CharacterSpellModel{})
 	if tx.Error != nil {
 		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 	return nil
 }

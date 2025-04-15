@@ -11,11 +11,11 @@ import (
 	"DnDCharacterSheet/test/helpers"
 )
 
-func TestFeatureRepository_Create(t *testing.T) {
+func TestSpellRepository_Create(t *testing.T) {
 	db := helpers.SetupTestDB(t)
 	userRepo := repositories.NewUserRepository(db)
 	characterRepo := repositories.NewCharacterRepository(db)
-	repo := repositories.NewFeatureRepository(db)
+	repo := repositories.NewSpellRepository(db)
 
 	userResult := &models.UserModel{
 		Email:    "test",
@@ -32,42 +32,55 @@ func TestFeatureRepository_Create(t *testing.T) {
 	}
 	err = characterRepo.Create(&character)
 	assert.NoError(t, err)
-	t.Run("Create Feature Success", func(t *testing.T) {
-		feature := &models.CharacterFeatureModel{
+	t.Run("Create Spell Success", func(t *testing.T) {
+		spell := &models.CharacterSpellModel{
 			CharacterID: character.ID,
-			Name:        "New Feature",
+			Name:        "New Spell",
 			Description: "Test description",
+			Level:       0,
+			School:      "Evocation",
+			CastingTime: "1 action",
+			Range:       "120",
+			Duration:    "1 minute",
+			Active:      true,
+			Components:  "V, S",
 		}
-		err := repo.CreateFeature(feature)
+		err := repo.CreateSpell(spell)
 		assert.NoError(t, err)
 
-		var savedFeature models.CharacterFeatureModel
-		err = db.First(&savedFeature, feature.ID).Error
+		var savedSpell models.CharacterSpellModel
+		err = db.First(&savedSpell, spell.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, feature.Name, savedFeature.Name)
-		assert.Equal(t, feature.Description, savedFeature.Description)
+		assert.Equal(t, spell.Name, savedSpell.Name)
+		assert.Equal(t, spell.Description, savedSpell.Description)
+		assert.Equal(t, spell.Level, savedSpell.Level)
+		assert.Equal(t, spell.School, savedSpell.School)
+		assert.Equal(t, spell.CastingTime, savedSpell.CastingTime)
+		assert.Equal(t, spell.Range, savedSpell.Range)
+		assert.Equal(t, spell.Duration, savedSpell.Duration)
+		assert.Equal(t, spell.Active, savedSpell.Active)
+		assert.Equal(t, spell.Components, savedSpell.Components)
 	})
-
-	t.Run("Create Feature to non-existent character", func(t *testing.T) {
-		feature := &models.CharacterFeatureModel{
+	t.Run("Create Spell to non-existent character", func(t *testing.T) {
+		spell := &models.CharacterSpellModel{
 			CharacterID: 9999,
-			Name:        "New Feature",
+			Name:        "New Spell",
 			Description: "Test description",
 		}
-		err := repo.CreateFeature(feature)
+		err := repo.CreateSpell(spell)
 		assert.Error(t, err)
 		assert.Equal(t, gorm.ErrForeignKeyViolated, err)
 	})
 }
 
-func TestFeatureRepository_Update(t *testing.T) {
+func TestSpellRepository_Update(t *testing.T) {
 	db := helpers.SetupTestDB(t)
 	userRepo := repositories.NewUserRepository(db)
 	characterRepo := repositories.NewCharacterRepository(db)
-	repo := repositories.NewFeatureRepository(db)
+	repo := repositories.NewSpellRepository(db)
 
-	t.Run("Update Feature Success", func(t *testing.T) {
+	t.Run("Update Spell Success", func(t *testing.T) {
 		userResult := &models.UserModel{
 			Email:    "test",
 			Password: "test",
@@ -83,32 +96,35 @@ func TestFeatureRepository_Update(t *testing.T) {
 		}
 		err = characterRepo.Create(&character)
 		assert.NoError(t, err)
-		// First, create a feature
-		feature := &models.CharacterFeatureModel{
+		spell := &models.CharacterSpellModel{
 			CharacterID: character.ID,
-			Name:        "Old Feature",
+			Name:        "Old Spell",
 			Description: "Old description",
+			Level:       0,
+			School:      "Evocation",
+			CastingTime: "1 action",
+			Range:       "120",
+			Duration:    "1 minute",
+			Active:      true,
+			Components:  "V, S",
 		}
-		err = repo.CreateFeature(feature)
+		err = repo.CreateSpell(spell)
 		assert.NoError(t, err)
 
-		// Now, update the feature
-		feature.Name = "Updated Feature"
-		feature.Description = "Updated description"
-		err = repo.UpdateFeature(feature)
+		spell.Name = "Updated Spell"
+		spell.Description = "Updated description"
+		err = repo.UpdateSpell(spell)
 		assert.NoError(t, err)
 
-		// Verify the feature was updated
-		var updatedFeature models.CharacterFeatureModel
-		err = db.First(&updatedFeature, feature.ID).Error
+		var updatedSpell models.CharacterSpellModel
+		err = db.First(&updatedSpell, spell.ID).Error
 		assert.NoError(t, err)
 
-		assert.Equal(t, feature.Name, updatedFeature.Name)
-		assert.Equal(t, feature.Description, updatedFeature.Description)
+		assert.Equal(t, spell.Name, updatedSpell.Name)
+		assert.Equal(t, spell.Description, updatedSpell.Description)
 	})
 
-	t.Run("Update Feature with mismatched character", func(t *testing.T) {
-		// Create a feature with a valid character
+	t.Run("Update Spell with mismatched character", func(t *testing.T) {
 		user1 := &models.UserModel{
 			Email:    "user1@example.com",
 			Password: "password",
@@ -140,38 +156,49 @@ func TestFeatureRepository_Update(t *testing.T) {
 		}
 		assert.NoError(t, characterRepo.Create(&character2))
 
-		// Create character feature for character 1
-		feature := models.CharacterFeatureModel{
+		spell := models.CharacterSpellModel{
 			CharacterID: character1.ID,
 			Name:        "test",
 			Description: "test",
-			Source:      "test",
+			Level:       0,
+			School:      "Evocation",
+			CastingTime: "1 action",
+			Range:       "120",
+			Duration:    "1 minute",
+			Active:      true,
+			Components:  "V, S",
 		}
-		assert.NoError(t, repo.CreateFeature(&feature))
+		assert.NoError(t, repo.CreateSpell(&spell))
 
-		// Attempt to update feature for character 1 from character 2's perspective (should fail)
-		feature.CharacterID = character2.ID // Character 2 tries to update character 1's feature
-		err := repo.UpdateFeature(&feature)
+		spell.CharacterID = character2.ID
+		err := repo.UpdateSpell(&spell)
 		assert.Error(t, err)
 		assert.Equal(t, gorm.ErrRecordNotFound, err)
 	})
 
-	t.Run("Update Feature with non-existent character", func(t *testing.T) {
-		feature := &models.CharacterFeatureModel{
+	t.Run("Update spell with non-existent character", func(t *testing.T) {
+		spell := &models.CharacterSpellModel{
 			CharacterID: 9999, // Non-existent character ID
-			Name:        "Feature",
+			Name:        "Spell",
 			Description: "Description",
+			Level:       0,
+			School:      "Evocation",
+			CastingTime: "1 action",
+			Range:       "120",
+			Duration:    "1 minute",
+			Active:      true,
+			Components:  "V, S",
 		}
-		err := repo.UpdateFeature(feature)
+		err := repo.UpdateSpell(spell)
 		assert.Error(t, err)
 	})
 }
 
-func TestFeatureRepository_Delete(t *testing.T) {
+func TestSpellRepository_Delete(t *testing.T) {
 	db := helpers.SetupTestDB(t)
 	userRepo := repositories.NewUserRepository(db)
 	characterRepo := repositories.NewCharacterRepository(db)
-	repo := repositories.NewFeatureRepository(db)
+	repo := repositories.NewSpellRepository(db)
 
 	user := &models.UserModel{
 		Email:    "delete@test.com",
@@ -187,28 +214,28 @@ func TestFeatureRepository_Delete(t *testing.T) {
 	}
 	assert.NoError(t, characterRepo.Create(&character))
 
-	t.Run("Delete Feature Success", func(t *testing.T) {
-		feature := &models.CharacterFeatureModel{
+	t.Run("Delete Spell Success", func(t *testing.T) {
+		spell := &models.CharacterSpellModel{
 			CharacterID: character.ID,
 			Name:        "To Be Deleted",
 			Description: "Will be deleted",
 		}
-		assert.NoError(t, repo.CreateFeature(feature))
+		assert.NoError(t, repo.CreateSpell(spell))
 
-		err := repo.DeleteFeature(int(feature.ID), int(character.ID))
+		err := repo.DeleteSpell(int(spell.ID), int(character.ID))
 		assert.NoError(t, err)
 
-		var deletedFeature models.CharacterFeatureModel
-		err = db.First(&deletedFeature, feature.ID).Error
+		var deletedSpell models.CharacterSpellModel
+		err = db.First(&deletedSpell, spell.ID).Error
 		assert.ErrorIs(t, err, gorm.ErrRecordNotFound)
 	})
 
-	t.Run("Delete Non-existent Feature", func(t *testing.T) {
-		err := repo.DeleteFeature(9999, int(character.ID))
+	t.Run("Delete Non-existent Spell", func(t *testing.T) {
+		err := repo.DeleteSpell(9999, int(character.ID))
 		assert.ErrorIs(t, err, gorm.ErrRecordNotFound)
 	})
 
-	t.Run("Delete Feature with mismatched character", func(t *testing.T) {
+	t.Run("Delete Spell with mismatched character", func(t *testing.T) {
 		// Create second user and character
 		user2 := &models.UserModel{
 			Email:    "anotheruser@test.com",
@@ -225,20 +252,20 @@ func TestFeatureRepository_Delete(t *testing.T) {
 		assert.NoError(t, characterRepo.Create(&character2))
 
 		// Create a feature under character 1
-		feature := &models.CharacterFeatureModel{
+		spell := &models.CharacterSpellModel{
 			CharacterID: character.ID,
 			Name:        "Unauthorized Delete",
 			Description: "Shouldn't be deleted by another char",
 		}
-		assert.NoError(t, repo.CreateFeature(feature))
+		assert.NoError(t, repo.CreateSpell(spell))
 
 		// Attempt to delete it with character 2's ID
-		err := repo.DeleteFeature(int(feature.ID), int(character2.ID))
+		err := repo.DeleteSpell(int(spell.ID), int(character2.ID))
 		assert.ErrorIs(t, err, gorm.ErrRecordNotFound)
 
 		// Confirm it's still in DB
-		var stillThere models.CharacterFeatureModel
-		err = db.First(&stillThere, feature.ID).Error
+		var stillThere models.CharacterSpellModel
+		err = db.First(&stillThere, spell.ID).Error
 		assert.NoError(t, err)
 	})
 }
