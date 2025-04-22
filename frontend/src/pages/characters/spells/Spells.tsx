@@ -50,78 +50,19 @@ const Spells: React.FC<{ characterId?: number }> = ({
   return (
     <>
       <div className="w-full sm:w-11/12 grid gap-2">
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={0}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={1}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={2}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={3}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={4}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={5}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={6}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={7}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={8}
-          characterId={characterId}
-        />
-        <SpellListPerLevel
-          canEdit={character.isOwner}
-          spells={spells}
-          trackers={trackers}
-          level={9}
-          characterId={characterId}
-        />
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+          <SpellListPerLevel
+            key={i}
+            canEdit={character.isOwner && !character.options.isDead}
+            spells={spells}
+            trackers={trackers}
+            level={i}
+            characterId={characterId}
+          />
+        ))}
       </div>
       {character.isOwner &&
+        !character.options.isDead &&
         (isModalOpen ? (
           <CreateSpellModal
             onClose={() => setIsModalOpen(false)}

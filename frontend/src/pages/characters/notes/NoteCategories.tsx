@@ -34,7 +34,7 @@ const NoteCategories: React.FC = () => {
       >
         {categories?.map((category) => (
           <NoteCategoryCard
-            canEdit={character.isOwner}
+            canEdit={character.isOwner && !character.options.isDead}
             key={category.id}
             category={category}
             characterId={character.ID}
@@ -42,6 +42,7 @@ const NoteCategories: React.FC = () => {
         ))}
       </div>
       {character.isOwner &&
+        !character.options.isDead &&
         (!modalOpen ? (
           <div className="fixed bottom-0 right-0 m-5">
             <CreateButton

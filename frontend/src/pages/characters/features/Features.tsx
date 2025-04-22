@@ -60,7 +60,7 @@ const Features: React.FC<{ characterId?: number }> = ({
       >
         {features?.map((feature) => (
           <FeatureCard
-            canEdit={character.isOwner}
+            canEdit={character.isOwner && !character.options.isDead}
             key={feature.id}
             feature={feature}
             characterId={character.ID}
@@ -68,6 +68,7 @@ const Features: React.FC<{ characterId?: number }> = ({
         ))}
       </div>
       {character.isOwner &&
+        !character.options.isDead &&
         (isModalOpen ? (
           <CreateFeatureModal
             onClose={() => setIsModalOpen(false)}

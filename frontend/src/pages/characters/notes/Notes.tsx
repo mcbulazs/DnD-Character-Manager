@@ -96,7 +96,7 @@ const Notes: React.FC = () => {
     });
   };
   const handleEditorChange = (val: string) => {
-    if (!character || !character.isOwner) return;
+    if (!character || !character.isOwner || character.options.isDead) return;
     // Only update if the change is initiated by the user
     if (isUserEditing.current) {
       updateNoteDebounce(val, notes[pageNumber.current].id);
@@ -146,13 +146,13 @@ const Notes: React.FC = () => {
             <Suspense fallback={<div> Loading editor...</div>}>
               <TextEditor
                 value={notes[currentPageNumber].note}
-                disabled={!character.isOwner}
+                disabled={!character.isOwner || character.options.isDead}
                 onChange={(val) => {
                   handleEditorChange(val);
                 }}
               />
             </Suspense>
-            {character.isOwner && (
+            {character.isOwner && !character.options.isDead && (
               <button
                 type="button"
                 className="absolute top-0 right-0 text-red-500"

@@ -25,9 +25,3 @@ jobs:
       - name: Test
         run: go test ./*
         working-directory: backend/test
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: |
-            backend/main

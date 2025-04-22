@@ -76,7 +76,7 @@ const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
       <div className="w-full pt-1 flex flex-col items-center">
         <div className="w-5/6 flex flex-wrap gap-2">
           <Tracker
-            canEdit={character.isOwner}
+            canEdit={character.isOwner && !character.options.isDead}
             style={{ width: "100%" }}
             tracker={
               character.trackers.filter(
@@ -96,7 +96,7 @@ const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
               {trackers.map((tracker) => (
                 <Tracker
                   disabled={!isVisible}
-                  canEdit={character.isOwner}
+                  canEdit={character.isOwner && !character.options.isDead}
                   key={tracker.id}
                   tracker={tracker}
                   isEditing={isEditing}
@@ -107,7 +107,7 @@ const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           </DndContext>
         </div>
       </div>
-      {character.isOwner && (
+      {character.isOwner && !character.options.isDead && (
         <div className="w-full h-16 absolute bottom-0 grid grid-cols-2">
           <div className="w-full flex items-center justify-center p-2">
             {!isEditing ? (

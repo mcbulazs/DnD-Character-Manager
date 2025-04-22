@@ -34,13 +34,16 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
   const [setCharacterAttribute] = useSetCharacterAttributeMutation();
   const [deleteCharacterMutation] = useDeleteCharacterMutation();
   const navigate = useNavigate();
+  useEffect(() => {
+    setIsFavorite(character.isFavorite);
+  }, [character]);
 
   const favoriteDebounce = useCallback(
-    debounce(async (isFavorite) => {
+    debounce(async (isFavorite, characterId) => {
       try {
         setCharacterAttribute({
           data: { isFavorite },
-          id: character.ID,
+          id: characterId,
         }).unwrap();
       } catch (error) {
         toast("Error updating favorite", { type: "error" });
@@ -53,7 +56,7 @@ const CharacterSheetHeader: React.FC<{ character: CharacterData }> = ({
     if (e.button !== 0) {
       return;
     }
-    favoriteDebounce(!isFavorite);
+    favoriteDebounce(!isFavorite, character.ID);
     setIsFavorite(!isFavorite);
   };
   const handleDelete = async () => {
@@ -162,7 +165,7 @@ const CharacterSheet: React.FC = () => {
         <AbilitScoresComp
           abilityScores={character.abilityScores}
           characterID={character.ID}
-          canEdit={character.isOwner}
+          canEdit={character.isOwner && !character.options.isDead}
         />
       </div>
       <div
@@ -172,7 +175,7 @@ const CharacterSheet: React.FC = () => {
                   order-5 sm:order-2"
       >
         <SkillsComp
-          canEdit={character.isOwner}
+          canEdit={character.isOwner && !character.options.isDead}
           skills={character.skills}
           characterID={character.ID}
           abilityScores={character.abilityScores}
@@ -187,7 +190,7 @@ const CharacterSheet: React.FC = () => {
         <CharacterName
           name={character.name}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -197,7 +200,7 @@ const CharacterSheet: React.FC = () => {
         <CharacterClass
           characterClass={character.class}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -210,7 +213,7 @@ const CharacterSheet: React.FC = () => {
         <CharacterLevel
           level={character.level}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
 
@@ -222,7 +225,7 @@ const CharacterSheet: React.FC = () => {
         <ProficiencyBonus
           value={character.proficiencyBonus}
           characterId={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -234,7 +237,7 @@ const CharacterSheet: React.FC = () => {
           value={character.initiative}
           characterId={character.ID}
           dexterity={character.abilityScores.dexterity}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -244,7 +247,7 @@ const CharacterSheet: React.FC = () => {
         <CharacterRace
           race={character.race}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -256,7 +259,7 @@ const CharacterSheet: React.FC = () => {
         <CharacterImage
           image={character.image}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -267,7 +270,7 @@ const CharacterSheet: React.FC = () => {
         <ArmorClass
           value={character.armorClass}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
 
@@ -279,7 +282,7 @@ const CharacterSheet: React.FC = () => {
         <Speed
           value={character.speed}
           characterID={character.ID}
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
         />
       </div>
       <div
@@ -289,7 +292,7 @@ const CharacterSheet: React.FC = () => {
           order-7 sm:order-12 2xl:order-12"
       >
         <SavingThrowsComp
-          canEdit={character.isOwner}
+          canEdit={character.isOwner && !character.options.isDead}
           savingThrows={character.savingThrows}
           characterID={character.ID}
           abilityScores={character.abilityScores}
@@ -303,7 +306,7 @@ const CharacterSheet: React.FC = () => {
                   order-6 sm:order-10 2xl:order-[13]"
       >
         <PassivePerception
-          disabled={!character.isOwner}
+          disabled={!character.isOwner || character.options.isDead}
           value={character.passivePerception}
           wisdom={character.abilityScores.wisdom}
           perception={character.skills.perception}

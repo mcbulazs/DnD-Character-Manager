@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useCharacterContext } from "../../layout/Contexts/CharacterContext";
-import { CharacterOptions } from "../../types/characterData";
+import type { CharacterOptions } from "../../types/characterData";
 import { useModifyCharacterOptionsMutation } from "../../store/api/characterApiSlice";
 import debounce from "../../utility/debounce";
 import Scrollbars from "react-custom-scrollbars-2";
@@ -39,24 +39,23 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
   }, [character]);
   const handleSave = useCallback(
     debounce(async (_options) => {
-      console.log("Saving options", _options);
-      if (_options) {
+      if (_options && character) {
         await modifyCharacterOptionsMutation({
-          characterID: character!.ID,
+          characterID: character.ID,
           options: _options,
         });
       }
     }, 300),
-    [options],
+    [],
   );
   const shareCaracter = async () => {
-    if (selectedFriendId == null) {
+    if (selectedFriendId == null || character == null) {
       return;
     }
     try {
       await shareCharacterMutation({
         friendId: selectedFriendId,
-        characterId: character!.ID,
+        characterId: character.ID,
       }).unwrap();
       toast("Character shared", { type: "success" });
       setShareModalOpen(false);
@@ -68,9 +67,10 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
   };
   const unshareCharacter = async (friendId: number) => {
     try {
+      if (character == null) return;
       await unshareCharacterMutation({
         friendId,
-        characterId: character!.ID,
+        characterId: character.ID,
       }).unwrap();
       toast("Character unshared", { type: "success" });
     } catch (error) {
@@ -90,6 +90,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
       <div className="w-full p-5 flex flex-col items-center text-ancient-gold">
         <div className="w-full">
           <button
+            type="button"
             onClick={closeOptions}
             className="flex flex-row items-center hover:text-amber-600"
           >
@@ -100,6 +101,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
         <div className="flex flex-col w-full h-full justify-around">
           <label className="flex flex-row items-center gap-2">
             <input
+              disabled={options.isDead}
               type="checkbox"
               checked={options.isCaster}
               onChange={(val) => {
@@ -135,6 +137,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
           <label className="flex flex-row items-center gap-2">
             <input
               type="checkbox"
+              disabled={options.isDead}
               checked={options.rollOption}
               onChange={(val) => {
                 setOptions((prev) => {
@@ -152,6 +155,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
           <div className="flex flex-row w-full justify-around">
             <label className="flex flex-row items-center gap-2">
               <input
+                disabled={options.isDead}
                 type="radio"
                 name="xp"
                 checked={!options.isXP}
@@ -174,6 +178,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
             <label className="flex flex-row items-center gap-2">
               <input
                 type="radio"
+                disabled={options.isDead}
                 name="xp"
                 checked={options.isXP}
                 onChange={(val) => {
@@ -196,6 +201,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
           <div className="flex flex-row w-full justify-between mt-2">
             <span>Shared: </span>
             <button
+              type="button"
               className="bg-amber-500 hover:bg-amber-400 duration-300 ease-in-out text-stone-900 font-bold py-1 px-2 rounded-md flex items-center gap-1"
               onClick={() => setShareModalOpen(true)}
             >
@@ -237,7 +243,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
         <Modal onClose={() => setShareModalOpen(false)}>
           <div className="w-full h-52 rounded-md overflow-hidden border-black border-2">
             <FriendList
-              friends={User?.friends.filter(
+              friends={User?.friends?.filter(
                 (friend) =>
                   !character.sharedWith?.some(
                     (user) => user.friend.id === friend.friend.id,
@@ -247,6 +253,7 @@ const CharactOptions: React.FC<{ closeOptions: () => void }> = ({
             />
           </div>
           <button
+            type="button"
             className="w-full p-2 
             disabled:bg-gray-600 bg-green-500 hover:bg-green-600 
             duration-300 ease-in-out 

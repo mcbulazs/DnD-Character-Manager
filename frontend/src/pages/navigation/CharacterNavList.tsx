@@ -125,7 +125,11 @@ const CharacterNavList: React.FC = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <button onClick={() => setIsOptionsOpen(true)}>
+                    <button
+                      disabled={!character?.isOwner}
+                      type="button"
+                      onClick={() => setIsOptionsOpen(true)}
+                    >
                       Options
                     </button>
                   </li>
