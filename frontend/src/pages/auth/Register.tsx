@@ -32,7 +32,6 @@ const Register: React.FC = () => {
     e.preventDefault(); // Prevent the default form submission behavior
 
     try {
-      console.log("Registering user", credentials);
       await registerMutate(credentials).unwrap();
       toast("Registration successful", { type: "success" });
       navigate("/");

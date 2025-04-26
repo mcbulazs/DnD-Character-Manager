@@ -36,7 +36,7 @@ const Login: React.FC = () => {
     e.preventDefault(); // Prevent the default form submission behavior
 
     try {
-      await loginMutate(credentials);
+      await loginMutate(credentials).unwrap();
       // Redirect after a successful login
       toast("Login successful", { type: "success" });
       navigate("/");
