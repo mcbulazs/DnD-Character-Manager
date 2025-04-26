@@ -470,7 +470,7 @@ func TestFindByUserIDAndFriendID(t *testing.T) {
 
 	t.Run("Find shared characters by userID and friendID", func(t *testing.T) {
 		// Find shared characters between user1 and user2
-		characters, err := friendRepo.FindByUserIDAndFriendID(user1.ID, user2.ID)
+		characters, err := friendRepo.FindByUserIDAndFriendID(user2.ID, user1.ID)
 		assert.NoError(t, err)
 		assert.Len(t, characters, 1) // user1 shared 1 character with user2
 		assert.Equal(t, character1.ID, characters[0].ID)

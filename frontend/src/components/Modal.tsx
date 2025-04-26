@@ -77,23 +77,35 @@ const Modal: React.FC<{
         >
           <CloseIcon />
         </button>
-
-        <Scrollbars
-          autoHeight
-          autoHeightMin={"fit-content"}
-          autoHeightMax={"90vh"}
+        <div
           style={{
+            width: "100%",
+            height: "auto",
+            overflow: "hidden",
             flexGrow: 1,
             marginRight: "0.2rem",
             marginBottom: "1rem",
             marginTop: "1rem",
           }}
-          universal
         >
-          <div style={{ overflowX: "hidden", padding: "0 1rem 1rem" }}>
-            {children}
-          </div>
-        </Scrollbars>
+          <Scrollbars
+            autoHeight
+            autoHeightMax={"90vh"}
+            style={{
+              marginBottom: "-15px",
+            }}
+            universal
+          >
+            <div
+              style={{
+                overflow: "hidden",
+                padding: "0 1rem 1rem",
+              }}
+            >
+              {children}
+            </div>
+          </Scrollbars>
+        </div>
         <div
           style={{
             position: "absolute",

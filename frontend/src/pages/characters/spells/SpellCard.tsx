@@ -102,6 +102,7 @@ const SpellCard: React.FC<{
                 flex flex-col 
                 bg-light-parchment-beige   
                 rounded-xl border-4 border-black
+                overflow-hidden
                 cursor-pointer
                 `}
         onMouseDown={handleClick}

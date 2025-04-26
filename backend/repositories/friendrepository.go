@@ -162,13 +162,14 @@ func (r *FriendRepository) UnshareCharacter(characterId uint, friendId uint) err
 }
 
 func (r *FriendRepository) FindByUserIDAndFriendID(userID uint, friendID uint) ([]models.CharacterModel, error) {
-	FriendModel, err := r.GetUserFriend(friendID, userID)
+	FriendModel, err := r.GetUserFriend(userID, friendID)
 	if err != nil {
 		return nil, err
 	}
 	var characters []models.CharacterModel
 	err = r.DB.
 		Model(&models.CharacterModel{}).
+		Preload("Image").
 		Joins("JOIN friend_shares ON friend_shares.character_id = characters.id").
 		Where("friend_shares.friend_id = ?", FriendModel.ID).
 		Find(&characters).Error

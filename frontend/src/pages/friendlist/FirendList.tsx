@@ -33,7 +33,7 @@ const FriendList: React.FC<{
   const [updateFriendNameMutation] = useUpdateFriendNameMutation();
 
   const getFriendName = (friend: Friends) => {
-    return friend.name != "" ? friend.name : friend.friend.email;
+    return friend.name !== "" ? friend.name : friend.friend.email;
   };
   const handleSendFriendRequest = async () => {
     try {
@@ -51,7 +51,7 @@ const FriendList: React.FC<{
       if (err.status === 409) {
         toast("User not found", { type: "error" });
       } else {
-        toast(`Error sending friend request`, { type: "error" });
+        toast("Error sending friend request", { type: "error" });
       }
     }
   };
@@ -60,7 +60,7 @@ const FriendList: React.FC<{
     try {
       if (!deleteFriend) return;
       const result = await unfriendMutation({
-        friendId: deleteFriend!.friend.id,
+        friendId: deleteFriend.friend.id,
       });
       if (result.error) throw result.error;
 
@@ -73,7 +73,7 @@ const FriendList: React.FC<{
       } else if (err.status === 409) {
         toast("User not found", { type: "error" });
       } else {
-        toast(`Error unfriending user`, { type: "error" });
+        toast("Error unfriending user", { type: "error" });
       }
     }
   };
@@ -81,7 +81,8 @@ const FriendList: React.FC<{
   const handleRenameing = () => {
     setEditFriendId(null);
     setEditFriendValue("");
-    if (editFriendValue === "" || editFriendValue == defaultFriendValue) return;
+    if (editFriendValue === "" || editFriendValue === defaultFriendValue)
+      return;
     updateFriendNameMutation({
       friendId: editFriendId as number,
       name: editFriendValue,
@@ -124,7 +125,7 @@ const FriendList: React.FC<{
                       value={editFriendValue}
                       onChange={(val) => setEditFriendValue(val.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key == "Enter") handleRenameing();
+                        if (e.key === "Enter") handleRenameing();
                       }}
                     />
                     <button
@@ -145,7 +146,7 @@ const FriendList: React.FC<{
                 ) : (
                   <div
                     key={friend.friend.id}
-                    className={`${selectedFriendId == friend.friend.id ? "bg-gray-600 hover:bg-gray-700" : "hover:bg-gray-500"} 
+                    className={`${selectedFriendId === friend.friend.id ? "bg-gray-600 hover:bg-gray-700" : "hover:bg-gray-500"} 
                       ease-in-out duration-300 p-1 flex w-full cursor-pointer`}
                   >
                     <span
@@ -155,7 +156,7 @@ const FriendList: React.FC<{
                         onFriendSelect(friend);
                       }}
                     >
-                      {friend.name != "" ? friend.name : friend.friend.email}
+                      {friend.name !== "" ? friend.name : friend.friend.email}
                     </span>
                     {buttonsActive && (
                       <button
@@ -164,12 +165,12 @@ const FriendList: React.FC<{
                         onClick={() => {
                           setEditFriendId(friend.friend.id);
                           setEditFriendValue(
-                            friend.name != ""
+                            friend.name !== ""
                               ? friend.name
                               : friend.friend.email,
                           );
                           setDefaultFriendValue(
-                            friend.name != ""
+                            friend.name !== ""
                               ? friend.name
                               : friend.friend.email,
                           );
@@ -208,7 +209,7 @@ const FriendList: React.FC<{
       )}
       {deleteFriend && (
         <DeleteDialog
-          message={`Are you sure you want to delete friend: ${deleteFriend?.name == "" ? deleteFriend.friend.email : deleteFriend?.name}`}
+          message={`Are you sure you want to delete friend: ${deleteFriend?.name === "" ? deleteFriend.friend.email : deleteFriend?.name}`}
           onCancel={() => setDeleteFriend(null)}
           onConfirm={handleUnFriend}
         />

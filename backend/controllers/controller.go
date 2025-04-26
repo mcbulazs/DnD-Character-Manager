@@ -55,25 +55,26 @@ func InitControllers(r *gin.Engine, db *gorm.DB) {
 		middleware.UserWebsocketMiddleware,
 	)
 
-	friends := auth.Group("/friends/:friendId")
+	friends := auth.Group("/friends/:friendId",
+		friendController.FriendMiddleware,
+	)
 	friends.DELETE("",
 		friendController.UnfriendHandler,
 		middleware.UserWebsocketMiddleware,
 	)
 	friends.PATCH("/name", friendController.UpdateFriendNameHandler)
-	friendsCharacter := friends.Group("/share",
-		friendController.FriendMiddleware,
-		middleware.UserWebsocketMiddleware,
-	)
+	friendsCharacter := friends.Group("/share")
 
 	// friend to share with
 	friendsCharacter.POST("/:characterId",
 		characterController.CharacterMiddleware,
 		friendController.ShareCharacterHandler,
+		middleware.UserWebsocketMiddleware,
 	)
 	friendsCharacter.DELETE("/:characterId",
 		characterController.CharacterMiddleware,
 		friendController.UnshareCharacterHandler,
+		middleware.UserWebsocketMiddleware,
 	)
 	// friend who shared with me
 	friendsCharacter.GET("", friendController.GetSharedCharactersHandler)

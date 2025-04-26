@@ -24,7 +24,7 @@ const FriendCharacters: React.FC<{ friendId: number }> = ({ friendId }) => {
 
   return (
     <Scrollbars className="w-full h-full" universal>
-      <div className="w-full flex flex-wrap justify-evenly gap-4">
+      <div className="w-full flex flex-wrap sm:justify-evenly gap-4">
         {characters.map((character) => (
           <CharacterListCard
             key={character.ID}

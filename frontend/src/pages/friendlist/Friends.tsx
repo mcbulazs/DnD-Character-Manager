@@ -6,7 +6,7 @@ import FriendRequests from "./FriendRequests";
 import FriendCharacters from "./FriendCharacters";
 import { useHeaderContext } from "../../layout/Contexts/HeaderContext";
 
-const Friends: React.FC = () => {
+const FriendsPage: React.FC = () => {
   const { User } = useUserContext();
   const [selectedFriend, setSelectedFriend] = useState<Friends | null>(null);
   const { setTitle } = useHeaderContext();
@@ -17,8 +17,8 @@ const Friends: React.FC = () => {
     return <div>Error...</div>;
   }
   return (
-    <div className="flex w-full lg:w-4/5 justify-between">
-      <div className="h-full w-44 flex flex-col bg-light-parchment-beige border-4 border-shadow-black rounded-md">
+    <div className="flex w-full lg:w-4/5 justify-between gap-4">
+      <div className="h-full sm:min-w-44 w-44 flex flex-col bg-light-parchment-beige border-4 border-shadow-black rounded-md">
         <FriendList
           friends={User.friends}
           onFriendSelect={setSelectedFriend}
@@ -35,4 +35,4 @@ const Friends: React.FC = () => {
   );
 };
 
-export default Friends;
+export default FriendsPage;
