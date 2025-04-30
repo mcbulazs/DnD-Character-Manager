@@ -52,14 +52,14 @@ const SkillsComp: React.FC<{
     );
     return (
       <div className="w-full h-auto border-4 border-black rounded-xl p-2 relative bg-light-parchment-beige">
-        <div
+        {/*<div
           className="absolute right-0 top-0"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           <InfoIcon />
         </div>
-        {/*isHovered && (
+        isHovered && (
                 <img
                     src={SkillInfo}
                     alt="Skills Info"

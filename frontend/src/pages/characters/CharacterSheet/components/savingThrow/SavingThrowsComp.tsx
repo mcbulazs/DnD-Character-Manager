@@ -58,6 +58,7 @@ const SavingThrowsComp: React.FC<{
 
     return (
       <div className="w-auto h-fit border-4 border-black rounded-xl p-2 relative bg-light-parchment-beige">
+        {/*
         <div
           className="absolute right-0 top-0"
           onMouseEnter={() => setIsHovered(true)}
@@ -65,7 +66,7 @@ const SavingThrowsComp: React.FC<{
         >
           <InfoIcon />
         </div>
-        {/*isHovered && (
+        isHovered && (
 				<img
 					src={SavingThrowInfo}
 					alt="Saving Throw Info"

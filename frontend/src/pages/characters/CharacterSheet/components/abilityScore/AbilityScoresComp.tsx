@@ -58,6 +58,7 @@ const AbilitScoresComp: React.FC<{
 			gap-y-5 sm:gap-y-0 
 			relative"
     >
+      {/*
       <div
         className="absolute right-[-1.5rem] top-0 z-10"
         onMouseEnter={() => setIsHovered(true)}
@@ -65,7 +66,7 @@ const AbilitScoresComp: React.FC<{
       >
         <InfoIcon />
       </div>
-      {/*isHovered  && (
+      isHovered  && (
 				<img
 					src={AbilityScoreInfo}
 					alt="Ability Score Info"

@@ -12,7 +12,7 @@ import CharacterOptions from "./CharacterOptions";
 import { useCharacterContext } from "../../layout/Contexts/CharacterContext";
 
 const CharacterNavList: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { character } = useCharacterContext();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [startX, setStartX] = useState(0);

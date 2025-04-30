@@ -19,13 +19,15 @@ const CharacterList: React.FC = () => {
   return (
     <>
       <div className="flex w-full lg:w-4/5 flex-wrap justify-evenly gap-4">
-        {User?.characters?.map((character) => (
-          <CharacterListCard
-            key={character.ID}
-            character={character}
-            isOwner={true}
-          />
-        ))}
+        {[...(User?.characters ?? [])]
+          .sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite))
+          .map((character) => (
+            <CharacterListCard
+              key={character.ID}
+              character={character}
+              isOwner={true}
+            />
+          ))}
       </div>
       {!modalOpen ? (
         <div className="fixed bottom-0 right-0 m-5">
