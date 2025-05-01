@@ -26,7 +26,6 @@ const Trackers: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   }, [isVisible]);
   useEffect(() => {
     if (character) {
-      console.log("Trackers", character.trackers);
       setTrackers(
         character.trackers
           .filter((tracker) =>

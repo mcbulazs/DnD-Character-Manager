@@ -94,7 +94,8 @@ const CharacterNavList: React.FC = () => {
             w-full sm:w-80
             transition-transform duration-500
             ${isOpen ? "-translate-x-0" : "translate-x-full"}
-            z-50`}
+            `}
+        style={{ zIndex: 1000 }}
         ref={sidebarRef}
       >
         <Scrollbars className="w-full h-full pb-16 relative" universal>
@@ -124,15 +125,16 @@ const CharacterNavList: React.FC = () => {
                       Notes
                     </NavLink>
                   </li>
-                  <li>
-                    <button
-                      disabled={!character?.isOwner}
-                      type="button"
-                      onClick={() => setIsOptionsOpen(true)}
-                    >
-                      Options
-                    </button>
-                  </li>
+                  {character?.isOwner && (
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => setIsOptionsOpen(true)}
+                      >
+                        Options
+                      </button>
+                    </li>
+                  )}
                 </ul>
               </nav>
               <Trackers isVisible={isOpen} />

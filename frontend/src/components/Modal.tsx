@@ -45,7 +45,7 @@ const Modal: React.FC<{
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         overflow: "hidden",
-        zIndex: 1000,
+        zIndex: 1001,
         opacity: isVisible ? 1 : 0,
         transition: "opacity 0.3s ease-in-out",
       }}

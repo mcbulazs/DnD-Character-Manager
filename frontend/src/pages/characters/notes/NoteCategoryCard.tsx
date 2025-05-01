@@ -41,7 +41,7 @@ const NoteCategoryCard: React.FC<{
         {canEdit && (
           <button
             type="button"
-            className="absolute bottom-0 right-0 text-orange-500"
+            className="absolute top-0 right-0 text-orange-500"
             onClick={() => {
               setModalOpen(true);
             }}

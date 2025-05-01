@@ -89,18 +89,25 @@ const Notes: React.FC = () => {
     if (!categoryId || !character) {
       return;
     }
+
+    isUserEditing.current = false;
     deleteNoteMutation({
       categoryId: Number.parseInt(categoryId),
       characterId: character.ID,
       noteId: notes[currentPageNumber].id,
     });
+    if (currentPageNumber >= notes.length - 1) {
+      setCurrentPageNumber(notes.length - 2);
+    }
   };
+
   const handleEditorChange = (val: string) => {
     if (!character || !character.isOwner || character.options.isDead) return;
     // Only update if the change is initiated by the user
     if (isUserEditing.current) {
       updateNoteDebounce(val, notes[pageNumber.current].id);
     }
+    isUserEditing.current = true;
     setNotes((prev) => {
       return prev.map((note, index) => {
         if (index === pageNumber.current) {
@@ -126,8 +133,6 @@ const Notes: React.FC = () => {
             onPageChange={(val) => {
               isUserEditing.current = false;
               setCurrentPageNumber(val);
-              // biome-ignore lint/suspicious/noAssignInExpressions: need it to run next cycle
-              setTimeout(() => (isUserEditing.current = true), 1);
             }}
           />
           <button
@@ -145,7 +150,10 @@ const Notes: React.FC = () => {
           <div className="relative">
             <Suspense fallback={<div> Loading editor...</div>}>
               <TextEditor
-                value={notes[currentPageNumber].note}
+                value={
+                  notes[currentPageNumber]?.note ??
+                  notes[notes.length - 1]?.note
+                }
                 disabled={!character.isOwner || character.options.isDead}
                 onChange={(val) => {
                   handleEditorChange(val);

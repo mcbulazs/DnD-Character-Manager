@@ -65,9 +65,8 @@ func (r *TrackerRepository) UpdateTracker(trackable *models.CharacterTrackerMode
 
 func (r *TrackerRepository) UpdateTrackerOrder(characterID int, trackerOrder *[]int) error {
 	stringOrder := strings.Join(strings.Split(strings.Trim(fmt.Sprint(*trackerOrder), "[]"), " "), ",") //[1,2,3,4] => "1,2,3,4"
-	fmt.Println(stringOrder)
 	tx := r.DB.Model(&models.CharacterTrackerModel{}).
-		Where("character_id = ? AND type = 'Custom'", characterID).
+		Where("character_id = ?", characterID).
 		Updates(map[string]interface{}{"tracker_order": gorm.Expr("array_position(ARRAY[" + stringOrder + "]::int[], id)")}) // there should be any fear of sql injection
 	if tx.Error != nil {
 		return tx.Error
@@ -104,6 +103,7 @@ func getDefaultTrackers(characterID uint) []models.CharacterTrackerModel {
 			CurrentValue: 10,
 			Type:         models.TrackerEnum.XP,
 			CharacterID:  characterID,
+			TrackerOrder: 1,
 		},
 		{
 			Name:         "Hit Die",
@@ -111,6 +111,7 @@ func getDefaultTrackers(characterID uint) []models.CharacterTrackerModel {
 			CurrentValue: 4,
 			Type:         models.TrackerEnum.HitDie,
 			CharacterID:  characterID,
+			TrackerOrder: 2,
 		},
 		{
 			Name:         "Cantrip",

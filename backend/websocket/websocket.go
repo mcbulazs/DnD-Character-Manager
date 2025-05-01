@@ -64,11 +64,11 @@ func HandleWebSocket(c *gin.Context) {
 	addClient(conn, objectID)
 
 	conn.SetReadLimit(maxMessageSize)
-	conn.SetReadDeadline(time.Now().Add(pongWait))
-	conn.SetPongHandler(func(string) error {
-		conn.SetReadDeadline(time.Now().Add(pongWait))
-		return nil
-	})
+	//conn.SetReadDeadline(time.Now().Add(pongWait))
+	//conn.SetPongHandler(func(string) error {
+	//	conn.SetReadDeadline(time.Now().Add(pongWait))
+	//	return nil
+	//})
 
 	// Start reader goroutine
 	go readPump(conn, objectID)
@@ -91,7 +91,7 @@ func removeClient(conn *websocket.Conn, objectID string) {
 		for i, client := range clients {
 			if client == conn {
 				// Remove the client from the list
-				store.subscriptions[objectID] = append(clients[:i], clients[i+1:]...)
+				store.subscriptions[objectID] = slices.Delete(clients, i, i+1)
 				break
 			}
 		}
@@ -136,6 +136,7 @@ func readPump(conn *websocket.Conn, objectID string) {
 		case <-ticker.C:
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				removeClient(conn, objectID)
 				return
 			}
 		default:

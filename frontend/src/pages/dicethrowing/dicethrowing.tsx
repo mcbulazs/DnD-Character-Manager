@@ -14,7 +14,6 @@ const DiceThrowing: React.FC = () => {
   if (!Dicebox) {
     return <div>Loading Dice Box...</div>;
   }
-  console.log("DiceThrowing");
   return (
     <Suspense fallback={<div>Loading Dice Box...</div>}>
       <Dicebox />

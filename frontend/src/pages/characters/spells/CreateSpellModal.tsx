@@ -107,7 +107,6 @@ const CreateSpellModal: React.FC<{
   const [range, setRange] = useState(spell?.range || "");
   const [duration, setDuration] = useState(spell?.duration || "");
   const [description, setDescription] = useState(spell?.description || "");
-  console.log("level", level);
   const [components, setComponents] = useState<componentType>(
     convertToComponentType(spell?.components || ""),
   );

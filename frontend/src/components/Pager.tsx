@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Pager: React.FC<{
   maxShown?: number;
@@ -7,6 +7,11 @@ const Pager: React.FC<{
   onPageChange: (page: number) => void;
 }> = ({ maxShown = 3, count, defaultPage = 0, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
+  useEffect(() => {
+    if (count !== 0 && count <= currentPage) {
+      setCurrentPage(count - 1);
+    }
+  }, [count, currentPage]);
 
   const changePage = (page: number) => {
     if (page < 0 || page >= count) return;
