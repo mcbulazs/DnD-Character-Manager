@@ -50,7 +50,7 @@ func TestTrackerRepository_Create(t *testing.T) {
 		assert.Equal(t, 10, savedTracker.CurrentValue)
 		assert.Equal(t, 20, savedTracker.MaxValue)
 		assert.Equal(t, models.TrackerEnum.Custom, savedTracker.Type)
-		assert.Equal(t, 1, savedTracker.TrackerOrder)
+		assert.Equal(t, 3, savedTracker.TrackerOrder)
 
 		tracker2 := &models.CharacterTrackerModel{
 			CharacterID:  character.ID,
@@ -64,7 +64,7 @@ func TestTrackerRepository_Create(t *testing.T) {
 		var savedTracker2 models.CharacterTrackerModel
 		err = db.First(&savedTracker2, tracker2.ID).Error
 		assert.NoError(t, err)
-		assert.Equal(t, 2, savedTracker2.TrackerOrder)
+		assert.Equal(t, 4, savedTracker2.TrackerOrder)
 	})
 
 	t.Run("Create Tracker to non-existent character", func(t *testing.T) {
