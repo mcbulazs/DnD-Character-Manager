@@ -152,7 +152,7 @@ const Tracker: React.FC<{
             ${!isEditing ? "" : isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!isEditing ? "" : "select-none"}`}
                     onClick={() => {
-                      if (currentValue === 0) return;
+                      if (currentValue <= 0) return;
                       setCurrentValue((value) => value - 1);
                       UpdateTrackerDebounce(currentValue - 1);
                     }}
@@ -166,7 +166,7 @@ const Tracker: React.FC<{
             ${!isEditing ? "" : isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!isEditing ? "" : "select-none"}`}
                     onClick={() => {
-                      if (currentValue === tracker.maxValue) return;
+                      if (currentValue >= tracker.maxValue) return;
                       setCurrentValue((value) => value + 1);
                       UpdateTrackerDebounce(currentValue + 1);
                     }}

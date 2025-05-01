@@ -60,7 +60,7 @@ func (s *CharacterTrackerModel) BeforeCreate(tx *gorm.DB) error {
 		return nil
 	}
 	var prevTracker CharacterTrackerModel
-	t := tx.Where("type = 'Custom' AND character_id = ?", s.CharacterID).Order("tracker_order desc").FirstOrInit(&prevTracker)
+	t := tx.Where("character_id = ?", s.CharacterID).Order("tracker_order desc").FirstOrInit(&prevTracker)
 	if t.Error != nil {
 		return t.Error
 	}
